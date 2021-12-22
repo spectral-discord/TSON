@@ -31,7 +31,7 @@ This repository contains the standardization for **TSON** (Tuning-Spectrum Objec
 </details>
 
 <details>
-<summary>Also, TSON is intended to be a focal point for a new generation of microtonal software...</summary>
+<summary>Also, TSON is intended to be a focal point for an array of new microtonal software...</summary>
 <br>
 
 - **Coming Soon!**: [TSONify]() - open-source packages/libraries for multiple languages with useful features for manipulating TSON data (and hopefully aiding its adoption)
