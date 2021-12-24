@@ -20,7 +20,7 @@ This repository contains the standardization for **TSON** (Tuning-Spectrum Objec
 
 - Readable without sacrificing portability and manipulability (JSON is pretty much everywhere these days, and the [Hjson](https://hjson.github.io/) superset is quite nice)
 - Compatible with existing tuning formats, yet extensible
-- Pitch ratios are defined via floats or expressions. JI ratios are therefore still valid, and cents can be defined as `2^(cents/1200)`.
+- Pitch ratios are defined via floats or expressions
 - Unrecognized parameters won't break TSON interpretation, they'll just be ignored if not implemented
 - Able to contain timbre/spectrum data, multiple tunings and timbres per file, plus tuning-timbre groupings and sequences
 - **Planned**: Instrument data (e.g. key layouts) and note/timbre mappings
