@@ -1,11 +1,11 @@
 # TSON
-This repository contains the standardization for **TSON** (Tuning-Spectrum Object Notation) - a JSON/[Hjson](https://hjson.github.io/)-based file format for storing tuning and timbre/spectrum data
+This repository contains the standardization for **TSON** (Tuning-Spectrum Object Notation) - a JSON/[Hjson](https://hjson.github.io/)-based file format for storing musical tuning and timbre/spectrum data
 
 ### Why another microtonal file standard?
 [Valid question.](https://xkcd.com/927/)
 
 <details>
-<summary>Existing formats are terrible and we actually do need something better...</summary>
+<summary>Existing formats kinda suck, and we actually do need something better...</summary>
 <br>
 
 - They suck to work with... some sacrifice portability and manipulability for readability (SCL, TUN), while others are environment-specific or unreadable (MTS)
