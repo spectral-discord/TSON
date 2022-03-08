@@ -30,18 +30,19 @@ This repository contains the standardization for **TSON** (Tuning-Spectrum Objec
 <summary>Also, TSON is intended to be a focal point for an set of useful microtonal software...</summary>
 <br>
 
-- **Coming Soon!**: [TSONify]() - open-source packages/libraries for multiple languages with useful features for manipulating TSON data (and hopefully aiding its adoption)
+- **Coming Soon!**: [TSONify]() - open-source packages/libraries for multiple languages with useful features for working with TSON data (and hopefully aiding its adoption)
   - Conversion between TSON and existing microtonal formats
   - TSON data validation
   - Support for the use of variables in expressions for dynamic tunings, timbres, and instrument models
   - Multi-file aggregation and linking for timbre/tuning pairings and sequences
   - Integration with TonalHub for fetching and updating data hosted in TonalHub instances
-  - And much more...
+  - Tools for including TSON support in your own software
+  - And more...
 - **Coming Soon!**: [TonalHub]() - open-source, self-hostable application for archiving and working with tuning, timbre, and instrument models
   - API and UI for archiving, fetching, and manipulating TSON data
   - TSON data model versioning
   - API and UI toolkits for analyzing and developing tunings and timbres
-  - And much more...
+  - And more...
 </details>
 
 ## Specification
