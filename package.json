@@ -1,0 +1,12 @@
+{
+  "name": "TSON",
+  "version": "1.0.0",
+  "description": "TSON Helper Library",
+  "main": "index.js",
+  "repository": "https://github.com/spectral-discord/TSON.git",
+  "author": "Lina <git@lina.pizza>",
+  "license": "Unlicense",
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  }
+}
