@@ -2,14 +2,21 @@ import dts from 'rollup-plugin-dts'
 
 export default [
   {
-    input: 'src/main.js',
+    input: 'lib/main.js',
     output: {
-      file: 'bundle.js',
-      format: 'cjs'
+      file: 'dist/bundle.umd.js',
+      format: 'umd'
     }
   },
   {
-    input: `src/main.js`,
+    input: 'lib/main.js',
+    output: {
+      file: 'dist/bundle.es.js',
+      format: 'es'
+    }
+  },
+  {
+    input: `lib/main.d.ts`,
     plugins: [dts()],
     output: {
       file: `dist/bundle.d.ts`,

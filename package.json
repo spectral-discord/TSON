@@ -2,10 +2,15 @@
   "name": "TSONify",
   "version": "1.0.0",
   "description": "TSON Helper Library",
-  "main": "index.js",
+  "main": "dist/bundle.umd.js",
+  "module": "dist/bundle.es.js",
+  "types": "dist/bundle.d.ts",
   "repository": "https://github.com/spectral-discord/TSON.git",
   "author": "Lina <git@lina.pizza>",
   "license": "Unlicense",
+  "scripts": {
+    "build": "tsc && rollup -c"
+  },
   "devDependencies": {
     "rollup-plugin-dts": "^4.2.2",
     "typescript": "^4.7.4"
