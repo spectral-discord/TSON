@@ -1,6 +1,6 @@
 {
   "name": "TSONify",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "TSON Helper Library",
   "main": "dist/bundle.umd.js",
   "module": "dist/bundle.es.js",
@@ -9,9 +9,14 @@
   "author": "Lina <git@lina.pizza>",
   "license": "Unlicense",
   "scripts": {
-    "build": "tsc && rollup -c"
+    "build": "tsc && yarn rollup -c",
+    "lint": "eslint src --fix"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
+    "@typescript-eslint/parser": "^5.36.2",
+    "eslint": "^8.23.0",
+    "rollup": "^2.79.0",
     "rollup-plugin-dts": "^4.2.2",
     "typescript": "^4.7.4"
   }
