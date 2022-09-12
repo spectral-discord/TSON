@@ -4,8 +4,8 @@ export default [
   {
     input: 'lib/main.js',
     output: {
-      file: 'dist/bundle.umd.js',
-      format: 'umd'
+      file: 'dist/bundle.cjs.js',
+      format: 'cjs'
     }
   },
   {
@@ -16,10 +16,10 @@ export default [
     }
   },
   {
-    input: `lib/main.d.ts`,
+    input: 'lib/main.d.ts',
     plugins: [dts()],
     output: {
-      file: `dist/bundle.d.ts`,
+      file: 'dist/bundle.d.ts',
       format: 'es',
     },
   }

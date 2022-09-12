@@ -1,2 +1,5 @@
-yarn global add rollup
-yarn i
+#!/bin/bash
+
+if [ -f "package.json" ]; then
+  yarn install
+fi

@@ -1,3 +1,6 @@
 'use strict';
 
-export const Greeting = () => {console.log('Hello TSONify!')}
+export function greeting() {
+  console.log('Hello World!');
+  return 'Hello World!';
+}

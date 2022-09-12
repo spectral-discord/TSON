@@ -1,6 +1,6 @@
 {
   "name": "TSONify",
-  "version": "1.1.0",
+  "version": "1.0.0",
   "description": "TSON Helper Library",
   "main": "dist/bundle.cjs.js",
   "module": "dist/bundle.es.js",
