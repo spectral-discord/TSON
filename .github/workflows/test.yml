@@ -6,6 +6,8 @@ jobs:
     outputs:
       package-exists: ${{ steps.check-package.outputs.files_exists }}
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
       - name: "Check if package.json exists"
         id: check-package
         uses: andstor/file-existence-action@v1
