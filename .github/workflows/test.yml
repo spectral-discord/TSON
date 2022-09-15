@@ -15,7 +15,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     needs: [check-package-exists]
-    if: needs.check-secret.outputs.package-exists == 'true'
+    if: needs.check-package-exists.outputs.package-exists == 'true'
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
