@@ -1,6 +1,6 @@
 'use strict';
 
-import { TSON } from './tson';
+import { TSON, Tuning } from './tson';
 import { string, number, boolean, object, array, alternatives, assert, link, exist } from 'joi';
 
 // TODO: Expression parsing
@@ -122,8 +122,33 @@ export default function validate(
 
   if (options.includedIdsOnly) {
     // Ensure that tuning/spectrum ID references are internally resolvable
+    const tuningIds: string[] = [];
+    const spectrumIds: string[] = [];
 
+    tson?.spectra?.forEach(spectrum => {
+      if (spectrum.id) spectrumIds.push(spectrum.id);
+    });
 
+    tson?.tunings?.forEach(tuning => {
+      if (tuning.id) tuningIds.push(tuning.id);
+
+      tuning.scales.forEach(scale => {
+        if (scale.spectrum && !spectrumIds.includes(scale.spectrum)) {
+          // Throw error
+        }
+      });
+    });
+
+    tson?.sets?.forEach(set => {
+      set.members.forEach(mem => {
+        if (mem.tuning && !tuningIds.includes(mem.tuning)) {
+          // Throw error
+        }
+        if (mem.spectrum && !spectrumIds.includes(mem.spectrum)) {
+          // Throw error
+        }
+      });
+    });
   }
 
   if (options.validateExpressions) {

@@ -67,5 +67,5 @@ export interface TSON {
   tunings?: Tuning[],
   'tuning systems'?: Tuning[],
   spectra?: Spectrum[],
-  set?: Set[]
+  sets?: Set[]
 }
