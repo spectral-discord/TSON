@@ -1,6 +1,6 @@
 'use strict';
 
-import { TSON, Tuning } from './tson';
+import { TSON } from './tson';
 import { string, number, boolean, object, array, alternatives, assert, link, exist } from 'joi';
 
 // TODO: Expression parsing
