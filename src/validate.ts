@@ -19,7 +19,7 @@ const notes = array().items(
     ratio: expression.optional(),
     name: string().optional(),
   }).xor('frequency ratio', 'ratio')
-).unique((a, b) => a.name === b.name);
+).min(1).unique((a, b) => a.name === b.name);
 
 const tunings = array().items(object().keys({
   name: string().optional(),
@@ -53,8 +53,8 @@ const tunings = array().items(object().keys({
     .nand('repeat', 'repeat ratio')
     .nand('min', 'min frequency')
     .nand('max', 'max frequency')
-  ).required()
-}).or('name', 'id')).unique((a, b) => a.id === b.id).optional();
+  ).min(1).required()
+}).or('name', 'id')).min(1).unique((a, b) => a.id === b.id).optional();
 
 const partials = array().items(
   object().keys({
@@ -67,7 +67,7 @@ const partials = array().items(
   })
     .xor('frequency ratio', 'frequency', 'ratio')
     .xor('amplitude weight', 'amplitude', 'weight')
-);
+).min(1);
 
 /**
  * Joi schema for validating TSON objects.
@@ -86,7 +86,7 @@ export const schema = object().keys({
   })
     .or('name', 'id')
     .xor('partials', 'partial distribution')
-  ).unique((a, b) => a.id === b.id).optional(),
+  ).min(1).unique((a, b) => a.id === b.id).optional(),
   sets: array().items(object().keys({
     name: string().required(),
     description: string().optional(),
@@ -95,8 +95,8 @@ export const schema = object().keys({
       tuning: string().optional(),
       spectrum: string().optional(),
       'override scale spectra': boolean().optional()
-    }).nand('tuning system', 'tuning')).required()
-  })).optional()
+    }).nand('tuning system', 'tuning')).min(1).required()
+  })).min(1).optional()
 }).nand('tuning systems', 'tunings');
 
 export interface ValidationOptions {
