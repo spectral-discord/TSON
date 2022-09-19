@@ -1,5 +1,8 @@
 'use strict';
 
+import validate, { ValidationOptions } from './validate';
+import YAML from 'yaml';
+
 export interface Note {
   'frequency ratio'?: string | number,
   ratio?: string | number,
@@ -67,5 +70,33 @@ export interface TSON {
   tunings?: Tuning[],
   'tuning systems'?: Tuning[],
   spectra?: Spectrum[],
-  sets?: Set[]
+  sets?: Set[],
+  validate?: (tson: TSON, options?: ValidationOptions) => boolean
+  // standardize?: (tson: TSON, options?: StandardizationOptions) => boolean;
+}
+
+export class TSON implements TSON {
+  tunings?: Tuning[];
+  'tuning systems'?: Tuning[];
+  spectra?: Spectrum[];
+  sets?: Set[];
+  validate?: (tson: TSON, options?: ValidationOptions) => boolean = validate;
+  // standardize?: (tson: TSON, options?: StandardizationOptions) => boolean = standardize;
+
+  constructor(
+    tson: string, 
+    validationOptions?: ValidationOptions
+    // standardizationOptions?: StandardizationOptions
+  ) {
+    // Parse YAML to TSON object
+    const parsed = YAML.parse(tson);
+
+    // Validate TSON object
+    validate(parsed, validationOptions);
+
+    // Standardize
+
+    // Add buildTuning() to all Tuning objects
+    // Add buildSpectrum() to all Spectrum objects
+  }
 }

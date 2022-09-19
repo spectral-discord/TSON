@@ -98,7 +98,7 @@ export const schema = object().keys({
   })).optional()
 }).nand('tuning systems', 'tunings');
 
-interface ValidationOptions {
+export interface ValidationOptions {
   validateExpressions?: boolean,
   includedIdsOnly?: boolean,
   allowUnknown?: boolean
@@ -112,9 +112,10 @@ export default function validate(
   options: ValidationOptions = {
     validateExpressions: true,
     includedIdsOnly: false,
-    allowUnknown: false
+    allowUnknown: true
   }
 ): boolean {
+  // Validate TSON syntax & values
   assert(tson, schema, 'Invalid TSON!\n', { 
     abortEarly: false, 
     allowUnknown: options.allowUnknown 
@@ -134,7 +135,7 @@ export default function validate(
 
       tuning.scales.forEach(scale => {
         if (scale.spectrum && !spectrumIds.includes(scale.spectrum)) {
-          // Throw error
+          throw new Error(`Invalid TSON!\nSpectrum [${scale.spectrum}] not found`);
         }
       });
     });
@@ -142,10 +143,10 @@ export default function validate(
     tson?.sets?.forEach(set => {
       set.members.forEach(mem => {
         if (mem.tuning && !tuningIds.includes(mem.tuning)) {
-          // Throw error
+          throw new Error(`Invalid TSON!\nTuning [${mem.tuning}] not found`);
         }
         if (mem.spectrum && !spectrumIds.includes(mem.spectrum)) {
-          // Throw error
+          throw new Error(`Invalid TSON!\nSpectrum [${mem.spectrum}] not found`);
         }
       });
     });
@@ -153,7 +154,7 @@ export default function validate(
 
   if (options.validateExpressions) {
     // Ensure that expressions can be evaluated
-
+    
   }
 
   return true;
