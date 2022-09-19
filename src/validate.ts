@@ -2,6 +2,7 @@
 
 import { TSON } from './tson';
 import { string, number, boolean, object, array, alternatives, assert, link, exist } from 'joi';
+import { parse } from 'mathjs';
 
 // TODO: Expression parsing
 const expression = string().regex(/([1234567890.+-*/^%()e ]|(pi)|(tau)|(abs))+/);
@@ -126,35 +127,87 @@ export default function validate(
     const tuningIds: string[] = [];
     const spectrumIds: string[] = [];
 
-    tson?.spectra?.forEach(spectrum => {
-      if (spectrum.id) spectrumIds.push(spectrum.id);
-    });
+    if (tson.spectra) {
+      for (const spectrum of tson.spectra) {
+        if (spectrum.id) spectrumIds.push(spectrum.id);
+      }
+    }
 
-    tson?.tunings?.forEach(tuning => {
-      if (tuning.id) tuningIds.push(tuning.id);
+    if (tson.tunings) {
+      for (const tuning of tson.tunings) {
+        if (tuning.id) tuningIds.push(tuning.id);
 
-      tuning.scales.forEach(scale => {
-        if (scale.spectrum && !spectrumIds.includes(scale.spectrum)) {
-          throw new Error(`Invalid TSON!\nSpectrum [${scale.spectrum}] not found`);
+        for (const scale of tuning.scales) {
+          if (scale.spectrum && !spectrumIds.includes(scale.spectrum)) {
+            throw new Error(`Invalid TSON!\nSpectrum [${scale.spectrum}] not found`);
+          }
         }
-      });
-    });
+      }
+    }
 
-    tson?.sets?.forEach(set => {
-      set.members.forEach(mem => {
-        if (mem.tuning && !tuningIds.includes(mem.tuning)) {
-          throw new Error(`Invalid TSON!\nTuning [${mem.tuning}] not found`);
+    if (tson.sets) {
+      for (const set of tson.sets) {
+        for (const mem of set.members) {
+          if (mem.tuning && !tuningIds.includes(mem.tuning)) {
+            throw new Error(`Invalid TSON!\nTuning [${mem.tuning}] not found`);
+          }
+          if (mem.spectrum && !spectrumIds.includes(mem.spectrum)) {
+            throw new Error(`Invalid TSON!\nSpectrum [${mem.spectrum}] not found`);
+          }
         }
-        if (mem.spectrum && !spectrumIds.includes(mem.spectrum)) {
-          throw new Error(`Invalid TSON!\nSpectrum [${mem.spectrum}] not found`);
-        }
-      });
-    });
+      }
+    }
   }
 
   if (options.validateExpressions) {
     // Ensure that expressions can be evaluated
-    
+    const tunings = tson.tunings 
+      ? tson.tunings 
+      : tson['tuning systems'];
+
+    if (tunings) {
+      for (const tuning of tunings) {
+        for (const scale of tuning.scales) {
+          for (const note of scale.notes) {
+            if (typeof(note) === 'string') {
+              parse(note);
+            } else if (typeof(note) === 'object') {
+              const ratio = note.ratio ? note.ratio : note['frequency ratio'];
+              if (typeof(ratio) === 'string') {
+                parse(ratio);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    if (tson.spectra) {
+      for (const spectrum of tson.spectra) {
+        const partials = spectrum.partials 
+          ? spectrum.partials 
+          : spectrum['partial distribution'];
+
+        if (partials) {
+          for (const partial of partials) {
+            const frequency = partial.frequency 
+              ? partial.frequency
+              : partial.ratio 
+                ? partial.ratio
+                : partial['frequency ratio'];
+  
+            const amplitude = partial.amplitude
+              ? partial.amplitude
+              : partial.weight
+                ? partial.weight
+                : partial['amplitude weight'];
+  
+            if (typeof(frequency) === 'string') parse(frequency);
+            if (typeof(amplitude) === 'string') parse(amplitude);
+          }
+        }
+      }
+    }
   }
 
   return true;

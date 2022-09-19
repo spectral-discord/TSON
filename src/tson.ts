@@ -43,9 +43,9 @@ export interface Partial {
 }
 
 export interface Spectrum {
-  name?: string, 
-  description?: string, 
-  id?: string, 
+  name?: string,
+  description?: string,
+  id?: string,
   partials?: Partial[],
   'partial distribution'?: Partial[]
 }
