@@ -28,8 +28,8 @@ const tunings = array().items(object().keys({
   scales: array().items(object().keys({
     notes: alternatives().conditional('reference', {
       is: object().required(),
-      then: alternatives().conditional('reference.note', { 
-        is: exist(), 
+      then: alternatives().conditional('reference.note', {
+        is: exist(),
         then: notes.has(object({ name: link('....reference.note') }).unknown()) ,
         otherwise: notes
       }),
@@ -71,8 +71,8 @@ const partials = array().items(
 
 /**
  * Joi schema for validating TSON objects.
- * 
- * Doesn't parse expressions, but does validate that expression strings only contain allowed substrings. 
+ *
+ * Doesn't parse expressions, but does validate that expression strings only contain allowed substrings.
  */
 export const schema = object().keys({
   'tuning systems': tunings,
@@ -109,7 +109,7 @@ export interface ValidationOptions {
  * TSON syntax validation
  */
 export default function validate(
-  tson: TSON, 
+  tson: TSON,
   options: ValidationOptions = {
     validateExpressions: true,
     includedIdsOnly: false,
@@ -117,9 +117,9 @@ export default function validate(
   }
 ): boolean {
   // Validate TSON syntax & values
-  assert(tson, schema, 'Invalid TSON!\n', { 
-    abortEarly: false, 
-    allowUnknown: options.allowUnknown 
+  assert(tson, schema, 'Invalid TSON!\n', {
+    abortEarly: false,
+    allowUnknown: options.allowUnknown
   });
 
   if (options.includedIdsOnly) {
@@ -161,8 +161,8 @@ export default function validate(
 
   if (options.validateExpressions) {
     // Ensure that expressions can be evaluated
-    const tunings = tson.tunings 
-      ? tson.tunings 
+    const tunings = tson.tunings
+      ? tson.tunings
       : tson['tuning systems'];
 
     if (tunings) {
@@ -184,24 +184,24 @@ export default function validate(
 
     if (tson.spectra) {
       for (const spectrum of tson.spectra) {
-        const partials = spectrum.partials 
-          ? spectrum.partials 
+        const partials = spectrum.partials
+          ? spectrum.partials
           : spectrum['partial distribution'];
 
         if (partials) {
           for (const partial of partials) {
-            const frequency = partial.frequency 
+            const frequency = partial.frequency
               ? partial.frequency
-              : partial.ratio 
+              : partial.ratio
                 ? partial.ratio
                 : partial['frequency ratio'];
-  
+
             const amplitude = partial.amplitude
               ? partial.amplitude
               : partial.weight
                 ? partial.weight
                 : partial['amplitude weight'];
-  
+
             if (typeof(frequency) === 'string') parse(frequency);
             if (typeof(amplitude) === 'string') parse(amplitude);
           }

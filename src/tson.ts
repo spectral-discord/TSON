@@ -27,9 +27,9 @@ export interface Scale {
 }
 
 export interface Tuning {
-  name?: string, 
-  description?: string, 
-  id?: string, 
+  name?: string,
+  description?: string,
+  id?: string,
   scales: Scale[]
 }
 
@@ -58,8 +58,8 @@ interface SetMember {
 }
 
 export interface Set {
-  name: string, 
-  description?: string, 
+  name: string,
+  description?: string,
   members: SetMember[]
 }
 
@@ -84,7 +84,7 @@ export class TSON implements TSON {
   // standardize?: (tson: TSON, options?: StandardizationOptions) => boolean = standardize;
 
   constructor(
-    tson: string, 
+    tson: string,
     validationOptions?: ValidationOptions
     // standardizationOptions?: StandardizationOptions
   ) {

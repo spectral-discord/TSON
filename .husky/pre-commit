@@ -3,4 +3,5 @@
 
 if [ -f "package.json" ]; then
   yarn test && yarn lint
+  git add .
 fi
