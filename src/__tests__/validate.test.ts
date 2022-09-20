@@ -56,18 +56,15 @@ describe('Validation function', () => {
 
 describe('Validate TSON examples', () => {
   const importTsonFile = (file: string) => {
-    const tson = readFileSync(`${dataDir}/invalid-tsons/${file}`).toString('utf8');
-    const parsed = YAML.parse(tson);
+    const tson = YAML.parse(readFileSync(`${dataDir}/invalid-tsons/${file}`).toString('utf8'));
+    const data: any = { tson, testName: tson.testName };
+    delete data.tson.testName;
 
-    const data: any = { testName: parsed.testName };
-    delete parsed.testName;
-
-    if (parsed.validationOptions) {
-      data.validationOptions = parsed.validationOptions;
-      delete parsed.validationOptions;
+    if (tson.validationOptions) {
+      data.validationOptions = tson.validationOptions;
+      delete data.tson.validationOptions;
     }
 
-    data.tson = parsed;
     return data;
   };
 
@@ -91,5 +88,3 @@ describe('Validate TSON examples', () => {
   //   }
   // );
 });
-
-export {};
