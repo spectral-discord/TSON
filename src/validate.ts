@@ -1,54 +1,53 @@
 'use strict';
 
 import { TSON } from './tson';
-import { string, number, boolean, object, array, alternatives, assert, link, exist } from 'joi';
+import * as Joi from 'joi';
 import { parse } from 'mathjs';
 
-// TODO: Expression parsing
-const expression = string().regex(/([1234567890.+-*/^%()e ]|(pi)|(tau)|(abs))+/);
+const expression = Joi.string().regex(/([1234567890.+\-*/^%()e ]|(pi)|(tau)|(abs))+/);
 
-const frequency = alternatives().try(
-  number().positive(),
-  string().regex(/([.]\d+|\d+[.]?\d*)( Hz)?/)
+const frequency = Joi.alternatives().try(
+  Joi.number().positive(),
+  Joi.string().regex(/([.]\d+|\d+[.]?\d*)( Hz)?/)
 );
 
-const notes = array().items(
+const notes = Joi.array().items(
   expression,
-  object().keys({
+  Joi.object().keys({
     'frequency ratio': expression.optional(),
     ratio: expression.optional(),
-    name: string().optional(),
+    name: Joi.string().optional(),
   }).xor('frequency ratio', 'ratio')
 ).min(1).unique((a, b) => a.name === b.name);
 
-const tunings = array().items(object().keys({
-  name: string().optional(),
-  description: string().optional(),
-  id: string().optional(),
-  scales: array().items(object().keys({
-    notes: alternatives().conditional('reference', {
-      is: object().required(),
-      then: alternatives().conditional('reference.note', {
-        is: exist(),
-        then: notes.has(object({ name: link('....reference.note') }).unknown()) ,
+const tunings = Joi.array().items(Joi.object().keys({
+  name: Joi.string().optional(),
+  description: Joi.string().optional(),
+  id: Joi.string().optional(),
+  scales: Joi.array().items(Joi.object().keys({
+    notes: Joi.alternatives().conditional('reference', {
+      is: Joi.object().required(),
+      then: Joi.alternatives().conditional('reference.note', {
+        is: Joi.exist(),
+        then: notes.has(Joi.object({ name: Joi.link('....reference.note') }).unknown()) ,
         otherwise: notes
       }),
       otherwise: notes
     }).required(),
-    reference: alternatives().try(
+    reference: Joi.alternatives().try(
       frequency,
-      object().keys({
+      Joi.object().keys({
         frequency: frequency.required(),
-        note: string().optional(),
+        note: Joi.string().optional(),
       }),
     ).required(),
-    'repeat ratio': number().positive().optional(),
-    repeat: number().positive().optional(),
+    'repeat ratio': Joi.number().positive().optional(),
+    repeat: Joi.number().positive().optional(),
     'max frequency': frequency.optional(),
     max: frequency.optional(),
     'min frequency': frequency.optional(),
     min: frequency.optional(),
-    spectrum: string().optional(),
+    spectrum: Joi.string().optional(),
   }).xor('reference', 'reference frequency')
     .nand('repeat', 'repeat ratio')
     .nand('min', 'min frequency')
@@ -56,8 +55,8 @@ const tunings = array().items(object().keys({
   ).min(1).required()
 }).or('name', 'id')).min(1).unique((a, b) => a.id === b.id).optional();
 
-const partials = array().items(
-  object().keys({
+const partials = Joi.array().items(
+  Joi.object().keys({
     'frequency ratio': expression.optional(),
     frequency: expression.optional(),
     ratio: expression.optional(),
@@ -74,30 +73,31 @@ const partials = array().items(
  *
  * Doesn't parse expressions, but does validate that expression strings only contain allowed substrings.
  */
-export const schema = object().keys({
+export const schema = Joi.object().keys({
   'tuning systems': tunings,
   tunings,
-  spectra: array().items(object().keys({
-    name: string().optional(),
-    description: string().optional(),
-    id: string().optional(),
+  spectra: Joi.array().items(Joi.object().keys({
+    name: Joi.string().optional(),
+    description: Joi.string().optional(),
+    id: Joi.string().optional(),
     'partial distribution': partials.optional(),
     partials: partials.optional()
   })
     .or('name', 'id')
     .xor('partials', 'partial distribution')
   ).min(1).unique((a, b) => a.id === b.id).optional(),
-  sets: array().items(object().keys({
-    name: string().required(),
-    description: string().optional(),
-    members: array().items(object().keys({
-      'tuning system': string().optional(),
-      tuning: string().optional(),
-      spectrum: string().optional(),
-      'override scale spectra': boolean().optional()
+  sets: Joi.array().items(Joi.object().keys({
+    name: Joi.string().required(),
+    description: Joi.string().optional(),
+    members: Joi.array().items(Joi.object().keys({
+      'tuning system': Joi.string().optional(),
+      tuning: Joi.string().optional(),
+      spectrum: Joi.string().optional(),
+      'override scale spectra': Joi.boolean().optional()
     }).nand('tuning system', 'tuning')).min(1).required()
   })).min(1).optional()
-}).nand('tuning systems', 'tunings');
+}).nand('tuning systems', 'tunings')
+  .or('tuning systems', 'tunings', 'spectra', 'sets');
 
 export interface ValidationOptions {
   validateExpressions?: boolean,
@@ -110,14 +110,19 @@ export interface ValidationOptions {
  */
 export default function validate(
   tson: TSON,
-  options: ValidationOptions = {
+  options?: ValidationOptions
+): boolean {
+  // Set defaults for undefined options
+  options = Object.assign({
     validateExpressions: true,
     includedIdsOnly: false,
     allowUnknown: true
-  }
-): boolean {
+  }, options);
+
+  console.log('something something happening');
+
   // Validate TSON syntax & values
-  assert(tson, schema, 'Invalid TSON!\n', {
+  Joi.assert(tson, schema, 'Invalid TSON!\n', {
     abortEarly: false,
     allowUnknown: options.allowUnknown
   });

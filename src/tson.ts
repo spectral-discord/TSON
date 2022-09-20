@@ -71,17 +71,18 @@ export interface TSON {
   'tuning systems'?: Tuning[],
   spectra?: Spectrum[],
   sets?: Set[],
-  validate?: (tson: TSON, options?: ValidationOptions) => boolean
-  // standardize?: (tson: TSON, options?: StandardizationOptions) => boolean;
 }
 
+/**
+ * TSON class
+ */
 export class TSON implements TSON {
   tunings?: Tuning[];
   'tuning systems'?: Tuning[];
   spectra?: Spectrum[];
   sets?: Set[];
   validate?: (tson: TSON, options?: ValidationOptions) => boolean = validate;
-  // standardize?: (tson: TSON, options?: StandardizationOptions) => boolean = standardize;
+  // standardize: (tson: TSON, options?: StandardizationOptions) => boolean = standardize;
 
   constructor(
     tson: string,
