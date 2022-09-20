@@ -1,3 +1,4 @@
 tasks:
-  - init: ./scripts/gitpod-init.sh
-  - command: ./scripts/gitpod-start.sh
+  - name: TSONify
+    init: ./scripts/gitpod-init.sh
+    command: ./scripts/gitpod-start.sh
