@@ -119,8 +119,6 @@ export default function validate(
     allowUnknown: true
   }, options);
 
-  console.log('something something happening');
-
   // Validate TSON syntax & values
   Joi.assert(tson, schema, 'Invalid TSON!\n', {
     abortEarly: false,

@@ -1,14 +1,11 @@
 jest.deepUnmock('../validate');
 
-import validate, { schema, ValidationOptions } from '../validate';
+import validate from '../validate';
 import { TSON } from '../tson';
-import * as Joi from 'joi';
-
-console.log(validate);
 
 describe('Validation function', () => {
-  let Validate: (tson: TSON, options?: ValidationOptions) => boolean;
-  let assert: (value: any, schema: Joi.Schema<any>, options?: Joi.ValidationOptions) => void;
+  let Validate: any;
+  let assert: any;
   beforeEach(() => {
     jest.resetModules();
     import('../validate').then(module => {
@@ -44,16 +41,20 @@ describe('Validation function', () => {
       boolean: jest.fn().mockReturnThis(),
     }));
   });
-  it('Should call `assert`', () => {
+  test('Should call `assert`', () => {
     const tson: TSON = {};
 
     Validate(tson, { validateExpressions: false });
 
     expect(assert).toBeCalledTimes(1);
-    expect(assert).toBeCalledWith(tson, schema, 'Invalid TSON!\n', {
-      abortEarly: false,
-      allowUnknown: true
-    });
+  });
+});
+
+describe('Validate TSON', () => {
+  test('Should throw for empty TSON', () => {
+    const tson: TSON = {};
+
+    expect(() => validate(tson, { validateExpressions: false })).toThrow();
   });
 });
 

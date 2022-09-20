@@ -2,5 +2,5 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 if [ -f "package.json" ]; then
-  yarn lint-staged
+  yarn test && yarn lint-staged
 fi
