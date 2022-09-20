@@ -1,7 +1,10 @@
 jest.deepUnmock('../validate');
+jest.deepUnmock('yaml');
 
 import validate from '../validate';
 import { TSON } from '../tson';
+import { readdirSync, readFileSync } from 'fs';
+import YAML from 'yaml';
 
 describe('Validation function', () => {
   let Validate: any;
@@ -41,6 +44,7 @@ describe('Validation function', () => {
       boolean: jest.fn().mockReturnThis(),
     }));
   });
+
   test('Should call `assert`', () => {
     const tson: TSON = {};
 
@@ -50,12 +54,42 @@ describe('Validation function', () => {
   });
 });
 
-describe('Validate TSON', () => {
-  test('Should throw for empty TSON', () => {
-    const tson: TSON = {};
+describe('Validate TSON examples', () => {
+  const importTsonFile = (file: string) => {
+    const tson = readFileSync(`${dataDir}/invalid-tsons/${file}`).toString('utf8');
+    const parsed = YAML.parse(tson);
 
-    expect(() => validate(tson, { validateExpressions: false })).toThrow();
-  });
+    const data: any = { testName: parsed.testName };
+    delete parsed.testName;
+
+    if (parsed.validationOptions) {
+      data.validationOptions = parsed.validationOptions;
+      delete parsed.validationOptions;
+    }
+
+    data.tson = parsed;
+    return data;
+  };
+
+  const dataDir = `${__dirname}/test-data`;
+  const invalidFiles = readdirSync(`${dataDir}/invalid-tsons`);
+  const invalid = invalidFiles.map(importTsonFile);
+  // const validFiles = readdirSync(`${dataDir}/valid-tsons`);
+  // const valid = validFiles.map(importTsonFile);
+
+  test.each(invalid)(
+    'Should throw when $testName',
+    ({ tson, validationOptions }) => {
+      expect(() => validate(tson, validationOptions)).toThrow();
+    }
+  );
+
+  // test.each(valid)(
+  //   'Should pass when $testName',
+  //   ({ tson, validationOptions }) => {
+  //     expect(validate(tson, validationOptions)).toBe(true);
+  //   }
+  // );
 });
 
 export {};
