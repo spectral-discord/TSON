@@ -4,7 +4,10 @@ import { TSON } from './tson';
 import * as Joi from 'joi';
 import { parse } from 'mathjs';
 
-const expression = Joi.string().regex(/([1234567890.+\-*/^%()e ]|(pi)|(tau)|(abs))+/);
+const expression = Joi.alternatives().try(
+  Joi.string().regex(/([1234567890.+\-*/^%()e ]|(pi)|(tau)|(abs))+/),
+  Joi.number().positive(),
+);
 
 const frequency = Joi.alternatives().try(
   Joi.number().positive(),
@@ -41,8 +44,8 @@ const tunings = Joi.array().items(Joi.object().keys({
         note: Joi.string().optional(),
       }),
     ).required(),
-    'repeat ratio': Joi.number().positive().optional(),
-    repeat: Joi.number().positive().optional(),
+    'repeat ratio': expression.optional(),
+    repeat: expression.optional(),
     'max frequency': frequency.optional(),
     max: frequency.optional(),
     'min frequency': frequency.optional(),

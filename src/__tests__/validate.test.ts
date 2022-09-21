@@ -55,8 +55,8 @@ describe('Validation function', () => {
 });
 
 describe('Validate TSON examples', () => {
-  const importTsonFile = (file: string) => {
-    const tson = YAML.parse(readFileSync(`${dataDir}/invalid-tsons/${file}`).toString('utf8'));
+  const importTsonFile = (file: string, directory: string) => {
+    const tson = YAML.parse(readFileSync(`${dataDir}/${directory}/${file}`).toString('utf8'));
     const data: any = { tson, testName: tson.testName };
     delete data.tson.testName;
 
@@ -70,9 +70,9 @@ describe('Validate TSON examples', () => {
 
   const dataDir = `${__dirname}/test-data`;
   const invalidFiles = readdirSync(`${dataDir}/invalid-tsons`);
-  const invalid = invalidFiles.map(importTsonFile);
+  const invalid = invalidFiles.map(file => importTsonFile(file, 'invalid-tsons'));
   const validFiles = readdirSync(`${dataDir}/valid-tsons`);
-  const valid = validFiles.map(importTsonFile);
+  const valid = validFiles.map(file => importTsonFile(file, 'valid-tsons'));
 
   if (invalid.length > 0) {
     test.each(invalid)(
