@@ -17,16 +17,18 @@ const frequency = Joi.alternatives().try(
 const notes = Joi.array().items(
   expression,
   Joi.object().keys({
-    'frequency ratio': expression.optional(),
-    ratio: expression.optional(),
-    name: Joi.string().optional(),
-  }).xor('frequency ratio', 'ratio')
-).min(1).unique((a, b) => a.name === b.name);
+    'frequency ratio': expression.description('The note\'s frequency ratio').optional(),
+    ratio: expression.description('The note\'s frequency ratio').optional(),
+    name: Joi.string().description('The note\'s name').optional(),
+  }).unknown().xor('frequency ratio', 'ratio')
+).min(1)
+  .unique((a, b) => a.name === b.name)
+  .description('List of the scale\'s notes');
 
 const tunings = Joi.array().items(Joi.object().keys({
-  name: Joi.string().optional(),
-  description: Joi.string().optional(),
-  id: Joi.string().optional(),
+  name: Joi.string().description('The tuning system\'s name').optional(),
+  description: Joi.string().description('A description of the tuning system').optional(),
+  id: Joi.string().description('A unique identifier for the tuning system').optional(),
   scales: Joi.array().items(Joi.object().keys({
     notes: Joi.alternatives().conditional('reference', {
       is: Joi.object().required(),
@@ -40,35 +42,38 @@ const tunings = Joi.array().items(Joi.object().keys({
     reference: Joi.alternatives().try(
       frequency,
       Joi.object().keys({
-        frequency: frequency.required(),
-        note: Joi.string().optional(),
-      }),
-    ).required(),
-    'repeat ratio': expression.optional(),
-    repeat: expression.optional(),
-    'max frequency': frequency.optional(),
-    max: frequency.optional(),
-    'min frequency': frequency.optional(),
-    min: frequency.optional(),
-    spectrum: Joi.string().optional(),
+        frequency: frequency.description('The reference frequency - a number, optionally with " Hz" appended').required(),
+        note: Joi.string().description('The name of the note that should be mapped onto the reference frequency').optional(),
+      }).unknown(),
+    ).description('A reference frequency that is used to map the note\'s frequency ratios to real frequencies values (ie., in Hz).\nCan be either a number (optionally appended with " Hz") or an object containing a frequency and an optional note that references one of the note names from the scale\'s notes list.\nIf no note name is provided, the reference frequency will be mapped to the frequency ratio "1".').required(),
+    'repeat ratio': expression.description('The frequency ratio at which the scale\'s notes will repeat').optional(),
+    repeat: expression.description('The frequency ratio at which the scale\'s notes will repeat').optional(),
+    'max frequency': frequency.description('A maximum frequency for the scale.\nWhen mapping the scale\'s notes onto actual frequencies, notes from this scale will not be mapped above the provided frequency.').optional(),
+    max: frequency.description('A maximum frequency for the scale.\nWhen mapping the scale\'s notes onto actual frequencies, notes from this scale will not be mapped above the provided frequency.').optional(),
+    'min frequency': frequency.description('A minimum frequency for the scale.\nWhen mapping the scale\'s notes onto actual frequencies, notes from this scale will not be mapped below the provided frequency.').optional(),
+    min: frequency.description('A minimum frequency for the scale.\nWhen mapping the scale\'s notes onto actual frequencies, notes from this scale will not be mapped below the provided frequency.').optional(),
+    spectrum: Joi.string().description('The spectrum of the tones that should be used for this tuning.\nThis enables multiple, scale-dependent spectra to be used within a single tuning system.').optional(),
   }).nand('repeat', 'repeat ratio')
     .nand('min', 'min frequency')
     .nand('max', 'max frequency')
-  ).min(1).required()
-}).or('name', 'id')).min(1).unique((a, b) => a.id === b.id).optional();
+    .unknown()
+  ).min(1).description('List of scale objects').required()
+}).or('name', 'id')
+  .unknown()
+).min(1)
+  .unique((a, b) => a.id === b.id)
+  .description('List of tuning system objects').optional();
 
 const partials = Joi.array().items(
   Joi.object().keys({
-    'frequency ratio': expression.optional(),
-    frequency: expression.optional(),
-    ratio: expression.optional(),
-    'amplitude weight': expression.optional(),
-    amplitude: expression.optional(),
-    weight: expression.optional(),
-  })
-    .xor('frequency ratio', 'ratio')
+    'frequency ratio': expression.description('The partial\'s frequency ratio').optional(),
+    ratio: expression.description('The partial\'s frequency ratio').optional(),
+    'amplitude weight': expression.description('The partial\'s amplitude weight.\nThis determines how much the partial contributes to the overall power (ie., loudness) of the reconstructed spectrum.').optional(),
+    weight: expression.description('The partial\'s amplitude weight.\nThis determines how much the partial contributes to the overall power (ie., loudness) of the reconstructed spectrum.').optional(),
+  }).xor('frequency ratio', 'ratio')
     .xor('amplitude weight', 'weight')
-).min(1);
+    .unknown()
+).min(1).description('A list of partials that should be used to reconstruct the spectrum');
 
 /**
  * Joi schema for validating TSON objects.
@@ -79,27 +84,34 @@ export const schema = Joi.object().keys({
   'tuning systems': tunings,
   tunings,
   spectra: Joi.array().items(Joi.object().keys({
-    name: Joi.string().optional(),
-    description: Joi.string().optional(),
-    id: Joi.string().optional(),
+    name: Joi.string().description('The spectrum\'s name').optional(),
+    description: Joi.string().description('A description of the spectrum').optional(),
+    id: Joi.string().description('A unique identifier for the spectrum').optional(),
     'partial distribution': partials.optional(),
     partials: partials.optional()
-  })
-    .or('name', 'id')
+  }).or('name', 'id')
     .xor('partials', 'partial distribution')
-  ).min(1).unique((a, b) => a.id === b.id).optional(),
+    .unknown()
+  ).min(1)
+    .unique((a, b) => a.id === b.id)
+    .description('A list of spectrum objects')
+    .optional(),
   sets: Joi.array().items(Joi.object().keys({
-    name: Joi.string().required(),
-    description: Joi.string().optional(),
+    name: Joi.string().description('The set\'s name').required(),
+    description: Joi.string().description('A description of the set').optional(),
     members: Joi.array().items(Joi.object().keys({
-      'tuning system': Joi.string().optional(),
-      tuning: Joi.string().optional(),
-      spectrum: Joi.string().optional(),
-      'override scale spectra': Joi.boolean().optional()
-    }).nand('tuning system', 'tuning')).min(1).required()
-  })).min(1).optional()
+      'tuning system': Joi.string().description('A reference of a tuning system\'s ID').optional(),
+      tuning: Joi.string().description('A reference of a tuning system\'s ID').optional(),
+      spectrum: Joi.string().description('A reference of a spectrum\'s ID').optional(),
+      'override scale spectra': Joi.boolean().description('If true, the set\'s spectrum should be applied to all scales in the set\'s tuning system, overriding any spectra that are references by the scales.').optional()
+    }).nand('tuning system', 'tuning').unknown())
+      .min(1)
+      .description('A list of set member objects')
+      .required()
+  }).unknown()).min(1).description('A list of set objects').optional()
 }).nand('tuning systems', 'tunings')
-  .or('tuning systems', 'tunings', 'spectra', 'sets');
+  .or('tuning systems', 'tunings', 'spectra', 'sets')
+  .unknown();
 
 export interface ValidationOptions {
   validateExpressions?: boolean,

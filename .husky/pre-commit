@@ -4,3 +4,6 @@
 if [ -f "package.json" ]; then
   yarn test && yarn lint-staged
 fi
+
+yarn ts-node -P tsconfig.scripts.json  ./scripts/build*
+git add schema/tson.json
