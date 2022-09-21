@@ -4,7 +4,7 @@ tunings:
   - name: alpha
     description: Alpha scale created by Wendy Carlos
     scales:
-      - reference: 200
-        repeat: 2^(77.965/1200)
+      - reference: 500
+        repeat: 2^(77.96499/1200)
         notes:
           - 1

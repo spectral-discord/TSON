@@ -12,7 +12,7 @@ export interface Note {
 
 interface Reference {
   frequency: string | number,
-  name: string
+  note: string
 }
 
 export interface Scale {

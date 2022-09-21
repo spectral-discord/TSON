@@ -1,0 +1,163 @@
+{
+    "$id": "https://raw.githubusercontent.com/spectral-discord/TSON/main/schema/tson.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "TSON Schema",
+    "type": "object",
+    "oneOf": [
+        {
+            "properties": {
+                "tunings": {
+                    "$ref": "#/definitions/tunings"
+                }
+            }
+        },
+        {
+            "properties": {
+                "tuning systems": {
+                    "$ref": "#/definitions/tunings"
+                }
+            }
+        }
+    ],
+    "properties": {
+
+    },
+    "additionalProperties": true,
+    "definitions": {
+        "expression": {
+            "oneOf": [
+                {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                },
+                {
+                    "type": "string",
+                    "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
+                }
+            ]
+        },
+        "frequency": {
+            "oneOf": [
+                {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                },
+                {
+                    "type": "string",
+                    "pattern": "^([.]\\d+|\\d+[.]?\\d*)( Hz)?$"
+                }
+            ]
+        },
+        "tunings": {
+            "type": "array",
+            "description": "List of tuning system objects",
+            "items": {
+                "type": "object",
+                "anyOf": [
+                    {
+                        "required": [
+                            "id",
+                            "scales"
+                        ]
+                    },
+                    {
+                        "required": [
+                            "name",
+                            "scales"
+                        ]
+                    }
+                ],
+                "properties": {
+                    "scales": {
+                        "type": "array",
+                        "description": "List of scale objects",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "notes",
+                                "reference"
+                            ],
+                            "properties": {
+                                "notes": {
+                                    "type": "array",
+                                    "description": "List of the scale's notes",
+                                    "items": {
+                                        "oneOf": [
+                                            {
+                                                "type": "object",
+                                                "oneOf": [
+                                                    {
+                                                        "properties": {
+                                                            "ratio": {
+                                                                "$ref": "#/definitions/expression",
+                                                                "description": "The note's frequency ratio"
+                                                            }
+                                                        }                                                    },
+                                                    {
+                                                        "properties": {
+                                                            "frequency ratio": {
+                                                                "$ref": "#/definitions/expression",
+                                                                "description": "The note's frequency ratio"
+                                                            }
+                                                        }                                                    }
+                                                ],
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string",
+                                                        "description": "The note's name"
+                                                    }
+                                                },
+                                                "additionalProperties": true
+                                            },
+                                            {
+                                                "$ref": "#/definitions/expression"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "reference": {
+                                    "description": "A reference frequency that is used to map the note's frequency ratios to real frequencies values (ie., in Hz).\nCan be either a number (optionally appended with ' Hz') or an object containing a frequency and an optional note that references one of the note names from the scale's notes list.\nIf no note name is provided, the reference frequency will be mapped to the frequency ratio '1'.",
+                                    "oneOf": [
+                                        {
+                                            "$ref": "#/definitions/frequency"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "required": [
+                                                "frequency"
+                                            ],
+                                            "properties": {
+                                                "frequency": {
+                                                    "description": "The reference frequency - a number, optionally with ' Hz' appended",
+                                                    "$ref": "#/definitions/frequency"
+                                                },
+                                                "note": {
+                                                    "description": "The name of the note that should be mapped onto the reference frequency"
+                                                }
+                                            },
+                                            "additionalProperties": true
+                                        }
+                                    ]
+                                }
+                            },
+                            "additionalProperties": true
+                        }
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "A description of the tuning system"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "The tuning system's name"
+                    },
+                    "id": {
+                        "type": "string",
+                        "description": "A unique identifier for the tuning system"
+                    }
+                },
+                "additionalProperties": true
+            }
+        }
+    }
+}
