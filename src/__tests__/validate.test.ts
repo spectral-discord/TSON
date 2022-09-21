@@ -71,20 +71,24 @@ describe('Validate TSON examples', () => {
   const dataDir = `${__dirname}/test-data`;
   const invalidFiles = readdirSync(`${dataDir}/invalid-tsons`);
   const invalid = invalidFiles.map(importTsonFile);
-  // const validFiles = readdirSync(`${dataDir}/valid-tsons`);
-  // const valid = validFiles.map(importTsonFile);
+  const validFiles = readdirSync(`${dataDir}/valid-tsons`);
+  const valid = validFiles.map(importTsonFile);
 
-  test.each(invalid)(
-    'Should throw when $testName',
-    ({ tson, validationOptions }) => {
-      expect(() => validate(tson, validationOptions)).toThrow();
-    }
-  );
+  if (invalid.length > 0) {
+    test.each(invalid)(
+      'Should throw when $testName',
+      ({ tson, validationOptions }) => {
+        expect(() => validate(tson, validationOptions)).toThrow();
+      }
+    );
+  }
 
-  // test.each(valid)(
-  //   'Should pass when $testName',
-  //   ({ tson, validationOptions }) => {
-  //     expect(validate(tson, validationOptions)).toBe(true);
-  //   }
-  // );
+  if (valid.length > 0) {
+    test.each(valid)(
+      'Should pass when $testName',
+      ({ tson, validationOptions }) => {
+        expect(validate(tson, validationOptions)).toBe(true);
+      }
+    );
+  }
 });
