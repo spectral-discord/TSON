@@ -1,6 +1,7 @@
 'use strict';
 
 import validate, { ValidationOptions } from './validate';
+import standardize, { StandardizationOptions } from './standardize';
 import YAML from 'yaml';
 
 export interface Note {
@@ -15,14 +16,14 @@ interface Reference {
 }
 
 export interface Scale {
-  notes: Note[] | string[] | number[],
+  notes: (Note | string | number)[],
   reference: Reference | string | number,
-  'repeat ratio': number,
-  repeat: number,
-  'max frequency': string | number,
-  max: string | number,
-  'min frequency': string | number,
-  min: string | number,
+  'repeat ratio'?: number,
+  repeat?: number,
+  'max frequency'?: string | number,
+  max?: string | number,
+  'min frequency'?: string | number,
+  min?: string | number,
   spectrum: string
 }
 
@@ -36,10 +37,8 @@ export interface Tuning {
 export interface Partial {
   'frequency ratio'?: string | number,
   ratio?: string | number,
-  frequency?: string | number,
-  'amplitude weight': string | number,
-  amplitude: string | number,
-  weight: string | number
+  'amplitude weight'?: string | number,
+  weight?: string | number
 }
 
 export interface Spectrum {
@@ -82,12 +81,12 @@ export class TSON implements TSON {
   spectra?: Spectrum[];
   sets?: Set[];
   validate?: (tson: TSON, options?: ValidationOptions) => boolean = validate;
-  // standardize: (tson: TSON, options?: StandardizationOptions) => boolean = standardize;
+  standardize?: (tson: TSON, options?: StandardizationOptions) => TSON = standardize;
 
   constructor(
     tson: string,
-    validationOptions?: ValidationOptions
-    // standardizationOptions?: StandardizationOptions
+    validationOptions?: ValidationOptions,
+    standardizationOptions?: StandardizationOptions
   ) {
     // Parse YAML to TSON object
     const parsed = YAML.parse(tson);
@@ -96,6 +95,7 @@ export class TSON implements TSON {
     validate(parsed, validationOptions);
 
     // Standardize
+    standardize(parsed, standardizationOptions);
 
     // Add buildTuning() to all Tuning objects
     // Add buildSpectrum() to all Spectrum objects

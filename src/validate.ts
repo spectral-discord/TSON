@@ -48,8 +48,7 @@ const tunings = Joi.array().items(Joi.object().keys({
     'min frequency': frequency.optional(),
     min: frequency.optional(),
     spectrum: Joi.string().optional(),
-  }).xor('reference', 'reference frequency')
-    .nand('repeat', 'repeat ratio')
+  }).nand('repeat', 'repeat ratio')
     .nand('min', 'min frequency')
     .nand('max', 'max frequency')
   ).min(1).required()
@@ -64,8 +63,8 @@ const partials = Joi.array().items(
     amplitude: expression.optional(),
     weight: expression.optional(),
   })
-    .xor('frequency ratio', 'frequency', 'ratio')
-    .xor('amplitude weight', 'amplitude', 'weight')
+    .xor('frequency ratio', 'ratio')
+    .xor('amplitude weight', 'weight')
 ).min(1);
 
 /**
@@ -193,18 +192,8 @@ export default function validate(
 
         if (partials) {
           for (const partial of partials) {
-            const frequency = partial.frequency
-              ? partial.frequency
-              : partial.ratio
-                ? partial.ratio
-                : partial['frequency ratio'];
-
-            const amplitude = partial.amplitude
-              ? partial.amplitude
-              : partial.weight
-                ? partial.weight
-                : partial['amplitude weight'];
-
+            const frequency = partial.ratio ? partial.ratio : partial['frequency ratio'];
+            const amplitude = partial.weight ? partial.weight : partial['amplitude weight'];
             if (typeof(frequency) === 'string') parse(frequency);
             if (typeof(amplitude) === 'string') parse(amplitude);
           }
