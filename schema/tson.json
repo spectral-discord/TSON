@@ -32,129 +32,28 @@
               "type": "object",
               "properties": {
                 "notes": {
-                  "oneOf": [
-                    {
-                      "oneOf": [
-                        {
-                          "type": "array",
-                          "description": "List of the scale's notes",
-                          "minItems": 1,
-                          "uniqueItems": true,
-                          "items": {
-                            "anyOf": [
-                              {
-                                "oneOf": [
-                                  {
-                                    "type": "string",
-                                    "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
-                                  },
-                                  {
-                                    "type": "number"
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "frequency ratio": {
-                                    "description": "The note's frequency ratio",
-                                    "oneOf": [
-                                      {
-                                        "type": "string",
-                                        "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
-                                      },
-                                      {
-                                        "type": "number"
-                                      }
-                                    ]
-                                  },
-                                  "ratio": {
-                                    "description": "The note's frequency ratio",
-                                    "oneOf": [
-                                      {
-                                        "type": "string",
-                                        "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
-                                      },
-                                      {
-                                        "type": "number"
-                                      }
-                                    ]
-                                  },
-                                  "name": {
-                                    "type": "string",
-                                    "description": "The note's name"
-                                  }
-                                },
-                                "additionalProperties": true
-                              }
-                            ]
-                          }
-                        },
-                        {
-                          "type": "array",
-                          "description": "List of the scale's notes",
-                          "minItems": 1,
-                          "uniqueItems": true,
-                          "items": {
-                            "anyOf": [
-                              {
-                                "oneOf": [
-                                  {
-                                    "type": "string",
-                                    "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
-                                  },
-                                  {
-                                    "type": "number"
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "frequency ratio": {
-                                    "description": "The note's frequency ratio",
-                                    "oneOf": [
-                                      {
-                                        "type": "string",
-                                        "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
-                                      },
-                                      {
-                                        "type": "number"
-                                      }
-                                    ]
-                                  },
-                                  "ratio": {
-                                    "description": "The note's frequency ratio",
-                                    "oneOf": [
-                                      {
-                                        "type": "string",
-                                        "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
-                                      },
-                                      {
-                                        "type": "number"
-                                      }
-                                    ]
-                                  },
-                                  "name": {
-                                    "type": "string",
-                                    "description": "The note's name"
-                                  }
-                                },
-                                "additionalProperties": true
-                              }
-                            ]
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "type": "array",
-                      "description": "List of the scale's notes",
-                      "minItems": 1,
-                      "uniqueItems": true,
-                      "items": {
-                        "anyOf": [
+                  "type": "array",
+                  "description": "List of the scale's notes",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "anyOf": [
+                      {
+                        "oneOf": [
                           {
+                            "type": "string",
+                            "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
+                          },
+                          {
+                            "type": "number"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "frequency ratio": {
+                            "description": "The note's frequency ratio",
                             "oneOf": [
                               {
                                 "type": "string",
@@ -165,44 +64,27 @@
                               }
                             ]
                           },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "frequency ratio": {
-                                "description": "The note's frequency ratio",
-                                "oneOf": [
-                                  {
-                                    "type": "string",
-                                    "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
-                                  },
-                                  {
-                                    "type": "number"
-                                  }
-                                ]
-                              },
-                              "ratio": {
-                                "description": "The note's frequency ratio",
-                                "oneOf": [
-                                  {
-                                    "type": "string",
-                                    "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
-                                  },
-                                  {
-                                    "type": "number"
-                                  }
-                                ]
-                              },
-                              "name": {
+                          "ratio": {
+                            "description": "The note's frequency ratio",
+                            "oneOf": [
+                              {
                                 "type": "string",
-                                "description": "The note's name"
+                                "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
+                              },
+                              {
+                                "type": "number"
                               }
-                            },
-                            "additionalProperties": true
+                            ]
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "The note's name"
                           }
-                        ]
+                        },
+                        "additionalProperties": true
                       }
-                    }
-                  ]
+                    ]
+                  }
                 },
                 "reference": {
                   "description": "A reference frequency that is used to map the note's frequency ratios to real frequencies values (ie., in Hz).\nCan be either a number (optionally appended with \" Hz\") or an object containing a frequency and an optional note that references one of the note names from the scale's notes list.\nIf no note name is provided, the reference frequency will be mapped to the frequency ratio \"1\".",
@@ -235,7 +117,16 @@
                         },
                         "note": {
                           "type": "string",
-                          "description": "The name of the note that should be mapped onto the reference frequency"
+                          "description": "The name of the note that should be mapped onto the reference frequency",
+                          "const": {
+                            "ref": {
+                              "path": [
+                                "notes"
+                              ],
+                              "ancestor": 2,
+                              "in": true
+                            }
+                          }
                         }
                       },
                       "required": [
@@ -364,129 +255,28 @@
               "type": "object",
               "properties": {
                 "notes": {
-                  "oneOf": [
-                    {
-                      "oneOf": [
-                        {
-                          "type": "array",
-                          "description": "List of the scale's notes",
-                          "minItems": 1,
-                          "uniqueItems": true,
-                          "items": {
-                            "anyOf": [
-                              {
-                                "oneOf": [
-                                  {
-                                    "type": "string",
-                                    "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
-                                  },
-                                  {
-                                    "type": "number"
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "frequency ratio": {
-                                    "description": "The note's frequency ratio",
-                                    "oneOf": [
-                                      {
-                                        "type": "string",
-                                        "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
-                                      },
-                                      {
-                                        "type": "number"
-                                      }
-                                    ]
-                                  },
-                                  "ratio": {
-                                    "description": "The note's frequency ratio",
-                                    "oneOf": [
-                                      {
-                                        "type": "string",
-                                        "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
-                                      },
-                                      {
-                                        "type": "number"
-                                      }
-                                    ]
-                                  },
-                                  "name": {
-                                    "type": "string",
-                                    "description": "The note's name"
-                                  }
-                                },
-                                "additionalProperties": true
-                              }
-                            ]
-                          }
-                        },
-                        {
-                          "type": "array",
-                          "description": "List of the scale's notes",
-                          "minItems": 1,
-                          "uniqueItems": true,
-                          "items": {
-                            "anyOf": [
-                              {
-                                "oneOf": [
-                                  {
-                                    "type": "string",
-                                    "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
-                                  },
-                                  {
-                                    "type": "number"
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "frequency ratio": {
-                                    "description": "The note's frequency ratio",
-                                    "oneOf": [
-                                      {
-                                        "type": "string",
-                                        "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
-                                      },
-                                      {
-                                        "type": "number"
-                                      }
-                                    ]
-                                  },
-                                  "ratio": {
-                                    "description": "The note's frequency ratio",
-                                    "oneOf": [
-                                      {
-                                        "type": "string",
-                                        "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
-                                      },
-                                      {
-                                        "type": "number"
-                                      }
-                                    ]
-                                  },
-                                  "name": {
-                                    "type": "string",
-                                    "description": "The note's name"
-                                  }
-                                },
-                                "additionalProperties": true
-                              }
-                            ]
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "type": "array",
-                      "description": "List of the scale's notes",
-                      "minItems": 1,
-                      "uniqueItems": true,
-                      "items": {
-                        "anyOf": [
+                  "type": "array",
+                  "description": "List of the scale's notes",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "anyOf": [
+                      {
+                        "oneOf": [
                           {
+                            "type": "string",
+                            "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
+                          },
+                          {
+                            "type": "number"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "frequency ratio": {
+                            "description": "The note's frequency ratio",
                             "oneOf": [
                               {
                                 "type": "string",
@@ -497,44 +287,27 @@
                               }
                             ]
                           },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "frequency ratio": {
-                                "description": "The note's frequency ratio",
-                                "oneOf": [
-                                  {
-                                    "type": "string",
-                                    "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
-                                  },
-                                  {
-                                    "type": "number"
-                                  }
-                                ]
-                              },
-                              "ratio": {
-                                "description": "The note's frequency ratio",
-                                "oneOf": [
-                                  {
-                                    "type": "string",
-                                    "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
-                                  },
-                                  {
-                                    "type": "number"
-                                  }
-                                ]
-                              },
-                              "name": {
+                          "ratio": {
+                            "description": "The note's frequency ratio",
+                            "oneOf": [
+                              {
                                 "type": "string",
-                                "description": "The note's name"
+                                "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
+                              },
+                              {
+                                "type": "number"
                               }
-                            },
-                            "additionalProperties": true
+                            ]
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "The note's name"
                           }
-                        ]
+                        },
+                        "additionalProperties": true
                       }
-                    }
-                  ]
+                    ]
+                  }
                 },
                 "reference": {
                   "description": "A reference frequency that is used to map the note's frequency ratios to real frequencies values (ie., in Hz).\nCan be either a number (optionally appended with \" Hz\") or an object containing a frequency and an optional note that references one of the note names from the scale's notes list.\nIf no note name is provided, the reference frequency will be mapped to the frequency ratio \"1\".",
@@ -567,7 +340,16 @@
                         },
                         "note": {
                           "type": "string",
-                          "description": "The name of the note that should be mapped onto the reference frequency"
+                          "description": "The name of the note that should be mapped onto the reference frequency",
+                          "const": {
+                            "ref": {
+                              "path": [
+                                "notes"
+                              ],
+                              "ancestor": 2,
+                              "in": true
+                            }
+                          }
                         }
                       },
                       "required": [
@@ -692,6 +474,7 @@
             "type": "array",
             "description": "A list of partials that should be used to reconstruct the spectrum",
             "minItems": 1,
+            "uniqueItems": true,
             "items": {
               "type": "object",
               "properties": {
@@ -751,6 +534,7 @@
             "type": "array",
             "description": "A list of partials that should be used to reconstruct the spectrum",
             "minItems": 1,
+            "uniqueItems": true,
             "items": {
               "type": "object",
               "properties": {

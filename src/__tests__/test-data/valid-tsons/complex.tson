@@ -1,15 +1,16 @@
 testName: the TSON is valid, yet complex
 
 tunings:
-  - scales:
+  - name: a tuning
+    scales:
       - notes:
-          - 1
+          - ratio: 1
           - ratio: 2^(2/12)
-            name: A note
+            name: plz
           - ratio: 2^(3/12)
           - ratio: 2
         reference:
           frequency: 234 Hz
-          note: A note
-        min: 300 Hz
+          note: plz
+        min: 800 Hz
         

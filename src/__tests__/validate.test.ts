@@ -43,6 +43,9 @@ describe('Validation function', () => {
       conditional: jest.fn().mockReturnThis(),
       boolean: jest.fn().mockReturnThis(),
       description: jest.fn().mockReturnThis(),
+      ref: jest.fn().mockReturnThis(),
+      valid: jest.fn().mockReturnThis(),
+      in: jest.fn().mockReturnThis(),
     }));
   });
 

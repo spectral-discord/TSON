@@ -22,28 +22,38 @@ const notes = Joi.array().items(
     name: Joi.string().description('The note\'s name').optional(),
   }).unknown().xor('frequency ratio', 'ratio')
 ).min(1)
-  .unique((a, b) => a.name === b.name)
+  .unique((a, b) =>
+    (a.name && b.name && a.name === b.name)
+    || (a.ratio && b.ratio && a.ratio === b.ratio)
+    || (a['frequency ratio'] && b['frequency ratio'] && a['frequency ratio'] === b['frequency ratio'])
+    || a === b || a === b.ratio || a === b['frequency ratio']
+    || a.ratio === b || a['frequency ratio'] === b
+    || (a.ratio && b['frequency ratio'] && a.ratio === b['frequency ratio'])
+    || (a['frequency ratio'] && b.ratio && a['frequency ratio'] === b.ratio)
+  )
   .description('List of the scale\'s notes');
+
+const noteNamesRef = Joi.ref('...notes', {
+  in: true,
+  adjust: (notes: any[]) => notes.reduce((previous: any[], current: any) => {
+    if (typeof(current) === 'object' && current.name) {
+      previous.push(current.name);
+    }
+    return previous;
+  }, []),
+});
 
 const tunings = Joi.array().items(Joi.object().keys({
   name: Joi.string().description('The tuning system\'s name').optional(),
   description: Joi.string().description('A description of the tuning system').optional(),
   id: Joi.string().description('A unique identifier for the tuning system').optional(),
   scales: Joi.array().items(Joi.object().keys({
-    notes: Joi.alternatives().conditional('reference', {
-      is: Joi.object().required(),
-      then: Joi.alternatives().conditional('reference.note', {
-        is: Joi.exist(),
-        then: notes.has(Joi.object({ name: Joi.link('....reference.note') }).unknown()) ,
-        otherwise: notes
-      }),
-      otherwise: notes
-    }).required(),
+    notes: notes.required(),
     reference: Joi.alternatives().try(
       frequency,
       Joi.object().keys({
         frequency: frequency.description('The reference frequency - a number, optionally with " Hz" appended').required(),
-        note: Joi.string().description('The name of the note that should be mapped onto the reference frequency').optional(),
+        note: Joi.string().valid(noteNamesRef).description('The name of the note that should be mapped onto the reference frequency').optional(),
       }).unknown(),
     ).description('A reference frequency that is used to map the note\'s frequency ratios to real frequencies values (ie., in Hz).\nCan be either a number (optionally appended with " Hz") or an object containing a frequency and an optional note that references one of the note names from the scale\'s notes list.\nIf no note name is provided, the reference frequency will be mapped to the frequency ratio "1".').required(),
     'repeat ratio': expression.description('The frequency ratio at which the scale\'s notes will repeat').optional(),
@@ -73,7 +83,13 @@ const partials = Joi.array().items(
   }).xor('frequency ratio', 'ratio')
     .xor('amplitude weight', 'weight')
     .unknown()
-).min(1).description('A list of partials that should be used to reconstruct the spectrum');
+).min(1)
+  .unique((a, b) =>
+    (a.ratio && b.ratio && a.ratio === b.ratio)
+    || (a['frequency ratio'] && b['frequency ratio'] && a['frequency ratio'] === b['frequency ratio'])
+    || (a.ratio && b['frequency ratio'] && a.ratio === b['frequency ratio'])
+    || (a['frequency ratio'] && b.ratio && a['frequency ratio'] === b.ratio)
+  ).description('A list of partials that should be used to reconstruct the spectrum');
 
 /**
  * Joi schema for validating TSON objects.
