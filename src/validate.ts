@@ -5,13 +5,13 @@ import * as Joi from 'joi';
 import { parse } from 'mathjs';
 
 const expression = Joi.alternatives().try(
-  Joi.string().regex(/([1234567890.+\-*/^%()e ]|(pi)|(tau)|(abs))+/),
+  Joi.string().regex(/^([1234567890.+\-*/^%()e ]|(pi)|(tau)|(abs))+$/),
   Joi.number().positive(),
 );
 
 const frequency = Joi.alternatives().try(
   Joi.number().positive(),
-  Joi.string().regex(/([.]\d+|\d+[.]?\d*)( Hz)?/)
+  Joi.string().regex(/^([.]\d+|\d+[.]?\d*)( Hz)?$/)
 );
 
 const notes = Joi.array().items(

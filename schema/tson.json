@@ -46,7 +46,7 @@
                                 "oneOf": [
                                   {
                                     "type": "string",
-                                    "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                                    "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                                   },
                                   {
                                     "type": "number"
@@ -61,7 +61,7 @@
                                     "oneOf": [
                                       {
                                         "type": "string",
-                                        "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                                        "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                                       },
                                       {
                                         "type": "number"
@@ -73,7 +73,7 @@
                                     "oneOf": [
                                       {
                                         "type": "string",
-                                        "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                                        "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                                       },
                                       {
                                         "type": "number"
@@ -101,7 +101,7 @@
                                 "oneOf": [
                                   {
                                     "type": "string",
-                                    "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                                    "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                                   },
                                   {
                                     "type": "number"
@@ -116,7 +116,7 @@
                                     "oneOf": [
                                       {
                                         "type": "string",
-                                        "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                                        "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                                       },
                                       {
                                         "type": "number"
@@ -128,7 +128,7 @@
                                     "oneOf": [
                                       {
                                         "type": "string",
-                                        "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                                        "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                                       },
                                       {
                                         "type": "number"
@@ -158,7 +158,7 @@
                             "oneOf": [
                               {
                                 "type": "string",
-                                "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                                "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                               },
                               {
                                 "type": "number"
@@ -173,7 +173,7 @@
                                 "oneOf": [
                                   {
                                     "type": "string",
-                                    "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                                    "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                                   },
                                   {
                                     "type": "number"
@@ -185,7 +185,7 @@
                                 "oneOf": [
                                   {
                                     "type": "string",
-                                    "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                                    "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                                   },
                                   {
                                     "type": "number"
@@ -214,7 +214,7 @@
                         },
                         {
                           "type": "string",
-                          "pattern": "([.]\\d+|\\d+[.]?\\d*)( Hz)?"
+                          "pattern": "^([.]\\d+|\\d+[.]?\\d*)( Hz)?$"
                         }
                       ]
                     },
@@ -229,7 +229,7 @@
                             },
                             {
                               "type": "string",
-                              "pattern": "([.]\\d+|\\d+[.]?\\d*)( Hz)?"
+                              "pattern": "^([.]\\d+|\\d+[.]?\\d*)( Hz)?$"
                             }
                           ]
                         },
@@ -250,7 +250,7 @@
                   "oneOf": [
                     {
                       "type": "string",
-                      "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                      "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                     },
                     {
                       "type": "number"
@@ -262,7 +262,7 @@
                   "oneOf": [
                     {
                       "type": "string",
-                      "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                      "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                     },
                     {
                       "type": "number"
@@ -277,7 +277,7 @@
                     },
                     {
                       "type": "string",
-                      "pattern": "([.]\\d+|\\d+[.]?\\d*)( Hz)?"
+                      "pattern": "^([.]\\d+|\\d+[.]?\\d*)( Hz)?$"
                     }
                   ]
                 },
@@ -289,7 +289,7 @@
                     },
                     {
                       "type": "string",
-                      "pattern": "([.]\\d+|\\d+[.]?\\d*)( Hz)?"
+                      "pattern": "^([.]\\d+|\\d+[.]?\\d*)( Hz)?$"
                     }
                   ]
                 },
@@ -301,7 +301,7 @@
                     },
                     {
                       "type": "string",
-                      "pattern": "([.]\\d+|\\d+[.]?\\d*)( Hz)?"
+                      "pattern": "^([.]\\d+|\\d+[.]?\\d*)( Hz)?$"
                     }
                   ]
                 },
@@ -313,7 +313,7 @@
                     },
                     {
                       "type": "string",
-                      "pattern": "([.]\\d+|\\d+[.]?\\d*)( Hz)?"
+                      "pattern": "^([.]\\d+|\\d+[.]?\\d*)( Hz)?$"
                     }
                   ]
                 },
@@ -378,7 +378,7 @@
                                 "oneOf": [
                                   {
                                     "type": "string",
-                                    "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                                    "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                                   },
                                   {
                                     "type": "number"
@@ -393,7 +393,7 @@
                                     "oneOf": [
                                       {
                                         "type": "string",
-                                        "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                                        "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                                       },
                                       {
                                         "type": "number"
@@ -405,7 +405,7 @@
                                     "oneOf": [
                                       {
                                         "type": "string",
-                                        "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                                        "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                                       },
                                       {
                                         "type": "number"
@@ -433,7 +433,7 @@
                                 "oneOf": [
                                   {
                                     "type": "string",
-                                    "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                                    "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                                   },
                                   {
                                     "type": "number"
@@ -448,7 +448,7 @@
                                     "oneOf": [
                                       {
                                         "type": "string",
-                                        "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                                        "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                                       },
                                       {
                                         "type": "number"
@@ -460,7 +460,7 @@
                                     "oneOf": [
                                       {
                                         "type": "string",
-                                        "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                                        "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                                       },
                                       {
                                         "type": "number"
@@ -490,7 +490,7 @@
                             "oneOf": [
                               {
                                 "type": "string",
-                                "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                                "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                               },
                               {
                                 "type": "number"
@@ -505,7 +505,7 @@
                                 "oneOf": [
                                   {
                                     "type": "string",
-                                    "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                                    "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                                   },
                                   {
                                     "type": "number"
@@ -517,7 +517,7 @@
                                 "oneOf": [
                                   {
                                     "type": "string",
-                                    "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                                    "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                                   },
                                   {
                                     "type": "number"
@@ -546,7 +546,7 @@
                         },
                         {
                           "type": "string",
-                          "pattern": "([.]\\d+|\\d+[.]?\\d*)( Hz)?"
+                          "pattern": "^([.]\\d+|\\d+[.]?\\d*)( Hz)?$"
                         }
                       ]
                     },
@@ -561,7 +561,7 @@
                             },
                             {
                               "type": "string",
-                              "pattern": "([.]\\d+|\\d+[.]?\\d*)( Hz)?"
+                              "pattern": "^([.]\\d+|\\d+[.]?\\d*)( Hz)?$"
                             }
                           ]
                         },
@@ -582,7 +582,7 @@
                   "oneOf": [
                     {
                       "type": "string",
-                      "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                      "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                     },
                     {
                       "type": "number"
@@ -594,7 +594,7 @@
                   "oneOf": [
                     {
                       "type": "string",
-                      "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                      "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                     },
                     {
                       "type": "number"
@@ -609,7 +609,7 @@
                     },
                     {
                       "type": "string",
-                      "pattern": "([.]\\d+|\\d+[.]?\\d*)( Hz)?"
+                      "pattern": "^([.]\\d+|\\d+[.]?\\d*)( Hz)?$"
                     }
                   ]
                 },
@@ -621,7 +621,7 @@
                     },
                     {
                       "type": "string",
-                      "pattern": "([.]\\d+|\\d+[.]?\\d*)( Hz)?"
+                      "pattern": "^([.]\\d+|\\d+[.]?\\d*)( Hz)?$"
                     }
                   ]
                 },
@@ -633,7 +633,7 @@
                     },
                     {
                       "type": "string",
-                      "pattern": "([.]\\d+|\\d+[.]?\\d*)( Hz)?"
+                      "pattern": "^([.]\\d+|\\d+[.]?\\d*)( Hz)?$"
                     }
                   ]
                 },
@@ -645,7 +645,7 @@
                     },
                     {
                       "type": "string",
-                      "pattern": "([.]\\d+|\\d+[.]?\\d*)( Hz)?"
+                      "pattern": "^([.]\\d+|\\d+[.]?\\d*)( Hz)?$"
                     }
                   ]
                 },
@@ -700,7 +700,7 @@
                   "oneOf": [
                     {
                       "type": "string",
-                      "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                      "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                     },
                     {
                       "type": "number"
@@ -712,7 +712,7 @@
                   "oneOf": [
                     {
                       "type": "string",
-                      "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                      "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                     },
                     {
                       "type": "number"
@@ -724,7 +724,7 @@
                   "oneOf": [
                     {
                       "type": "string",
-                      "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                      "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                     },
                     {
                       "type": "number"
@@ -736,7 +736,7 @@
                   "oneOf": [
                     {
                       "type": "string",
-                      "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                      "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                     },
                     {
                       "type": "number"
@@ -759,7 +759,7 @@
                   "oneOf": [
                     {
                       "type": "string",
-                      "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                      "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                     },
                     {
                       "type": "number"
@@ -771,7 +771,7 @@
                   "oneOf": [
                     {
                       "type": "string",
-                      "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                      "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                     },
                     {
                       "type": "number"
@@ -783,7 +783,7 @@
                   "oneOf": [
                     {
                       "type": "string",
-                      "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                      "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                     },
                     {
                       "type": "number"
@@ -795,7 +795,7 @@
                   "oneOf": [
                     {
                       "type": "string",
-                      "pattern": "([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+"
+                      "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
                     },
                     {
                       "type": "number"
