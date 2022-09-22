@@ -2,15 +2,48 @@ testName: the TSON is valid, yet complex
 
 tunings:
   - name: a tuning
+    id: something
     scales:
       - notes:
-          - ratio: 1
+          - 1
           - ratio: 2^(2/12)
-            name: plz
+            name: B
           - ratio: 2^(3/12)
           - ratio: 2
         reference:
-          frequency: 234 Hz
-          note: plz
+          frequency: 1234 Hz
+          note: B
         min: 800 Hz
-        
+        maximum frequency: 2400
+
+  - name: a different tuning
+    description: another tuning
+    scales:
+      - notes:
+          - frequency ratio: 1
+            name: A
+          - ratio: 2^(2/12)
+            name: Something else
+          - frequency ratio: 2^(6/12)
+          - 2
+        reference:
+          frequency: 234 Hz
+          note: Something else
+        minimum frequency: 80
+        max: 1200
+        repeat ratio: 2.6
+
+      - notes:
+          - 1
+          - 2
+          - 1.5
+        reference: 123
+        repeat: 2.5
+        min: 1500
+
+spectra:
+  - id: some spectrum
+    description: it's a spectrum
+    partials:
+      - frequency ratio: 3
+        weight: 0.2

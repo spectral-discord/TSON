@@ -71,7 +71,7 @@ const tunings = Joi.array().items(Joi.object().keys({
 }).or('name', 'id')
   .unknown()
 ).min(1)
-  .unique((a, b) => a.id === b.id)
+  .unique((a, b) => a.id && b.id && a.id === b.id)
   .description('List of tuning system objects').optional();
 
 const partials = Joi.array().items(
@@ -109,7 +109,7 @@ export const schema = Joi.object().keys({
     .xor('partials', 'partial distribution')
     .unknown()
   ).min(1)
-    .unique((a, b) => a.id === b.id)
+    .unique((a, b) => a.id && b.id && a.id === b.id)
     .description('A list of spectrum objects')
     .optional(),
   sets: Joi.array().items(Joi.object().keys({
@@ -203,11 +203,25 @@ export default function validate(
         for (const scale of tuning.scales) {
           for (const note of scale.notes) {
             if (typeof(note) === 'string') {
-              parse(note);
+              try {
+                parse(note);
+              } catch (ex) {
+                throw new Error(`
+                  Error parsing expression string: "${note}"
+                  Used for a note's frequency ratio in tuning: ${tuning.name ? tuning.name : tuning.id}
+                `);
+              }
             } else if (typeof(note) === 'object') {
               const ratio = note.ratio ? note.ratio : note['frequency ratio'];
               if (typeof(ratio) === 'string') {
-                parse(ratio);
+                try {
+                  parse(ratio);
+                } catch (ex) {
+                  throw new Error(`
+                    Error parsing expression string: "${ratio}"
+                    Used for a partial's frequency ratio in tuning: ${tuning.name ? tuning.name : tuning.id}
+                  `);
+                }
               }
             }
           }
@@ -225,8 +239,26 @@ export default function validate(
           for (const partial of partials) {
             const frequency = partial.ratio ? partial.ratio : partial['frequency ratio'];
             const amplitude = partial.weight ? partial.weight : partial['amplitude weight'];
-            if (typeof(frequency) === 'string') parse(frequency);
-            if (typeof(amplitude) === 'string') parse(amplitude);
+            if (typeof(frequency) === 'string') {
+              try {
+                parse(frequency);
+              } catch (ex) {
+                throw new Error(`
+                  Error parsing expression string: "${frequency}"
+                  Used for a partial's frequency ratio in spectrum: ${spectrum.name ? spectrum.name : spectrum.id}
+                `);
+              }
+            }
+            if (typeof(amplitude) === 'string') {
+              try {
+                parse(amplitude);
+              } catch (ex) {
+                throw new Error(`
+                  Error parsing expression string: "${amplitude}"
+                  Used for a partial's amplitude weight in spectrum: ${spectrum.name ? spectrum.name : spectrum.id}
+                `);
+              }
+            }
           }
         }
       }
