@@ -2,7 +2,6 @@ jest.deepUnmock('../validate');
 jest.deepUnmock('yaml');
 
 import validate from '../validate';
-import { TSON } from '../tson';
 import { readdirSync, readFileSync } from 'fs';
 import YAML from 'yaml';
 
@@ -50,9 +49,7 @@ describe('Validation function', () => {
   });
 
   test('Should call `assert`', () => {
-    const tson: TSON = {};
-
-    Validate(tson, { validateExpressions: false });
+    Validate({}, { validateExpressions: false });
 
     expect(assert).toBeCalledTimes(1);
   });

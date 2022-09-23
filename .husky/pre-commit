@@ -5,7 +5,7 @@ if [ -f "package.json" ]; then
   yarn test && yarn lint-staged
 fi
 
-if [ $(git diff --cached --name-only src/validate.ts) ]; then
-  yarn ts-node -P tsconfig.scripts.json ./scripts/build-json-schema.ts
-  git add schema/tson.json
-fi
+# if [ $(git diff --cached --name-only src/validate.ts) ]; then
+#   yarn ts-node -P tsconfig.scripts.json ./scripts/build-json-schema.ts
+#   git add schema/tson.json
+# fi
