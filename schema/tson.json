@@ -121,7 +121,7 @@
                           "const": {
                             "ref": {
                               "path": [
-                                "notes.name"
+                                "notes"
                               ],
                               "ancestor": 2,
                               "in": true
@@ -344,7 +344,7 @@
                           "const": {
                             "ref": {
                               "path": [
-                                "notes.name"
+                                "notes"
                               ],
                               "ancestor": 2,
                               "in": true

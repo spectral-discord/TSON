@@ -3,6 +3,7 @@
 import { TSON } from './tson';
 import * as Joi from 'joi';
 import { parse } from 'mathjs';
+import YAML from 'yaml';
 
 const expression = Joi.alternatives().try(
   Joi.string().regex(/^([1234567890.+\-*/^%()e ]|(pi)|(tau)|(abs))+$/),
@@ -139,8 +140,8 @@ export interface ValidationOptions {
  * TSON syntax validation
  */
 export default function validate(
-  tson: TSON,
-  options?: ValidationOptions
+  input: TSON | string,
+  options?: ValidationOptions,
 ): boolean {
   // Set defaults for undefined options
   options = Object.assign({
@@ -148,6 +149,9 @@ export default function validate(
     includedIdsOnly: false,
     allowUnknown: true
   }, options);
+
+  // Parse input if it's a YAML string
+  const tson: TSON = typeof(input) === 'string' ? YAML.parse(input) : input;
 
   // Validate TSON syntax & values
   Joi.assert(tson, schema, 'Invalid TSON!\n', {

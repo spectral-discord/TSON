@@ -24,7 +24,6 @@ export default function standardize(
     partialDistribution: 'partials',
   }
 ): TSON {
-  console.log(JSON.stringify(tson));
   return JSON.parse(JSON.stringify(tson)
     .replace(options.tuningSystems === 'tunings' ? /("tuning systems":)/g : /("tunings":)/g, `"${options.tuningSystems}":`)
     .replace(options.repeatRatio === 'repeat' ? /("repeat ratio":)/g : /("repeat":)/g, `"${options.repeatRatio}":`)

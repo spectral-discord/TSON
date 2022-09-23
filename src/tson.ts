@@ -80,24 +80,80 @@ export class TSON implements TSON {
   'tuning systems'?: Tuning[];
   spectra?: Spectrum[];
   sets?: Set[];
-  validate?: (tson: TSON, options?: ValidationOptions) => boolean = validate;
-  standardize?: (tson: TSON, options?: StandardizationOptions) => TSON = standardize;
+  private validationOptions?: ValidationOptions;
+  private standardizationOptions?: StandardizationOptions;
 
   constructor(
-    tson: string,
+    tson?: string | TSON,
     validationOptions?: ValidationOptions,
     standardizationOptions?: StandardizationOptions
   ) {
-    // Parse YAML to TSON object
-    const parsed = YAML.parse(tson);
 
-    // Validate TSON object
-    validate(parsed, validationOptions);
+    this.validationOptions = validationOptions;
+    this.standardizationOptions = standardizationOptions;
 
-    // Standardize
-    standardize(parsed, standardizationOptions);
+    if (tson) {
+      this.load(tson);
+    }
+  }
 
-    // Add buildTuning() to all Tuning objects
-    // Add buildSpectrum() to all Spectrum objects
+  load(input: string | TSON): void {
+    const tson: TSON = typeof(input) === 'string' ? YAML.parse(input) : input;
+
+    validate(tson, this.validationOptions);
+
+    const formatted = standardize(tson, this.standardizationOptions);
+
+    if (formatted.tunings) {
+      this.tunings = formatted.tunings.concat(this.tunings || []);
+    }
+
+    if (formatted['tuning systems']) {
+      this['tuning systems'] = formatted['tuning systems'].concat(this['tuning systems'] || []);
+    }
+
+    if (formatted.spectra) {
+      this.spectra = formatted.spectra.concat(this.spectra || []);
+    }
+
+    if (formatted.sets) {
+      this.sets = formatted.sets.concat(this.sets || []);
+    }
+  }
+
+  setStandardizationOptions(standardizationOptions: StandardizationOptions): void {
+    this.standardizationOptions = standardizationOptions;
+
+    const reformatted = standardize(this, this.standardizationOptions);
+
+    this.tunings = reformatted.tunings;
+    this['tuning systems'] = reformatted['tuning systems'];
+    this.spectra = reformatted.spectra;
+    this.sets = reformatted.sets;
+  }
+
+  setValidationOptions(validationOptions: ValidationOptions): void {
+    this.validationOptions = validationOptions;
+    validate(this, this.validationOptions);
+  }
+
+  findTuningById(id: string): Tuning | undefined {
+    if (this.tunings) {
+      return this.tunings.find(tuning => tuning.id === id);
+    }
+
+    if (this['tuning systems']) {
+      return this['tuning systems'].find(tuning => tuning.id === id);
+    }
+
+    return undefined;
+  }
+
+  findSpectrumById(id: string): Spectrum | undefined {
+    if (this.spectra) {
+      return this.spectra.find(spectrum => spectrum.id === id);
+    }
+
+    return undefined;
   }
 }
