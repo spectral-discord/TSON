@@ -29,7 +29,6 @@ export function toScala(scale: Scale, description?: string) {
     }
   }
 
-
   ratios = ratios.filter(ratio => ratio > 0);
   ratios.sort((a, b) => a - b);
   const preSub = ratios[0] - 1;
