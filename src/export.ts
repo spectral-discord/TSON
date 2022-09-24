@@ -5,7 +5,6 @@ import { Scale } from './tson';
 
 function ratioToCents(ratio: number): number {
   return round(1200 * Math.log2(ratio), 5);
-  //return `${cents}`.includes('.') ? `${cents}` : `${cents}.`;
 }
 
 export function toScala(scale: Scale, description?: string) {
@@ -22,6 +21,15 @@ export function toScala(scale: Scale, description?: string) {
     return 0;
   });
 
+  const repeat = scale.repeat || scale['repeat ratio'];
+  if (repeat) {
+    const ratio = typeof(repeat) === 'string' ? evaluate(repeat) : repeat;
+    if (ratio > ratios[ratios.length - 1]) {
+      ratios.push(ratio);
+    }
+  }
+
+
   ratios = ratios.filter(ratio => ratio > 0);
   ratios.sort((a, b) => a - b);
   const preSub = ratios[0] - 1;
@@ -29,21 +37,8 @@ export function toScala(scale: Scale, description?: string) {
   const sub = preSub < 0 ? 0 : ratios[0];
   ratios.shift();
 
-  const repeat = scale.repeat || scale['repeat ratio'];
-  if (repeat) {
-    const ratio = typeof(repeat) === 'string' ? evaluate(repeat) : repeat;
-    const cents = preSub < 0 ? ratioToCents(ratio - (preSub * ratio)) : ratioToCents(ratio);
-    if (cents > ratios[ratios.length - 1]) {
-      ratios.push(cents);
-    }
-  }
-
   let scl = `${description ? description : ''}\n${ratios.length}`;
-  ratios.forEach(ratio => {
-    const cents = ratio - sub;
-    const centsString = `${cents}`.includes('.') ? `${cents}` : `${cents}.`;
-    scl += `\n${centsString}`;
-  });
+  ratios.forEach(ratio => scl += `${ratio - sub}`.includes('.') ? `\n${ratio - sub}` : `\n${ratio - sub}.`);
 
   return scl;
 }
