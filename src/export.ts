@@ -1,16 +1,15 @@
 'use strict';
 
-import { evaluate } from 'mathjs';
+import { evaluate, round } from 'mathjs';
 import { Scale } from './tson';
 
 function ratioToCents(ratio: number): number {
-  return 1200 * Math.log2(ratio);
+  return round(1200 * Math.log2(ratio), 5);
+  //return `${cents}`.includes('.') ? `${cents}` : `${cents}.`;
 }
 
 export function toScala(scale: Scale, description?: string) {
-  let scl = `${description ? description : ''}\n${scale.notes.length}`;
-
-  let notes: number[] = scale.notes.map(note => {
+  let ratios: number[] = scale.notes.map(note => {
     if (typeof(note) === 'object') {
       const ratio = note['frequency ratio'] || note.ratio;
       if (ratio) {
@@ -23,19 +22,28 @@ export function toScala(scale: Scale, description?: string) {
     return 0;
   });
 
-  notes = notes.filter(note => note > 0);
-  notes.sort((a, b) => a - b);
-  const sub = notes[0] - 1;
-  notes.shift();
-  notes.forEach(note => scl += `\n${ratioToCents(note - sub)}`);
+  ratios = ratios.filter(ratio => ratio > 0);
+  ratios.sort((a, b) => a - b);
+  const preSub = ratios[0] - 1;
+  ratios = ratios.map(ratio => preSub < 0 ? ratioToCents(ratio - (preSub * ratio)) : ratioToCents(ratio));
+  const sub = preSub < 0 ? 0 : ratios[0];
+  ratios.shift();
 
   const repeat = scale.repeat || scale['repeat ratio'];
   if (repeat) {
     const ratio = typeof(repeat) === 'string' ? evaluate(repeat) : repeat;
-    if (ratio > notes[notes.length - 1]) {
-      scl += `\n${ratioToCents(ratio - sub)}`;
+    const cents = preSub < 0 ? ratioToCents(ratio - (preSub * ratio)) : ratioToCents(ratio);
+    if (cents > ratios[ratios.length - 1]) {
+      ratios.push(cents);
     }
   }
+
+  let scl = `${description ? description : ''}\n${ratios.length}`;
+  ratios.forEach(ratio => {
+    const cents = ratio - sub;
+    const centsString = `${cents}`.includes('.') ? `${cents}` : `${cents}.`;
+    scl += `\n${centsString}`;
+  });
 
   return scl;
 }
