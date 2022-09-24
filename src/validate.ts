@@ -205,6 +205,13 @@ export default function validate(
     if (tunings) {
       for (const tuning of tunings) {
         for (const scale of tuning.scales) {
+          const repeat = scale.repeat || scale['repeat ratio'];
+          if (repeat) {
+            if (typeof(repeat) === 'string') {
+              parse(repeat);
+            }
+          }
+
           for (const note of scale.notes) {
             if (typeof(note) === 'string') {
               try {
