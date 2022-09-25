@@ -2,7 +2,7 @@
 
 import { TSON } from './tson';
 import * as Joi from 'joi';
-import { parse } from 'mathjs';
+import { evaluate } from 'mathjs';
 import YAML from 'yaml';
 
 const expression = Joi.alternatives().try(
@@ -198,9 +198,7 @@ export default function validate(
 
   if (options.validateExpressions) {
     // Ensure that expressions can be evaluated
-    const tunings = tson.tunings
-      ? tson.tunings
-      : tson['tuning systems'];
+    const tunings = tson.tunings || tson['tuning systems'];
 
     if (tunings) {
       for (const tuning of tunings) {
@@ -208,29 +206,39 @@ export default function validate(
           const repeat = scale.repeat || scale['repeat ratio'];
           if (repeat) {
             if (typeof(repeat) === 'string') {
-              parse(repeat);
+              try {
+                if (evaluate(repeat) < 0) throw new Error();
+              } catch (ex) {
+                throw new Error(`
+                  Error parsing expression string: "${repeat}"
+                  Used for a repeat ratio in tuning: ${tuning.name || tuning.id}
+                  Frequency ratio expressions must evaluate to a positive number.
+                `);
+              }
             }
           }
 
           for (const note of scale.notes) {
             if (typeof(note) === 'string') {
               try {
-                parse(note);
+                if (evaluate(note) < 0) throw new Error();
               } catch (ex) {
                 throw new Error(`
                   Error parsing expression string: "${note}"
-                  Used for a note's frequency ratio in tuning: ${tuning.name ? tuning.name : tuning.id}
+                  Used for a note's frequency ratio in tuning: ${tuning.name || tuning.id}
+                  Frequency ratio expressions must evaluate to a positive number.
                 `);
               }
             } else if (typeof(note) === 'object') {
               const ratio = note.ratio ? note.ratio : note['frequency ratio'];
               if (typeof(ratio) === 'string') {
                 try {
-                  parse(ratio);
+                  if (evaluate(ratio) < 0) throw new Error();
                 } catch (ex) {
                   throw new Error(`
                     Error parsing expression string: "${ratio}"
-                    Used for a partial's frequency ratio in tuning: ${tuning.name ? tuning.name : tuning.id}
+                    Used for a partial's frequency ratio in tuning: ${tuning.name || tuning.id}
+                    Frequency ratio expressions must evaluate to a positive number.
                   `);
                 }
               }
@@ -252,21 +260,23 @@ export default function validate(
             const amplitude = partial.weight ? partial.weight : partial['amplitude weight'];
             if (typeof(frequency) === 'string') {
               try {
-                parse(frequency);
+                if (evaluate(frequency) < 0) throw new Error();
               } catch (ex) {
                 throw new Error(`
                   Error parsing expression string: "${frequency}"
-                  Used for a partial's frequency ratio in spectrum: ${spectrum.name ? spectrum.name : spectrum.id}
+                  Used for a partial's frequency ratio in spectrum: ${spectrum.name || spectrum.id}
+                  Frequency ratio expressions must evaluate to a positive number.
                 `);
               }
             }
             if (typeof(amplitude) === 'string') {
               try {
-                parse(amplitude);
+                if (evaluate(amplitude) < 0) throw new Error();
               } catch (ex) {
                 throw new Error(`
                   Error parsing expression string: "${amplitude}"
-                  Used for a partial's amplitude weight in spectrum: ${spectrum.name ? spectrum.name : spectrum.id}
+                  Used for a partial's amplitude weight in spectrum: ${spectrum.name || spectrum.id}
+                  Amplitude weight expressions must evaluate to a positive number.
                 `);
               }
             }
