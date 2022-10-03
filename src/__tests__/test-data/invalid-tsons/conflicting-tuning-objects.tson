@@ -17,9 +17,6 @@ tunings:
         max frequency: 2400
 
 tuning systems:
-  - scales:
-      - notes:
-        -
   - name: a different tuning
     description: another tuning
     scales:

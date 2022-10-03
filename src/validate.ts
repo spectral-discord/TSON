@@ -64,9 +64,9 @@ const tunings = Joi.array().items(Joi.object().keys({
     'min frequency': frequency.description('A minimum frequency for the scale.\nWhen mapping the scale\'s notes onto actual frequencies, notes from this scale will not be mapped below the provided frequency.').optional(),
     min: frequency.description('A minimum frequency for the scale.\nWhen mapping the scale\'s notes onto actual frequencies, notes from this scale will not be mapped below the provided frequency.').optional(),
     spectrum: Joi.string().description('The spectrum of the tones that should be used for this tuning.\nThis enables multiple, scale-dependent spectra to be used within a single tuning system.').optional(),
-  }).nand('repeat', 'repeat ratio')
-    .nand('min', 'min frequency')
-    .nand('max', 'max frequency')
+  }).oxor('repeat', 'repeat ratio')
+    .oxor('min', 'min frequency')
+    .oxor('max', 'max frequency')
     .unknown()
   ).min(1).description('List of scale objects').required()
 }).or('name', 'id')
@@ -121,12 +121,12 @@ export const schema = Joi.object().keys({
       tuning: Joi.string().description('A reference of a tuning system\'s ID').optional(),
       spectrum: Joi.string().description('A reference of a spectrum\'s ID').optional(),
       'override scale spectra': Joi.boolean().description('If true, the set\'s spectrum should be applied to all scales in the set\'s tuning system, overriding any spectra that are references by the scales.').optional()
-    }).nand('tuning system', 'tuning').unknown())
+    }).oxor('tuning system', 'tuning').unknown())
       .min(1)
       .description('A list of set member objects')
       .required()
   }).unknown()).min(1).description('A list of set objects').optional()
-}).nand('tuning systems', 'tunings')
+}).oxor('tuning systems', 'tunings')
   .or('tuning systems', 'tunings', 'spectra', 'sets')
   .unknown();
 

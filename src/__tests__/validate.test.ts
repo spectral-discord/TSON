@@ -33,6 +33,7 @@ describe('Validation function', () => {
       min: jest.fn().mockReturnThis(),
       or: jest.fn().mockReturnThis(),
       xor: jest.fn().mockReturnThis(),
+      oxor: jest.fn().mockReturnThis(),
       nand: jest.fn().mockReturnThis(),
       unique: jest.fn().mockReturnThis(),
       items: jest.fn().mockReturnThis(),

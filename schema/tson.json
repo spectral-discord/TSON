@@ -5,15 +5,8 @@
   "type": "object",
   "oneOf": [
     {
-      "required": ["tuning systems"],
       "not": {
-        "required": ["tunings"]
-      }
-    },
-    {
-      "required": ["tunings"],
-      "not": {
-        "required": ["tuning systems"]
+        "required": []
       }
     },
     {
