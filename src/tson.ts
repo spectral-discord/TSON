@@ -17,7 +17,7 @@ interface Reference {
 
 export interface Scale {
   notes: (Note | string | number)[],
-  reference?: Reference | string | number,
+  reference: Reference | string | number,
   'repeat ratio'?: number,
   repeat?: number,
   'max frequency'?: string | number,

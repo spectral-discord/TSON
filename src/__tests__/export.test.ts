@@ -4,6 +4,7 @@ import { toScala } from '../export';
 import { Scale } from '../tson';
 
 const twelveTet: Scale = {
+  reference: 300,
   repeat: 2,
   notes: [
     1,
@@ -22,6 +23,7 @@ const twelveTet: Scale = {
 };
 
 const twelveTetPlusHalf: Scale = {
+  reference: 300,
   repeat: 2,
   notes: [
     '2 - 2^(7/12)',
@@ -41,6 +43,7 @@ const twelveTetPlusHalf: Scale = {
 };
 
 const twelveTetWithoutRoot: Scale = {
+  reference: 300,
   repeat: 2,
   notes: [
     '2^(1/12)',

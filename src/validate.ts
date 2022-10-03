@@ -56,7 +56,7 @@ const tunings = Joi.array().items(Joi.object().keys({
         frequency: frequency.description('The reference frequency - a number, optionally with " Hz" appended').required(),
         note: Joi.string().valid(noteNamesRef).description('The name of the note that should be mapped onto the reference frequency').optional(),
       }).unknown(),
-    ).description('A reference frequency that is used to map the note\'s frequency ratios to real frequencies values (ie., in Hz).\nCan be either a number (optionally appended with " Hz") or an object containing a frequency and an optional note that references one of the note names from the scale\'s notes list.\nIf no note name is provided, the reference frequency will be mapped to the frequency ratio "1".').optional(),
+    ).description('A reference frequency that is used to map the note\'s frequency ratios to real frequencies values (ie., in Hz).\nCan be either a number (optionally appended with " Hz") or an object containing a frequency and an optional note that references one of the note names from the scale\'s notes list.\nIf no note name is provided, the reference frequency will be mapped to the frequency ratio "1".').required(),
     'repeat ratio': expression.description('The frequency ratio at which the scale\'s notes will repeat').optional(),
     repeat: expression.description('The frequency ratio at which the scale\'s notes will repeat').optional(),
     'max frequency': frequency.description('A maximum frequency for the scale.\nWhen mapping the scale\'s notes onto actual frequencies, notes from this scale will not be mapped above the provided frequency.').optional(),
