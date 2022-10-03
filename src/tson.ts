@@ -28,9 +28,9 @@ export interface Scale {
 }
 
 export interface Tuning {
+  id: string,
   name?: string,
   description?: string,
-  id?: string,
   scales: Scale[]
 }
 
@@ -42,9 +42,9 @@ export interface Partial {
 }
 
 export interface Spectrum {
+  id: string,
   name?: string,
   description?: string,
-  id?: string,
   partials?: Partial[],
   'partial distribution'?: Partial[]
 }
@@ -155,5 +155,21 @@ export class TSON implements TSON {
     }
 
     return undefined;
+  }
+
+  listTuningNames(): string[] {
+    return (this.tunings || this['tuning systems'])?.reduce<string[]>((acc, cur) => cur.name && !acc.includes(cur.name) ? acc.concat(cur.name) : acc, []) || [];
+  }
+
+  listTuningIds(): string[] {
+    return (this.tunings || this['tuning systems'])?.map(tuning => tuning.id) || [];
+  }
+
+  listSpectrumNames(): string[] {
+    return this.spectra?.reduce<string[]>((acc, cur) => cur.name && !acc.includes(cur.name) ? acc.concat(cur.name) : acc, []) || [];
+  }
+
+  listSpectrumIds(): string[] {
+    return this.spectra?.map(tuning => tuning.id) || [];
   }
 }

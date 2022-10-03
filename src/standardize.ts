@@ -24,12 +24,14 @@ export default function standardize(
     partialDistribution: 'partials',
   }
 ): TSON {
-  return JSON.parse(JSON.stringify(tson)
-    .replace(options.tuningSystems === 'tunings' ? /("tuning systems":)/g : /("tunings":)/g, `"${options.tuningSystems}":`)
-    .replace(options.repeatRatio === 'repeat' ? /("repeat ratio":)/g : /("repeat":)/g, `"${options.repeatRatio}":`)
-    .replace(options.minFrequency === 'min' ? /("min frequency":)/g : /("min":)/g, `"${options.minFrequency}":`)
-    .replace(options.maxFrequency === 'max' ? /("max frequency":)/g : /("max":)/g, `"${options.maxFrequency}":`)
-    .replace(options.frequencyRatio === 'ratio' ? /("frequency ratio":)/g : /("ratio":)/g, `"${options.frequencyRatio}":`)
-    .replace(options.amplitudeWeight === 'weight' ? /("amplitude weight":)/g : /("weight":)/g, `"${options.amplitudeWeight}":`)
-    .replace(options.partialDistribution === 'partials' ? /("partial distribution":)/g : /("partials":)/g, `"${options.partialDistribution}":`));
+  return JSON.parse(
+    JSON.stringify(tson)
+      .replace(options.tuningSystems === 'tunings' ? /("tuning systems":)/g : /("tunings":)/g, `"${options.tuningSystems}":`)
+      .replace(options.repeatRatio === 'repeat' ? /("repeat ratio":)/g : /("repeat":)/g, `"${options.repeatRatio}":`)
+      .replace(options.minFrequency === 'min' ? /("min frequency":)/g : /("min":)/g, `"${options.minFrequency}":`)
+      .replace(options.maxFrequency === 'max' ? /("max frequency":)/g : /("max":)/g, `"${options.maxFrequency}":`)
+      .replace(options.frequencyRatio === 'ratio' ? /("frequency ratio":)/g : /("ratio":)/g, `"${options.frequencyRatio}":`)
+      .replace(options.amplitudeWeight === 'weight' ? /("amplitude weight":)/g : /("weight":)/g, `"${options.amplitudeWeight}":`)
+      .replace(options.partialDistribution === 'partials' ? /("partial distribution":)/g : /("partials":)/g, `"${options.partialDistribution}":`)
+  );
 }
