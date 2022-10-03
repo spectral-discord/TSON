@@ -63,7 +63,7 @@ describe('Export to .scl', () => {
   });
 
   test('Should export 12tet without the root', () => {
-    expect(toScala(twelveTetWithoutRoot)).toBe('\n11\n100.\n200.\n300.\n400.\n500.\n600.\n700.\n800.\n900.\n1000.\n1100.');
+    expect(toScala(twelveTetWithoutRoot)).toBe('\n11\n100.\n200.\n300.\n400.\n500.\n600.\n700.\n800.\n900.\n1000.\n1200.');
   });
 
   test('Should export 12tet With an additional note at .5 ratio', () => {

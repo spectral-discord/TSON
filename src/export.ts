@@ -21,14 +21,6 @@ export function toScala(scale: Scale, description?: string) {
     return 0;
   });
 
-  const repeat = scale.repeat || scale['repeat ratio'];
-  if (repeat) {
-    const ratio = typeof(repeat) === 'string' ? evaluate(repeat) : repeat;
-    if (ratio > ratios[ratios.length - 1]) {
-      ratios.push(ratio);
-    }
-  }
-
   ratios = ratios.filter(ratio => ratio > 0);
   ratios.sort((a, b) => a - b);
   const preSub = ratios[0] - 1;
@@ -36,8 +28,20 @@ export function toScala(scale: Scale, description?: string) {
   const sub = preSub < 0 ? 0 : ratios[0];
   ratios.shift();
 
-  let scl = `${description ? description : ''}\n${ratios.length}`;
-  ratios.forEach(ratio => scl += `${ratio - sub}`.includes('.') ? `\n${ratio - sub}` : `\n${ratio - sub}.`);
+  const notesInCents = [];
+  ratios.forEach(ratio => {
+    const cents = ratio - sub;
+    notesInCents.push(`${cents}${`${cents}`.includes('.') ? '' : '.'}`);
+  });
 
-  return scl;
+  const repeat = scale.repeat || scale['repeat ratio'];
+  if (repeat) {
+    const ratio = typeof(repeat) === 'string' ? evaluate(repeat) : repeat;
+    const cents = preSub < 0 ? ratioToCents(ratio - (preSub * ratio)) : ratioToCents(ratio);
+    if (cents > ratios[ratios.length - 1]) {
+      notesInCents.push(`${cents}${`${cents}`.includes('.') ? '' : '.'}`);
+    }
+  }
+
+  return `${description || ''}\n${notesInCents.length}\n${notesInCents.join('\n')}`;
 }

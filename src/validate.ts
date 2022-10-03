@@ -12,7 +12,7 @@ const expression = Joi.alternatives().try(
 
 const frequency = Joi.alternatives().try(
   Joi.number().positive(),
-  Joi.string().regex(/^([.]\d+|\d+[.]?\d*)( Hz)?$/)
+  Joi.string().regex(/^(0*[1-9][0-9]*(\.[0-9]+)?|0+\.[0-9]*[1-9][0-9]*)( Hz)?$/)
 );
 
 const notes = Joi.array().items(
@@ -207,7 +207,7 @@ export default function validate(
           if (repeat) {
             if (typeof(repeat) === 'string') {
               try {
-                if (evaluate(repeat) < 0) throw new Error();
+                if (evaluate(repeat) <= 0) throw new Error();
               } catch (ex) {
                 throw new Error(`
                   Error parsing expression string: "${repeat}"
@@ -221,7 +221,7 @@ export default function validate(
           for (const note of scale.notes) {
             if (typeof(note) === 'string') {
               try {
-                if (evaluate(note) < 0) throw new Error();
+                if (evaluate(note) <= 0) throw new Error();
               } catch (ex) {
                 throw new Error(`
                   Error parsing expression string: "${note}"
@@ -233,7 +233,7 @@ export default function validate(
               const ratio = note.ratio ? note.ratio : note['frequency ratio'];
               if (typeof(ratio) === 'string') {
                 try {
-                  if (evaluate(ratio) < 0) throw new Error();
+                  if (evaluate(ratio) <= 0) throw new Error();
                 } catch (ex) {
                   throw new Error(`
                     Error parsing expression string: "${ratio}"
@@ -260,7 +260,7 @@ export default function validate(
             const amplitude = partial.weight ? partial.weight : partial['amplitude weight'];
             if (typeof(frequency) === 'string') {
               try {
-                if (evaluate(frequency) < 0) throw new Error();
+                if (evaluate(frequency) <= 0) throw new Error();
               } catch (ex) {
                 throw new Error(`
                   Error parsing expression string: "${frequency}"
@@ -271,7 +271,7 @@ export default function validate(
             }
             if (typeof(amplitude) === 'string') {
               try {
-                if (evaluate(amplitude) < 0) throw new Error();
+                if (evaluate(amplitude) <= 0) throw new Error();
               } catch (ex) {
                 throw new Error(`
                   Error parsing expression string: "${amplitude}"
