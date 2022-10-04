@@ -60,7 +60,7 @@ const twelveTetWithoutRoot: Scale = {
   ]
 };
 
-describe('Export to .scl', () => {
+describe('Scala export tests', () => {
   test('Should export 12tet', () => {
     expect(toScala(twelveTet, '12 TET')).toBe('12 TET\n12\n100.\n200.\n300.\n400.\n500.\n600.\n700.\n800.\n900.\n1000.\n1100.\n1200.');
   });

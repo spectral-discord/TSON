@@ -1,12 +1,11 @@
 jest.deepUnmock('../standardize');
 jest.deepUnmock('yaml');
-jest.deepUnmock('lodash');
 
 import standardize from '../standardize';
 import { writeFileSync, readFileSync } from 'fs';
 import YAML from 'yaml';
 
-describe('Standardize TSON examples', () => {
+describe('TSON standardization tests', () => {
   const dir = `${__dirname}/test-data/valid-tsons`;
   const importTsonFile = (file: string) => {
     return YAML.parse(readFileSync(`${dir}/${file}`).toString('utf8'));

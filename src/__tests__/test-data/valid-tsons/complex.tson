@@ -45,5 +45,13 @@ spectra:
   - id: some spectrum
     description: it's a spectrum
     partials:
-      - frequency ratio: 3
+      - frequency ratio: 1
+        weight: 1.2
+      - frequency ratio: 2
+        weight: 0.61
+      - frequency ratio: 2.7
+        weight: 0.81
+      - frequency ratio: 3.3
+        weight: 0.25
+      - frequency ratio: 4.5
         weight: 0.2

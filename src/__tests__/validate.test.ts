@@ -5,7 +5,7 @@ import validate from '../validate';
 import { readdirSync, readFileSync } from 'fs';
 import YAML from 'yaml';
 
-describe('Validation function', () => {
+describe('TSON validation tests', () => {
   let Validate: any;
   let assert: any;
   beforeEach(() => {

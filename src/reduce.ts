@@ -42,7 +42,7 @@ export default function reduce(
         }
 
         if (scale[maxPref]) {
-          scale[minPref] = parseFloat(String(scale[maxPref]));
+          scale[maxPref] = parseFloat(String(scale[maxPref]));
         }
 
         // Evaluate repeat ratio expressions

@@ -41,5 +41,13 @@ spectra:
   - id: some spectrum
     description: it's a spectrum
     partial distribution:
-      - frequency ratio: 3
+      - frequency ratio: 1
+        amplitude weight: 1.2
+      - frequency ratio: 2
+        amplitude weight: 0.61
+      - frequency ratio: 2.7
+        amplitude weight: 0.81
+      - frequency ratio: 3.3
+        amplitude weight: 0.25
+      - frequency ratio: 4.5
         amplitude weight: 0.2

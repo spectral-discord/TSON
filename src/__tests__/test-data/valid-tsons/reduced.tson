@@ -1,18 +1,18 @@
-testName: the TSON is valid and only uses short parameter names
+testName: the TSON is reduced
 tunings:
   - name: a tuning
     id: something
     scales:
       - notes:
           - 1
-          - ratio: 2^(2/12)
+          - ratio: 1.122462048309373
             name: B
-          - ratio: 2^(3/12)
+          - ratio: 1.189207115002721
           - ratio: 2
         reference:
-          frequency: 1234 Hz
+          frequency: 1234
           note: B
-        min: 800 Hz
+        min: 800
         max: 2400
   - name: a different tuning
     description: another tuning
@@ -20,12 +20,12 @@ tunings:
       - notes:
           - ratio: 1
             name: A
-          - ratio: 2^(2/12)
+          - ratio: 1.122462048309373
             name: Something else
-          - ratio: 2^(6/12)
+          - ratio: 1.4142135623730951
           - 2
         reference:
-          frequency: 234 Hz
+          frequency: 234
           note: Something else
         min: 80
         max: 1200
@@ -42,12 +42,12 @@ spectra:
     description: it's a spectrum
     partials:
       - ratio: 1
-        weight: 1.2
+        weight: 0.3908794788273615
       - ratio: 2
-        weight: 0.61
+        weight: 0.19869706840390877
       - ratio: 2.7
-        weight: 0.81
+        weight: 0.26384364820846906
       - ratio: 3.3
-        weight: 0.25
+        weight: 0.08143322475570032
       - ratio: 4.5
-        weight: 0.2
+        weight: 0.06514657980456026
