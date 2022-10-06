@@ -69,22 +69,18 @@ export interface TSON {
   tunings?: Tuning[],
   'tuning systems'?: Tuning[],
   spectra?: Spectrum[],
-  sets?: Set[],
+  sets?: Set[]
 }
 
 /**
  * TSON class
  */
 export class TSON implements TSON {
-  tunings?: Tuning[];
-  'tuning systems'?: Tuning[];
-  spectra?: Spectrum[];
-  sets?: Set[];
   private validationOptions?: ValidationOptions;
   private standardizationOptions?: StandardizationOptions;
 
   constructor(
-    tson?: string | TSON,
+    tson?: string | TSON | object,
     validationOptions?: ValidationOptions,
     standardizationOptions?: StandardizationOptions
   ) {
@@ -97,7 +93,7 @@ export class TSON implements TSON {
     }
   }
 
-  load(input: string | TSON): void {
+  load (input: string | TSON | object): void {
     const tson: TSON = typeof(input) === 'string' ? YAML.parse(input) : input;
 
     validate(tson, this.validationOptions);
