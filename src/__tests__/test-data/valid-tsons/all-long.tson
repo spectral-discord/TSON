@@ -34,7 +34,8 @@ tuning systems:
           - 1
           - 2
           - 1.5
-        reference: 123
+        reference: 
+          frequency: 123
         repeat ratio: 2.5
         min frequency: 1500
 spectra:

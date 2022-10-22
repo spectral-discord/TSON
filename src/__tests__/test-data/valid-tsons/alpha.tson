@@ -4,7 +4,8 @@ tunings:
   - name: alpha
     description: Alpha scale created by Wendy Carlos
     scales:
-      - reference: 500
+      - reference: 
+          frequency: 500
         repeat: 2^(77.96499/1200)
         notes:
           - 1

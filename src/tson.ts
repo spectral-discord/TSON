@@ -12,12 +12,12 @@ export interface Note {
 
 interface Reference {
   frequency: string | number,
-  note: string
+  note?: string
 }
 
 export interface Scale {
   notes: (Note | string | number)[],
-  reference: Reference | string | number,
+  reference: Reference,
   'repeat ratio'?: number,
   repeat?: number,
   'max frequency'?: string | number,

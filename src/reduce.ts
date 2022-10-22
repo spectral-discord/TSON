@@ -2,12 +2,88 @@ import { TSON } from './tson';
 import standardize, { StandardizationOptions } from './standardize';
 import { evaluate } from 'mathjs';
 
+interface Partial {
+  'frequency ratio'?: number,
+  ratio?: number,
+  'amplitude weight'?: number,
+  weight?: number
+}
+
+interface Spectrum {
+  id: string,
+  name?: string,
+  description?: string,
+  partials?: Partial[],
+  'partial distribution'?: Partial[]
+}
+
+interface Note {
+  'frequency ratio'?: number,
+  ratio?: number,
+  name?: string
+}
+
+interface Reference {
+  frequency: number,
+  note?: string
+}
+
+interface Scale {
+  notes: Note[],
+  reference: Reference,
+  'repeat ratio'?: number,
+  repeat?: number,
+  'max frequency'?: number,
+  maximum?: number,
+  max?: number,
+  'min frequency'?: number,
+  minimum?: number,
+  min?: number,
+  spectrum?: string
+}
+
+interface Tuning {
+  id: string,
+  name?: string,
+  description?: string,
+  scales: Scale[]
+}
+
+interface SetMember {
+  'tuning system': string,
+  tuning: string,
+  spectrum: string,
+  'override scale spectra': boolean
+}
+
+interface Set {
+  name: string,
+  description?: string,
+  members: SetMember[]
+}
+
+/**
+ *  Reduced TSON Type Interface
+ *
+ *  This type interface is basically the same as the regular TSON interface,
+ *  except that frequencies, ratios, and weights are only allowed to be strings,
+ *  and notes are always objects.
+ */
+interface ReducedTSON {
+  tunings?: Tuning[],
+  'tuning systems'?: Tuning[],
+  spectra?: Spectrum[],
+  sets?: Set[]
+}
+
 /**
  * Standardizes variable names, evaluates expressions, normalizes spectra amplitude weights, and removes 'Hz' from frequencies
  */
 export default function reduce(
   tson: TSON,
-  standardizationOptions: StandardizationOptions = {
+  standardizationOptions?: StandardizationOptions
+): ReducedTSON {
+  standardizationOptions = Object.assign({
     tuningSystems: 'tunings',
     repeatRatio: 'repeat',
     minFrequency: 'min',
@@ -15,9 +91,15 @@ export default function reduce(
     frequencyRatio: 'ratio',
     amplitudeWeight: 'weight',
     partialDistribution: 'partials',
-  }
-): TSON {
+  }, standardizationOptions);
+
   tson = standardize(tson, standardizationOptions);
+
+  const reduced: ReducedTSON = {};
+
+  if (tson.sets) {
+    reduced.sets = tson.sets;
+  }
 
   const tuningsPref = standardizationOptions.tuningSystems;
   const minPref = standardizationOptions.minFrequency;
@@ -28,21 +110,34 @@ export default function reduce(
   const partialsPref = standardizationOptions.partialDistribution;
 
   if (tson[tuningsPref]) {
-    tson[tuningsPref] = tson[tuningsPref]?.map(tuning => {
-      tuning.scales = tuning.scales.map(scale => {
+    reduced[tuningsPref] = [];
+    tson[tuningsPref]?.forEach(tuning => {
+      console.log(tuning);
+      const reducedTuning: Tuning = { ...tuning, scales: [] };
+      tuning.scales.forEach(scale => {
+        console.log(scale);
+        const reducedScale: Scale = {
+          notes: [],
+          reference: { frequency: 0 }
+        };
+
+        if (scale.spectrum) {
+          reducedScale.spectrum = scale.spectrum;
+        }
+
         // Remove 'Hz' from reference, min, & max
-        if (typeof(scale.reference) === 'object') {
-          scale.reference.frequency = parseFloat(String(scale.reference.frequency));
-        } else {
-          scale.reference = parseFloat(String(scale.reference));
+        reducedScale.reference.frequency = parseFloat(String(scale.reference.frequency));
+
+        if (scale.reference.note) {
+          reducedScale.reference.note = scale.reference.note;
         }
 
         if (scale[minPref]) {
-          scale[minPref] = parseFloat(String(scale[minPref]));
+          reducedScale[minPref] = parseFloat(String(scale[minPref]));
         }
 
         if (scale[maxPref]) {
-          scale[maxPref] = parseFloat(String(scale[maxPref]));
+          reducedScale[maxPref] = parseFloat(String(scale[maxPref]));
         }
 
         // Evaluate repeat ratio expressions
@@ -50,7 +145,7 @@ export default function reduce(
           try {
             const repeat = evaluate(String(scale[repeatPref]));
             if (repeat > 0) {
-              scale[repeatPref] = repeat;
+              reducedScale[repeatPref] = repeat;
             } else throw new Error();
           } catch (ex) {
             throw new Error(`
@@ -67,7 +162,14 @@ export default function reduce(
             try {
               const ratio = evaluate(String(note[ratioPref]));
               if (ratio > 0) {
-                note[ratioPref] = ratio;
+                const reducedNote: Note = {};
+                reducedNote[ratioPref] = ratio;
+
+                if (note.name) {
+                  reducedNote.name = note.name;
+                }
+
+                reducedScale.notes.push(reducedNote);
               } else throw new Error();
             } catch (ex) {
               throw new Error(`
@@ -76,13 +178,13 @@ export default function reduce(
                 Frequency ratio expressions must evaluate to a positive number.
               `);
             }
-
-            return note;
           } else {
             try {
               const ratio = evaluate(String(note));
               if (ratio > 0) {
-                return ratio;
+                const reducedNote: Note = {};
+                reducedNote[ratioPref] = ratio;
+                reducedScale.notes.push(reducedNote);
               } else throw new Error();
             } catch (ex) {
               throw new Error(`
@@ -94,25 +196,39 @@ export default function reduce(
           }
         });
 
-        return scale;
+        reducedTuning.scales.push(reducedScale);
       });
 
-      return tuning;
+      reduced[tuningsPref]?.push(reducedTuning);
     });
   }
 
   if (tson.spectra) {
-    tson.spectra = tson.spectra.map(spectrum =>  {
+    reduced.spectra = [];
+    tson.spectra.forEach(spectrum =>  {
+      const reducedSpectrum: Spectrum = { id: spectrum.id };
+      reducedSpectrum[partialsPref] = [];
+
+      if (spectrum.description) {
+        reducedSpectrum.description = spectrum.description;
+      }
+
+      if (spectrum.name) {
+        reducedSpectrum.name = spectrum.name;
+      }
+
       const totalWeight = spectrum[partialsPref]
         ?.map(partial => evaluate(String(partial[weightPref])))
         .reduce((a, b) => a + b, 0);
 
-      spectrum[partialsPref] = spectrum[partialsPref]?.map(partial => {
+      spectrum[partialsPref]?.forEach(partial => {
         // Evaluate frequency ratio expressions
+        const reducedPartial: Partial = {};
+
         try {
           const ratio = evaluate(String(partial[ratioPref]));
           if (ratio > 0) {
-            partial[ratioPref] = ratio;
+            reducedPartial[ratioPref] = ratio;
           } else throw new Error();
         } catch (ex) {
           throw new Error(`
@@ -126,7 +242,7 @@ export default function reduce(
         try {
           const weight = evaluate(String(partial[weightPref]));
           if (weight > 0) {
-            partial[weightPref] = weight / totalWeight;
+            reducedPartial[weightPref] = weight / totalWeight;
           } else throw new Error();
         } catch (ex) {
           throw new Error(`
@@ -136,12 +252,12 @@ export default function reduce(
           `);
         }
 
-        return partial;
+        reducedSpectrum[partialsPref]?.push(reducedPartial);
       });
 
-      return spectrum;
+      reduced.spectra?.push(reducedSpectrum);
     });
   }
 
-  return tson;
+  return reduced;
 }

@@ -2,7 +2,7 @@ jest.deepUnmock('../reduce');
 jest.deepUnmock('yaml');
 
 import reduce from '../reduce';
-import { writeFileSync, readFileSync } from 'fs';
+import { readFileSync } from 'fs';
 import YAML from 'yaml';
 
 describe('TSON reduction tests', () => {
@@ -11,13 +11,13 @@ describe('TSON reduction tests', () => {
     return YAML.parse(readFileSync(`${dir}/${file}`).toString('utf8'));
   };
 
-  test('Should reduce a TSON object', () => {
-    const tson = importTsonFile('complex.tson');
-    tson.testName = 'the TSON is reduced';
-    writeFileSync(`${dir}/reduced.tson`, YAML.stringify(reduce(tson)));
-  });
+  // test('Should reduce a TSON object', () => {
+  //   const tson = importTsonFile('complex.tson');
+  //   tson.testName = 'the TSON is reduced';
+  //   writeFileSync(`${dir}/reduced.tson`, YAML.stringify(reduce(tson)));
+  // });
 
-  test('Should standardize a TSON object with mixed keys to all-short', () => {
+  test('Should reduce a TSON object', () => {
     const complex = importTsonFile('complex.tson');
     const reduced = importTsonFile('reduced.tson');
     delete complex.testName;

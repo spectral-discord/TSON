@@ -14,7 +14,9 @@ export interface StandardizationOptions {
 
 export default function standardize(
   tson: TSON,
-  options: StandardizationOptions = {
+  options?: StandardizationOptions
+): TSON {
+  options = Object.assign({
     tuningSystems: 'tunings',
     repeatRatio: 'repeat',
     minFrequency: 'min',
@@ -22,8 +24,8 @@ export default function standardize(
     frequencyRatio: 'ratio',
     amplitudeWeight: 'weight',
     partialDistribution: 'partials',
-  }
-): TSON {
+  }, options);
+
   return JSON.parse(
     JSON.stringify(tson)
       .replace(options.tuningSystems === 'tunings' ? /("tuning systems":)/g : /("tunings":)/g, `"${options.tuningSystems}":`)

@@ -34,7 +34,8 @@ tunings:
           - 1
           - 2
           - 1.5
-        reference: 123
+        reference: 
+          frequency: 123
         repeat: 2.5
         min: 1500
 spectra:
