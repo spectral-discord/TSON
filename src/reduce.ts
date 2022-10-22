@@ -65,9 +65,9 @@ interface Set {
 /**
  *  Reduced TSON Type Interface
  *
- *  This type interface is basically the same as the regular TSON interface,
- *  except that frequencies, ratios, and weights are only allowed to be strings,
- *  and notes are always objects.
+ *  This type interface is basically the same as the regular
+ *  TSON interface, except that notes are always objects, and
+ *  frequencies, ratios, and weights are always numbers.
  */
 interface ReducedTSON {
   tunings?: Tuning[],
@@ -112,10 +112,8 @@ export default function reduce(
   if (tson[tuningsPref]) {
     reduced[tuningsPref] = [];
     tson[tuningsPref]?.forEach(tuning => {
-      console.log(tuning);
       const reducedTuning: Tuning = { ...tuning, scales: [] };
       tuning.scales.forEach(scale => {
-        console.log(scale);
         const reducedScale: Scale = {
           notes: [],
           reference: { frequency: 0 }
@@ -196,6 +194,7 @@ export default function reduce(
           }
         });
 
+        reducedScale.notes.sort((a, b) => (a[ratioPref] || 0) - (b[ratioPref] || 0));
         reducedTuning.scales.push(reducedScale);
       });
 
@@ -255,6 +254,7 @@ export default function reduce(
         reducedSpectrum[partialsPref]?.push(reducedPartial);
       });
 
+      reducedSpectrum[partialsPref]?.sort((a, b) => (a[ratioPref] || 0) - (b[ratioPref] || 0));
       reduced.spectra?.push(reducedSpectrum);
     });
   }
