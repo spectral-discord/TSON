@@ -21,8 +21,10 @@ export interface Scale {
   'repeat ratio'?: number,
   repeat?: number,
   'max frequency'?: string | number,
+  maximum?: string | number,
   max?: string | number,
   'min frequency'?: string | number,
+  minimum?: string | number,
   min?: string | number,
   spectrum?: string
 }

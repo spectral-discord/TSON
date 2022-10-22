@@ -61,12 +61,14 @@ const tunings = Joi.array().items(Joi.object().keys({
     repeat: expression.description('The frequency ratio at which the scale\'s notes will repeat').optional(),
     'max frequency': frequency.description('A maximum frequency for the scale.\nWhen mapping the scale\'s notes onto actual frequencies, notes from this scale will not be mapped above the provided frequency.').optional(),
     max: frequency.description('A maximum frequency for the scale.\nWhen mapping the scale\'s notes onto actual frequencies, notes from this scale will not be mapped above the provided frequency.').optional(),
+    maximum: frequency.description('A maximum frequency for the scale.\nWhen mapping the scale\'s notes onto actual frequencies, notes from this scale will not be mapped above the provided frequency.').optional(),
     'min frequency': frequency.description('A minimum frequency for the scale.\nWhen mapping the scale\'s notes onto actual frequencies, notes from this scale will not be mapped below the provided frequency.').optional(),
+    minimum: frequency.description('A minimum frequency for the scale.\nWhen mapping the scale\'s notes onto actual frequencies, notes from this scale will not be mapped below the provided frequency.').optional(),
     min: frequency.description('A minimum frequency for the scale.\nWhen mapping the scale\'s notes onto actual frequencies, notes from this scale will not be mapped below the provided frequency.').optional(),
     spectrum: Joi.string().description('The spectrum of the tones that should be used for this tuning.\nThis enables multiple, scale-dependent spectra to be used within a single tuning system.').optional(),
   }).oxor('repeat', 'repeat ratio')
-    .oxor('min', 'min frequency')
-    .oxor('max', 'max frequency')
+    .oxor('min', 'minimum', 'min frequency')
+    .oxor('max', 'maximum', 'max frequency')
     .unknown()
   ).min(1).description('List of scale objects').required()
 }).or('name', 'id')
