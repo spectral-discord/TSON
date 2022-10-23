@@ -1,10 +1,14 @@
-import { TSON, Tuning, Spectrum } from './tson';
-import reduce from './reduce';
+import { TSON, Tuning } from './tson';
+import reduce, { Spectrum } from './reduce';
+import { round } from 'mathjs';
 
 interface BuildTuningOptions {
   globalMin?: number,
   globalMax?: number,
-  forcedSpectrum?: Spectrum
+  forcedSpectrum?: Spectrum,
+  includeSpectra?: boolean,
+  allowConflicts?: boolean,
+  precision?: number
 }
 
 interface Note {
@@ -17,7 +21,13 @@ export default function buildTuning(
   tuning: Tuning,
   options?: BuildTuningOptions
 ): Note[] {
-  options = Object.assign({ globalMin: 10, globalMax: 24000 }, options);
+  options = Object.assign({
+    globalMin: 10,
+    globalMax: 24000,
+    allowConflicts: false,
+    includeSpectra: true,
+    precision: 7
+  }, options);
 
   const notes: Note[] = [];
   const tson = new TSON({ tunings: [ tuning ] });
@@ -28,6 +38,7 @@ export default function buildTuning(
   }
 
   reduced.scales.forEach(scale => {
+    // Determine whether to use the scale or global min/max settings
     const min = scale.min && options?.globalMin && scale.min > options?.globalMin
       ? scale.min
       : options?.globalMin;
@@ -35,6 +46,7 @@ export default function buildTuning(
       ? scale.max
       : options?.globalMax;
 
+    // Set the reference frequency, calculating the root's frequency for convenience
     let referenceFreq = scale.reference.frequency;
     if (scale.reference.note) {
       const referenceNote = scale.notes.find(note => note.name === scale.reference.note);
@@ -49,7 +61,8 @@ export default function buildTuning(
         && (min && note.ratio * referenceFreq > min)
         && (max && note.ratio * referenceFreq < max)
       ) {
-        const builtNote: Note = { frequency: note.ratio * referenceFreq };
+        const freq = note.ratio * referenceFreq;
+        const builtNote: Note = { frequency: round(freq, options?.precision) };
 
         if (note.name) {
           builtNote.name = note.name;
@@ -60,22 +73,103 @@ export default function buildTuning(
         //   builtNote.spectrum = options?.forcedSpectrum || scale.spectrum;
         // }
 
-        notes.push(builtNote);
+        if (
+          options?.allowConflicts
+          || !notes.find(note => note.frequency === builtNote.frequency)
+        ) {
+          notes.push(builtNote);
+        } else if (!options?.allowConflicts) {
+          const problemNotes = [
+            {
+              name: builtNote.name,
+              frequency: builtNote.frequency
+            },
+            {
+              name: notes.find(note => note.frequency === builtNote.frequency)?.name,
+              frequency: builtNote.frequency
+            }
+          ];
 
-        // if (scale.repeat) {
-        //   const nextHigherRepeat = scale.repeat;
-        //   const nextLowerRepeat = 1 / scale.repeat;
+          throw new Error(`
+            Conflicting note frequencies were found.
+            To allow multiple notes with the same frequency, set 'allowConflicts' to true.
+            Problem notes:
+            ${JSON.stringify(problemNotes)}
+          `);
+        }
 
-        //   while (min && note.ratio * referenceFreq > min) {
+        if (scale.repeat) {
+          // Add notes for scale iterations descending in frequency
+          let lastFreq = freq;
+          while (min && lastFreq / scale.repeat > min) {
+            lastFreq /= scale.repeat;
 
-        //   }
-        // }
+            if (
+              options?.allowConflicts
+              || !notes.find(note => note.frequency === lastFreq)
+            ) {
+              notes.push({
+                ...builtNote,
+                frequency: round(lastFreq, options?.precision)
+              });
+            } else if (!options?.allowConflicts) {
+              const problemNotes = [
+                {
+                  name: builtNote.name,
+                  frequency: lastFreq
+                },
+                {
+                  name: notes.find(note => note.frequency === lastFreq)?.name,
+                  frequency: lastFreq
+                }
+              ];
+
+              throw new Error(`
+                Conflicting note frequencies were found.
+                To allow multiple notes with the same frequency, set 'allowConflicts' to true.
+                Problem notes:
+                ${JSON.stringify(problemNotes)}
+              `);
+            }
+          }
+
+          // Add notes for scale iterations ascending in frequency
+          lastFreq = freq;
+          while (max && lastFreq * scale.repeat < max) {
+            lastFreq *= scale.repeat;
+
+            if (
+              options?.allowConflicts
+              || !notes.find(note => note.frequency === lastFreq)
+            ) {
+              notes.push({
+                ...builtNote,
+                frequency: round(lastFreq, options?.precision)
+              });
+            } else if (!options?.allowConflicts) {
+              const problemNotes = [
+                {
+                  name: builtNote.name,
+                  frequency: lastFreq
+                },
+                {
+                  name: notes.find(note => note.frequency === lastFreq)?.name,
+                  frequency: lastFreq
+                }
+              ];
+
+              throw new Error(`
+                Conflicting note frequencies were found.
+                To allow multiple notes with the same frequency, set 'allowConflicts' to true.
+                Problem notes:
+                ${JSON.stringify(problemNotes)}
+              `);
+            }
+          }
+        }
       }
     });
   });
 
-  console.log(reduced);
-  console.log(options);
-
-  return notes;
+  return notes.sort((a, b) => a.frequency - b.frequency);
 }

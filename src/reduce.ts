@@ -9,7 +9,7 @@ interface Partial {
   weight?: number
 }
 
-interface Spectrum {
+export interface Spectrum {
   id: string,
   name?: string,
   description?: string,

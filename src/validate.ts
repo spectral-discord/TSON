@@ -23,16 +23,33 @@ const notes = Joi.array().items(
     name: Joi.string().description('The note\'s name').optional(),
   }).unknown().xor('frequency ratio', 'ratio')
 ).min(1)
-  .unique((a, b) =>
-    (a.name && b.name && a.name === b.name)
-    || (a.ratio && b.ratio && a.ratio === b.ratio)
-    || (a['frequency ratio'] && b['frequency ratio'] && a['frequency ratio'] === b['frequency ratio'])
-    || a === b || a === b.ratio || a === b['frequency ratio']
-    || a.ratio === b || a['frequency ratio'] === b
-    || (a.ratio && b['frequency ratio'] && a.ratio === b['frequency ratio'])
-    || (a['frequency ratio'] && b.ratio && a['frequency ratio'] === b.ratio)
-  )
-  .description('List of the scale\'s notes');
+  .unique((a, b) => {
+    let aFreq;
+    let bFreq;
+
+    try {
+      if (typeof(b) === 'object') {
+        bFreq = evaluate(String(b['frequency ratio'] || b.ratio));
+      } else {
+        bFreq = evaluate(String(b));
+      }
+    } catch (ex) {
+      throw new Error(`Error parsing expression string: "${(b.ratio || b['frequency ratio'])}"`);
+    }
+
+    try {
+      if (typeof(a) === 'object') {
+        aFreq = evaluate(String(a['frequency ratio'] || a.ratio));
+      } else {
+        aFreq = evaluate(String(a));
+      }
+    } catch (ex) {
+      throw new Error(`Error parsing expression string: "${(a.ratio || a['frequency ratio'])}"`);
+    }
+
+    return aFreq === bFreq;
+  })
+  .description('A list of the scale\'s notes');
 
 const noteNamesRef = Joi.ref('...notes', {
   in: true,
@@ -84,12 +101,25 @@ const partials = Joi.array().items(
     .xor('amplitude weight', 'weight')
     .unknown()
 ).min(1)
-  .unique((a, b) =>
-    (a.ratio && b.ratio && a.ratio === b.ratio)
-    || (a['frequency ratio'] && b['frequency ratio'] && a['frequency ratio'] === b['frequency ratio'])
-    || (a.ratio && b['frequency ratio'] && a.ratio === b['frequency ratio'])
-    || (a['frequency ratio'] && b.ratio && a['frequency ratio'] === b.ratio)
-  ).description('A list of partials that should be used to reconstruct the spectrum');
+  .unique((a, b) => {
+    let aRatio;
+    let bRatio;
+
+    try {
+      aRatio = evaluate(String(a.ratio || a['frequency ratio']));
+    } catch (ex) {
+      throw new Error(`Error parsing expression string: "${(a.ratio || a['frequency ratio'])}"`);
+    }
+
+    try {
+      bRatio = evaluate(String(b.ratio || b['frequency ratio']));
+    } catch (ex) {
+      throw new Error(`Error parsing expression string: "${(a.ratio || a['frequency ratio'])}"`);
+    }
+
+    return aRatio === bRatio;
+  })
+  .description('A list of partials that should be used to reconstruct the spectrum');
 
 /**
  * Joi schema for validating TSON objects.
@@ -130,7 +160,6 @@ export const schema = Joi.object().keys({
   .unknown();
 
 export interface ValidationOptions {
-  validateExpressions?: boolean,
   includedIdsOnly?: boolean,
   allowUnknown?: boolean
 }
@@ -144,8 +173,7 @@ export default function validate(
 ): boolean {
   // Set defaults for undefined options
   options = Object.assign({
-    validateExpressions: true,
-    includedIdsOnly: false,
+    includedIdsOnly: true,
     allowUnknown: true
   }, options);
 
@@ -195,89 +223,87 @@ export default function validate(
     }
   }
 
-  if (options.validateExpressions) {
-    // Ensure that expressions can be evaluated
-    const tunings = tson.tunings || tson['tuning systems'];
+  // Ensure that expressions can be evaluated
+  const tunings = tson.tunings || tson['tuning systems'];
 
-    if (tunings) {
-      for (const tuning of tunings) {
-        for (const scale of tuning.scales) {
-          const repeat = scale.repeat || scale['repeat ratio'];
-          if (repeat) {
-            if (typeof(repeat) === 'string') {
-              try {
-                if (evaluate(repeat) <= 0) throw new Error();
-              } catch (ex) {
-                throw new Error(`
-                  Error parsing expression string: "${repeat}"
-                  Used for a repeat ratio in tuning: ${tuning.name || tuning.id}
-                  Frequency ratio expressions must evaluate to a positive number.
-                `);
-              }
+  if (tunings) {
+    for (const tuning of tunings) {
+      for (const scale of tuning.scales) {
+        const repeat = scale.repeat || scale['repeat ratio'];
+        if (repeat) {
+          if (typeof(repeat) === 'string') {
+            try {
+              if (evaluate(repeat) <= 0) throw new Error();
+            } catch (ex) {
+              throw new Error(`
+                Error parsing expression string: "${repeat}"
+                Used for a repeat ratio in tuning: ${tuning.name || tuning.id}
+                Frequency ratio expressions must evaluate to a positive number.
+              `);
             }
           }
+        }
 
-          for (const note of scale.notes) {
-            if (typeof(note) === 'string') {
+        for (const note of scale.notes) {
+          if (typeof(note) === 'string') {
+            try {
+              if (evaluate(note) <= 0) throw new Error();
+            } catch (ex) {
+              throw new Error(`
+                Error parsing expression string: "${note}"
+                Used for a note's frequency ratio in tuning: ${tuning.name || tuning.id}
+                Frequency ratio expressions must evaluate to a positive number.
+              `);
+            }
+          } else if (typeof(note) === 'object') {
+            const ratio = note.ratio ? note.ratio : note['frequency ratio'];
+            if (typeof(ratio) === 'string') {
               try {
-                if (evaluate(note) <= 0) throw new Error();
+                if (evaluate(ratio) <= 0) throw new Error();
               } catch (ex) {
                 throw new Error(`
-                  Error parsing expression string: "${note}"
-                  Used for a note's frequency ratio in tuning: ${tuning.name || tuning.id}
+                  Error parsing expression string: "${ratio}"
+                  Used for a partial's frequency ratio in tuning: ${tuning.name || tuning.id}
                   Frequency ratio expressions must evaluate to a positive number.
                 `);
-              }
-            } else if (typeof(note) === 'object') {
-              const ratio = note.ratio ? note.ratio : note['frequency ratio'];
-              if (typeof(ratio) === 'string') {
-                try {
-                  if (evaluate(ratio) <= 0) throw new Error();
-                } catch (ex) {
-                  throw new Error(`
-                    Error parsing expression string: "${ratio}"
-                    Used for a partial's frequency ratio in tuning: ${tuning.name || tuning.id}
-                    Frequency ratio expressions must evaluate to a positive number.
-                  `);
-                }
               }
             }
           }
         }
       }
     }
+  }
 
-    if (tson.spectra) {
-      for (const spectrum of tson.spectra) {
-        const partials = spectrum.partials
-          ? spectrum.partials
-          : spectrum['partial distribution'];
+  if (tson.spectra) {
+    for (const spectrum of tson.spectra) {
+      const partials = spectrum.partials
+        ? spectrum.partials
+        : spectrum['partial distribution'];
 
-        if (partials) {
-          for (const partial of partials) {
-            const frequency = partial.ratio ? partial.ratio : partial['frequency ratio'];
-            const amplitude = partial.weight ? partial.weight : partial['amplitude weight'];
-            if (typeof(frequency) === 'string') {
-              try {
-                if (evaluate(frequency) <= 0) throw new Error();
-              } catch (ex) {
-                throw new Error(`
-                  Error parsing expression string: "${frequency}"
-                  Used for a partial's frequency ratio in spectrum: ${spectrum.name || spectrum.id}
-                  Frequency ratio expressions must evaluate to a positive number.
-                `);
-              }
+      if (partials) {
+        for (const partial of partials) {
+          const frequency = partial.ratio ? partial.ratio : partial['frequency ratio'];
+          const amplitude = partial.weight ? partial.weight : partial['amplitude weight'];
+          if (typeof(frequency) === 'string') {
+            try {
+              if (evaluate(frequency) <= 0) throw new Error();
+            } catch (ex) {
+              throw new Error(`
+                Error parsing expression string: "${frequency}"
+                Used for a partial's frequency ratio in spectrum: ${spectrum.name || spectrum.id}
+                Frequency ratio expressions must evaluate to a positive number.
+              `);
             }
-            if (typeof(amplitude) === 'string') {
-              try {
-                if (evaluate(amplitude) <= 0) throw new Error();
-              } catch (ex) {
-                throw new Error(`
-                  Error parsing expression string: "${amplitude}"
-                  Used for a partial's amplitude weight in spectrum: ${spectrum.name || spectrum.id}
-                  Amplitude weight expressions must evaluate to a positive number.
-                `);
-              }
+          }
+          if (typeof(amplitude) === 'string') {
+            try {
+              if (evaluate(amplitude) <= 0) throw new Error();
+            } catch (ex) {
+              throw new Error(`
+                Error parsing expression string: "${amplitude}"
+                Used for a partial's amplitude weight in spectrum: ${spectrum.name || spectrum.id}
+                Amplitude weight expressions must evaluate to a positive number.
+              `);
             }
           }
         }

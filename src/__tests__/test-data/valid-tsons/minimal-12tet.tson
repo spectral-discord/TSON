@@ -1,0 +1,10 @@
+testName: a minimal, 12tet tuning exists
+
+tunings:
+  - name: Minimal 12-tet
+    scales:
+      - reference: 
+          frequency: 440
+        repeat: 2^(1/12)
+        notes:
+          - 1
