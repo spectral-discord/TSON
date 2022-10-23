@@ -16,6 +16,7 @@ export default function standardize(
   tson: TSON,
   options?: StandardizationOptions
 ): TSON {
+  // TODO: Add validations for options everywhere
   options = Object.assign({
     tuningSystems: 'tunings',
     repeatRatio: 'repeat',

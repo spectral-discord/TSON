@@ -20,10 +20,10 @@ describe('TSON standardization tests', () => {
   // });
 
   test('Should build a 12-tet tuning from a fully-described 12tet TSON', () => {
-    const tuning = importTsonFile('full-12tet.tson').tunings[0];
+    const tson = importTsonFile('full-12tet.tson');
     const validBuilt = readFileSync(`${dataDir}/built-12tet.json`).toString('utf8');
 
-    const built = buildTuning(tuning);
+    const built = buildTuning(tson.tunings[0], tson.spectra);
     expect(JSON.stringify(built)).toBe(validBuilt);
   });
 });

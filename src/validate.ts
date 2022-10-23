@@ -191,6 +191,7 @@ export default function validate(
     const tuningIds: string[] = [];
     const spectrumIds: string[] = [];
 
+    // TODO: Make IDs required in validations
     if (tson.spectra) {
       for (const spectrum of tson.spectra) {
         if (spectrum.id) spectrumIds.push(spectrum.id);

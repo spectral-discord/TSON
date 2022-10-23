@@ -1,3 +1,17 @@
+spectra:
+  - id: some spectrum
+    partials:
+      - ratio: 1
+        weight: 0.3908794788273615
+      - ratio: 2
+        weight: 0.19869706840390877
+      - ratio: 2.7
+        weight: 0.26384364820846906
+      - ratio: 3.3
+        weight: 0.08143322475570032
+      - ratio: 4.5
+        weight: 0.06514657980456026
+    description: it's a spectrum
 tunings:
   - name: a tuning
     id: something
@@ -37,17 +51,3 @@ tunings:
           frequency: 123
         min: 1500
         repeat: 2.5
-spectra:
-  - id: some spectrum
-    partials:
-      - ratio: 1
-        weight: 0.3908794788273615
-      - ratio: 2
-        weight: 0.19869706840390877
-      - ratio: 2.7
-        weight: 0.26384364820846906
-      - ratio: 3.3
-        weight: 0.08143322475570032
-      - ratio: 4.5
-        weight: 0.06514657980456026
-    description: it's a spectrum

@@ -1,11 +1,11 @@
-import { TSON, Tuning } from './tson';
-import reduce, { Spectrum } from './reduce';
+import { TSON, Tuning, Spectrum } from './tson';
+import reduce, { ReducedSpectrum } from './reduce';
 import { round } from 'mathjs';
 
 interface BuildTuningOptions {
   globalMin?: number,
   globalMax?: number,
-  forcedSpectrum?: Spectrum,
+  forcedSpectrum?: ReducedSpectrum,
   includeSpectra?: boolean,
   allowConflicts?: boolean,
   precision?: number
@@ -14,11 +14,12 @@ interface BuildTuningOptions {
 interface Note {
   frequency: number,
   name?: string,
-  spectrum?: Spectrum
+  spectrum?: ReducedSpectrum
 }
 
 export default function buildTuning(
   tuning: Tuning,
+  spectra?: Spectrum[],
   options?: BuildTuningOptions
 ): Note[] {
   options = Object.assign({
@@ -30,7 +31,10 @@ export default function buildTuning(
   }, options);
 
   const notes: Note[] = [];
-  const tson = new TSON({ tunings: [ tuning ] });
+  const tson = new TSON({
+    tunings: [ tuning ],
+    ...(spectra && { spectra })
+  });
   const reduced = reduce(tson).tunings?.[0];
 
   if (!reduced) {
@@ -62,16 +66,14 @@ export default function buildTuning(
         && (max && note.ratio * referenceFreq < max)
       ) {
         const freq = note.ratio * referenceFreq;
-        const builtNote: Note = { frequency: round(freq, options?.precision) };
+        const builtNote: Note = {
+          frequency: round(freq, options?.precision),
+          ...(note.name && { name: note.name }),
+        };
 
-        if (note.name) {
-          builtNote.name = note.name;
+        if (options?.forcedSpectrum || scale.spectrum) {
+          builtNote.spectrum = options?.forcedSpectrum || scale.spectrum;
         }
-
-        // TODO: Add spectrum object to note
-        // if (options?.forcedSpectrum || scale.spectrum) {
-        //   builtNote.spectrum = options?.forcedSpectrum || scale.spectrum;
-        // }
 
         if (
           options?.allowConflicts

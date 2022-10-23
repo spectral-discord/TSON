@@ -1,4 +1,5 @@
 import { TSON } from './tson';
+import validate from './validate';
 import standardize, { StandardizationOptions } from './standardize';
 import { evaluate } from 'mathjs';
 
@@ -9,7 +10,7 @@ interface Partial {
   weight?: number
 }
 
-export interface Spectrum {
+export interface ReducedSpectrum {
   id: string,
   name?: string,
   description?: string,
@@ -39,7 +40,7 @@ interface Scale {
   'min frequency'?: number,
   minimum?: number,
   min?: number,
-  spectrum?: string
+  spectrum?: ReducedSpectrum
 }
 
 interface Tuning {
@@ -72,7 +73,7 @@ interface Set {
 interface ReducedTSON {
   tunings?: Tuning[],
   'tuning systems'?: Tuning[],
-  spectra?: Spectrum[],
+  spectra?: ReducedSpectrum[],
   sets?: Set[]
 }
 
@@ -93,6 +94,7 @@ export default function reduce(
     partialDistribution: 'partials',
   }, standardizationOptions);
 
+  validate(tson);
   tson = standardize(tson, standardizationOptions);
 
   const reduced: ReducedTSON = {};
@@ -109,6 +111,63 @@ export default function reduce(
   const weightPref = standardizationOptions.amplitudeWeight;
   const partialsPref = standardizationOptions.partialDistribution;
 
+  if (tson.spectra) {
+    reduced.spectra = [];
+    tson.spectra.forEach(spectrum =>  {
+      const reducedSpectrum: ReducedSpectrum = { id: spectrum.id };
+      reducedSpectrum[partialsPref] = [];
+
+      if (spectrum.description) {
+        reducedSpectrum.description = spectrum.description;
+      }
+
+      if (spectrum.name) {
+        reducedSpectrum.name = spectrum.name;
+      }
+
+      const totalWeight = spectrum[partialsPref]
+        ?.map(partial => evaluate(String(partial[weightPref])))
+        .reduce((a, b) => a + b, 0);
+
+      spectrum[partialsPref]?.forEach(partial => {
+        // Evaluate frequency ratio expressions
+        const reducedPartial: Partial = {};
+
+        try {
+          const ratio = evaluate(String(partial[ratioPref]));
+          if (ratio > 0) {
+            reducedPartial[ratioPref] = ratio;
+          } else throw new Error();
+        } catch (ex) {
+          throw new Error(`
+            Error parsing expression string: "${partial[ratioPref]}"
+            Used for a partial's frequency ratio in spectrum: ${spectrum.name || spectrum.id}
+            Frequency ratio expressions must evaluate to a positive number.
+          `);
+        }
+
+        // Evaluate amplitude weight expressions & normalize
+        try {
+          const weight = evaluate(String(partial[weightPref]));
+          if (weight > 0) {
+            reducedPartial[weightPref] = weight / totalWeight;
+          } else throw new Error();
+        } catch (ex) {
+          throw new Error(`
+            Error parsing expression string: "${partial[weightPref]}"
+            Used for a partial's amplitude weight in spectrum: ${spectrum.name || spectrum.id}
+            Amplitude weight expressions must evaluate to a positive number.
+          `);
+        }
+
+        reducedSpectrum[partialsPref]?.push(reducedPartial);
+      });
+
+      reducedSpectrum[partialsPref]?.sort((a, b) => (a[ratioPref] || 0) - (b[ratioPref] || 0));
+      reduced.spectra?.push(reducedSpectrum);
+    });
+  }
+
   if (tson[tuningsPref]) {
     reduced[tuningsPref] = [];
     tson[tuningsPref]?.forEach(tuning => {
@@ -120,7 +179,7 @@ export default function reduce(
         };
 
         if (scale.spectrum) {
-          reducedScale.spectrum = scale.spectrum;
+          reducedScale.spectrum = reduced.spectra?.find(spectrum => spectrum.id === scale.spectrum);
         }
 
         // Remove 'Hz' from reference, min, & max
@@ -199,63 +258,6 @@ export default function reduce(
       });
 
       reduced[tuningsPref]?.push(reducedTuning);
-    });
-  }
-
-  if (tson.spectra) {
-    reduced.spectra = [];
-    tson.spectra.forEach(spectrum =>  {
-      const reducedSpectrum: Spectrum = { id: spectrum.id };
-      reducedSpectrum[partialsPref] = [];
-
-      if (spectrum.description) {
-        reducedSpectrum.description = spectrum.description;
-      }
-
-      if (spectrum.name) {
-        reducedSpectrum.name = spectrum.name;
-      }
-
-      const totalWeight = spectrum[partialsPref]
-        ?.map(partial => evaluate(String(partial[weightPref])))
-        .reduce((a, b) => a + b, 0);
-
-      spectrum[partialsPref]?.forEach(partial => {
-        // Evaluate frequency ratio expressions
-        const reducedPartial: Partial = {};
-
-        try {
-          const ratio = evaluate(String(partial[ratioPref]));
-          if (ratio > 0) {
-            reducedPartial[ratioPref] = ratio;
-          } else throw new Error();
-        } catch (ex) {
-          throw new Error(`
-            Error parsing expression string: "${partial[ratioPref]}"
-            Used for a partial's frequency ratio in spectrum: ${spectrum.name || spectrum.id}
-            Frequency ratio expressions must evaluate to a positive number.
-          `);
-        }
-
-        // Evaluate amplitude weight expressions & normalize
-        try {
-          const weight = evaluate(String(partial[weightPref]));
-          if (weight > 0) {
-            reducedPartial[weightPref] = weight / totalWeight;
-          } else throw new Error();
-        } catch (ex) {
-          throw new Error(`
-            Error parsing expression string: "${partial[weightPref]}"
-            Used for a partial's amplitude weight in spectrum: ${spectrum.name || spectrum.id}
-            Amplitude weight expressions must evaluate to a positive number.
-          `);
-        }
-
-        reducedSpectrum[partialsPref]?.push(reducedPartial);
-      });
-
-      reducedSpectrum[partialsPref]?.sort((a, b) => (a[ratioPref] || 0) - (b[ratioPref] || 0));
-      reduced.spectra?.push(reducedSpectrum);
     });
   }
 

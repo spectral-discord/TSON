@@ -74,6 +74,7 @@ export interface TSON {
   sets?: Set[]
 }
 
+// TODO: Add actual documentation everywhere
 /**
  * TSON class
  */
@@ -169,5 +170,10 @@ export class TSON implements TSON {
 
   listSpectrumIds(): string[] {
     return this.spectra?.map(tuning => tuning.id) || [];
+  }
+
+  buildTuning(tuningId: string) {
+    // TODO: This function should fetch all required spectra and call buildTuning
+    console.log(tuningId);
   }
 }
