@@ -1,15 +1,31 @@
 import { TSON, Tuning, Spectrum } from './tson';
 import reduce, { ReducedSpectrum } from './reduce';
 import { round } from 'mathjs';
+import * as Joi from 'joi';
 
 interface BuildTuningOptions {
   globalMin?: number,
   globalMax?: number,
-  forcedSpectrum?: ReducedSpectrum,
   includeSpectra?: boolean,
+  defaultSpectrumId?: string,
+  overrideScaleSpectra?: boolean,
   allowConflicts?: boolean,
   precision?: number
 }
+
+export const buildTuningOptionsSchema = Joi.object().keys({
+  globalMin: Joi.number().required(),
+  globalMax: Joi.number().required(),
+  precision: Joi.number().required(),
+  includeSpectra: Joi.boolean().required(),
+  allowConflicts: Joi.boolean().required(),
+  overrideScaleSpectra: Joi.boolean().required(),
+  defaultSpectrumId: Joi.when('overrideScaleSpectra', {
+    is: true,
+    then: Joi.string().required(),
+    otherwise: Joi.string().optional()
+  })
+});
 
 interface Note {
   frequency: number,
@@ -25,23 +41,32 @@ export default function buildTuning(
   options = Object.assign({
     globalMin: 10,
     globalMax: 24000,
+    precision: 7,
     allowConflicts: false,
     includeSpectra: true,
-    precision: 7
+    overrideScaleSpectra: false
   }, options);
+
+  Joi.assert(options, buildTuningOptionsSchema, 'Invalid build tuning options!');
+
+  if (options.defaultSpectrumId && !spectra?.find(spectrum => spectrum.id === options?.defaultSpectrumId)) {
+    throw new Error('The `spectra` array doesn\'t include a spectrum with an ID that matches the provided `defaultSpectrumId`.');
+  }
 
   const notes: Note[] = [];
   const tson = new TSON({
     tunings: [ tuning ],
     ...(spectra && { spectra })
   });
-  const reduced = reduce(tson).tunings?.[0];
+  const reduced = reduce(tson);
+  const reducedTuning = reduced.tunings?.[0];
+  const reducedSpectra = reduced.spectra;
 
-  if (!reduced) {
+  if (!reducedTuning) {
     throw new Error('Error while building tuning: Tuning not found');
   }
 
-  reduced.scales.forEach(scale => {
+  reducedTuning.scales.forEach(scale => {
     // Determine whether to use the scale or global min/max settings
     const min = scale.min && options?.globalMin && scale.min > options?.globalMin
       ? scale.min
@@ -71,8 +96,12 @@ export default function buildTuning(
           ...(note.name && { name: note.name }),
         };
 
-        if (options?.forcedSpectrum || scale.spectrum) {
-          builtNote.spectrum = options?.forcedSpectrum || scale.spectrum;
+        if (options?.includeSpectra) {
+          if (options?.defaultSpectrumId || scale.spectrum) {
+            const spectrumId = (!options?.overrideScaleSpectra && scale.spectrum) || options?.defaultSpectrumId;
+            const spectrum = reducedSpectra?.find(spectrum => spectrum.id === spectrumId);
+            builtNote.spectrum = spectrum;
+          }
         }
 
         if (

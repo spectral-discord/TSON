@@ -121,27 +121,29 @@ const partials = Joi.array().items(
   })
   .description('A list of partials that should be used to reconstruct the spectrum');
 
+const spectrumSchema = Joi.array().items(Joi.object().keys({
+  name: Joi.string().description('The spectrum\'s name').optional(),
+  description: Joi.string().description('A description of the spectrum').optional(),
+  id: Joi.string().description('A unique identifier for the spectrum').optional(),
+  'partial distribution': partials.optional(),
+  partials: partials.optional()
+}).or('name', 'id')
+  .xor('partials', 'partial distribution')
+  .unknown()
+).min(1)
+  .unique((a, b) => a.id && b.id && a.id === b.id)
+  .description('A list of spectrum objects')
+  .optional();
+
 /**
  * Joi schema for validating TSON objects.
  *
  * Doesn't parse expressions, but does validate that expression strings only contain allowed substrings.
  */
-export const schema = Joi.object().keys({
+export const tsonSchema = Joi.object().keys({
   'tuning systems': tunings,
   tunings,
-  spectra: Joi.array().items(Joi.object().keys({
-    name: Joi.string().description('The spectrum\'s name').optional(),
-    description: Joi.string().description('A description of the spectrum').optional(),
-    id: Joi.string().description('A unique identifier for the spectrum').optional(),
-    'partial distribution': partials.optional(),
-    partials: partials.optional()
-  }).or('name', 'id')
-    .xor('partials', 'partial distribution')
-    .unknown()
-  ).min(1)
-    .unique((a, b) => a.id && b.id && a.id === b.id)
-    .description('A list of spectrum objects')
-    .optional(),
+  spectra: spectrumSchema,
   sets: Joi.array().items(Joi.object().keys({
     name: Joi.string().description('The set\'s name').required(),
     description: Joi.string().description('A description of the set').optional(),
@@ -158,6 +160,11 @@ export const schema = Joi.object().keys({
 }).oxor('tuning systems', 'tunings')
   .or('tuning systems', 'tunings', 'spectra', 'sets')
   .unknown();
+
+export const validationOptionsSchema = Joi.object().keys({
+  includedIdsOnly: Joi.boolean().optional(),
+  allowUnknown: Joi.boolean().optional()
+});
 
 export interface ValidationOptions {
   includedIdsOnly?: boolean,
@@ -177,11 +184,13 @@ export default function validate(
     allowUnknown: true
   }, options);
 
+  Joi.assert(options, validationOptionsSchema, 'Invalid validation options!\n');
+
   // Parse input if it's a YAML string
   const tson: TSON = typeof(input) === 'string' ? YAML.parse(input) : input;
 
   // Validate TSON syntax & values
-  Joi.assert(tson, schema, 'Invalid TSON!\n', {
+  Joi.assert(tson, tsonSchema, 'Invalid TSON!\n', {
     abortEarly: false,
     allowUnknown: options.allowUnknown
   });

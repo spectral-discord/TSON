@@ -82,9 +82,7 @@ interface ReducedTSON {
  */
 export default function reduce(
   tson: TSON,
-  standardizationOptions?: StandardizationOptions
-): ReducedTSON {
-  standardizationOptions = Object.assign({
+  standardizationOptions: StandardizationOptions = {
     tuningSystems: 'tunings',
     repeatRatio: 'repeat',
     minFrequency: 'min',
@@ -92,8 +90,8 @@ export default function reduce(
     frequencyRatio: 'ratio',
     amplitudeWeight: 'weight',
     partialDistribution: 'partials',
-  }, standardizationOptions);
-
+  }
+): ReducedTSON {
   validate(tson);
   tson = standardize(tson, standardizationOptions);
 

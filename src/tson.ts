@@ -1,8 +1,9 @@
 'use strict';
 
-import validate, { ValidationOptions } from './validate';
-import standardize, { StandardizationOptions } from './standardize';
+import validate, { ValidationOptions, validationOptionsSchema } from './validate';
+import standardize, { StandardizationOptions, standardizationOptionsSchema } from './standardize';
 import YAML from 'yaml';
+import { assert } from 'joi';
 
 export interface Note {
   'frequency ratio'?: string | number,
@@ -121,6 +122,7 @@ export class TSON implements TSON {
   }
 
   setStandardizationOptions(standardizationOptions: StandardizationOptions): void {
+    assert(standardizationOptions, standardizationOptionsSchema, 'Invalid standardization options!\n');
     this.standardizationOptions = standardizationOptions;
 
     const reformatted = standardize(this, this.standardizationOptions);
@@ -132,6 +134,7 @@ export class TSON implements TSON {
   }
 
   setValidationOptions(validationOptions: ValidationOptions): void {
+    assert(validationOptions, validationOptionsSchema, 'Invalid validation options!\n');
     this.validationOptions = validationOptions;
     validate(this, this.validationOptions);
   }

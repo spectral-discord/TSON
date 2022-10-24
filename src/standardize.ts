@@ -1,6 +1,7 @@
 'use strict';
 
 import { TSON } from './tson';
+import * as Joi from 'joi';
 
 export interface StandardizationOptions {
   tuningSystems: 'tuning systems' | 'tunings',
@@ -12,12 +13,19 @@ export interface StandardizationOptions {
   partialDistribution: 'partials' | 'partial distribution',
 }
 
+export const standardizationOptionsSchema = Joi.object().keys({
+  tuningSystems: Joi.string().valid('tuning systems', 'tunings').required(),
+  repeatRatio: Joi.string().valid('repeat', 'repeat ratio').required(),
+  minFrequency: Joi.string().valid('min', 'minimum', 'min frequency').required(),
+  maxFrequency: Joi.string().valid('max', 'maximum', 'max frequency').required(),
+  frequencyRatio: Joi.string().valid('frequency ratio', 'ratio').required(),
+  amplitudeWeight: Joi.string().valid('amplitude weight', 'weight').required(),
+  partialDistribution: Joi.string().valid('partials', 'partial distribution').required()
+});
+
 export default function standardize(
   tson: TSON,
-  options?: StandardizationOptions
-): TSON {
-  // TODO: Add validations for options everywhere
-  options = Object.assign({
+  options: StandardizationOptions = {
     tuningSystems: 'tunings',
     repeatRatio: 'repeat',
     minFrequency: 'min',
@@ -25,7 +33,9 @@ export default function standardize(
     frequencyRatio: 'ratio',
     amplitudeWeight: 'weight',
     partialDistribution: 'partials',
-  }, options);
+  }
+): TSON {
+  Joi.assert(options, standardizationOptionsSchema, 'Invalid standardization options!\n');
 
   return JSON.parse(
     JSON.stringify(tson)

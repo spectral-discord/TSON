@@ -17,8 +17,6 @@ export function toScala(scale: Scale, description?: string) {
     } else {
       return typeof(note) === 'string' ? evaluate(note) : note;
     }
-
-    return 0;
   });
 
   ratios = ratios.filter(ratio => ratio > 0);

@@ -52,7 +52,7 @@ describe('TSON validation tests', () => {
   test('Should call `assert`', () => {
     Validate({}, { validateExpressions: false });
 
-    expect(assert).toBeCalledTimes(1);
+    expect(assert).toBeCalledTimes(2);
   });
 });
 
