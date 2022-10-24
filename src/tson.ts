@@ -2,6 +2,7 @@
 
 import validate, { ValidationOptions, validationOptionsSchema } from './validate';
 import standardize, { StandardizationOptions, standardizationOptionsSchema } from './standardize';
+import reduce from './reduce';
 import YAML from 'yaml';
 import { assert } from 'joi';
 
@@ -173,6 +174,26 @@ export class TSON implements TSON {
 
   listSpectrumIds(): string[] {
     return this.spectra?.map(tuning => tuning.id) || [];
+  }
+
+  reduce() {
+    const reduced = reduce(this, this.standardizationOptions);
+
+    if (reduced.tunings) {
+      this.tunings = reduced.tunings;
+    }
+
+    if (reduced['tuning systems']) {
+      this['tuning systems'] = reduced['tuning systems'];
+    }
+
+    if (reduced.spectra) {
+      this.spectra = reduced.spectra;
+    }
+
+    if (reduced.sets) {
+      this.sets = reduced.sets.concat(this.sets || []);
+    }
   }
 
   buildTuning(tuningId: string) {

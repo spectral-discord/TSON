@@ -40,7 +40,7 @@ interface Scale {
   'min frequency'?: number,
   minimum?: number,
   min?: number,
-  spectrum?: ReducedSpectrum
+  spectrum?: string,
 }
 
 interface Tuning {
@@ -173,12 +173,9 @@ export default function reduce(
       tuning.scales.forEach(scale => {
         const reducedScale: Scale = {
           notes: [],
-          reference: { frequency: 0 }
+          reference: { frequency: 0 },
+          ...(scale.spectrum && { spectrum: scale.spectrum })
         };
-
-        if (scale.spectrum) {
-          reducedScale.spectrum = reduced.spectra?.find(spectrum => spectrum.id === scale.spectrum);
-        }
 
         // Remove 'Hz' from reference, min, & max
         reducedScale.reference.frequency = parseFloat(String(scale.reference.frequency));
