@@ -64,7 +64,7 @@ const noteNamesRef = Joi.ref('...notes', {
 const tunings = Joi.array().items(Joi.object().keys({
   name: Joi.string().description('The tuning system\'s name').optional(),
   description: Joi.string().description('A description of the tuning system').optional(),
-  id: Joi.string().description('A unique identifier for the tuning system').optional(),
+  id: Joi.string().description('A unique identifier for the tuning system').required(),
   scales: Joi.array().items(Joi.object().keys({
     notes: notes.required(),
     reference: Joi.object().keys({
@@ -85,9 +85,8 @@ const tunings = Joi.array().items(Joi.object().keys({
     .oxor('max', 'maximum', 'max frequency')
     .unknown()
   ).min(1).description('List of scale objects').required()
-}).or('name', 'id')
-  .unknown()
-).min(1)
+}).unknown())
+  .min(1)
   .unique((a, b) => a.id && b.id && a.id === b.id)
   .description('List of tuning system objects').optional();
 
@@ -124,11 +123,10 @@ const partials = Joi.array().items(
 const spectrumSchema = Joi.array().items(Joi.object().keys({
   name: Joi.string().description('The spectrum\'s name').optional(),
   description: Joi.string().description('A description of the spectrum').optional(),
-  id: Joi.string().description('A unique identifier for the spectrum').optional(),
+  id: Joi.string().description('A unique identifier for the spectrum').required(),
   'partial distribution': partials.optional(),
   partials: partials.optional()
-}).or('name', 'id')
-  .xor('partials', 'partial distribution')
+}).xor('partials', 'partial distribution')
   .unknown()
 ).min(1)
   .unique((a, b) => a.id && b.id && a.id === b.id)
@@ -145,7 +143,8 @@ export const tsonSchema = Joi.object().keys({
   tunings,
   spectra: spectrumSchema,
   sets: Joi.array().items(Joi.object().keys({
-    name: Joi.string().description('The set\'s name').required(),
+    id: Joi.string().description('A unique identifier for the set').required(),
+    name: Joi.string().description('The set\'s name').optional(),
     description: Joi.string().description('A description of the set').optional(),
     members: Joi.array().items(Joi.object().keys({
       'tuning system': Joi.string().description('A reference of a tuning system\'s ID').optional(),
@@ -154,6 +153,7 @@ export const tsonSchema = Joi.object().keys({
       'override scale spectra': Joi.boolean().description('If true, the set\'s spectrum should be applied to all scales in the set\'s tuning system, overriding any spectra that are references by the scales.').optional()
     }).oxor('tuning system', 'tuning').unknown())
       .min(1)
+      .unique((a, b) => a.id && b.id && a.id === b.id)
       .description('A list of set member objects')
       .required()
   }).unknown()).min(1).description('A list of set objects').optional()
@@ -195,21 +195,22 @@ export default function validate(
     allowUnknown: options.allowUnknown
   });
 
+  const tunings = tson.tunings || tson['tuning systems'];
+
   if (options.includedIdsOnly) {
     // Ensure that tuning/spectrum ID references are internally resolvable
     const tuningIds: string[] = [];
     const spectrumIds: string[] = [];
 
-    // TODO: Make IDs required in validations
     if (tson.spectra) {
       for (const spectrum of tson.spectra) {
-        if (spectrum.id) spectrumIds.push(spectrum.id);
+        spectrumIds.push(spectrum.id);
       }
     }
 
-    if (tson.tunings) {
-      for (const tuning of tson.tunings) {
-        if (tuning.id) tuningIds.push(tuning.id);
+    if (tunings) {
+      for (const tuning of tunings) {
+        tuningIds.push(tuning.id);
 
         for (const scale of tuning.scales) {
           if (scale.spectrum && !spectrumIds.includes(scale.spectrum)) {
@@ -234,8 +235,6 @@ export default function validate(
   }
 
   // Ensure that expressions can be evaluated
-  const tunings = tson.tunings || tson['tuning systems'];
-
   if (tunings) {
     for (const tuning of tunings) {
       for (const scale of tuning.scales) {
@@ -247,7 +246,7 @@ export default function validate(
             } catch (ex) {
               throw new Error(`
                 Error parsing expression string: "${repeat}"
-                Used for a repeat ratio in tuning: ${tuning.name || tuning.id}
+                Used for a repeat ratio in tuning: ${tuning.id}
                 Frequency ratio expressions must evaluate to a positive number.
               `);
             }
@@ -261,7 +260,7 @@ export default function validate(
             } catch (ex) {
               throw new Error(`
                 Error parsing expression string: "${note}"
-                Used for a note's frequency ratio in tuning: ${tuning.name || tuning.id}
+                Used for a note's frequency ratio in tuning: ${tuning.id}
                 Frequency ratio expressions must evaluate to a positive number.
               `);
             }
@@ -273,7 +272,7 @@ export default function validate(
               } catch (ex) {
                 throw new Error(`
                   Error parsing expression string: "${ratio}"
-                  Used for a partial's frequency ratio in tuning: ${tuning.name || tuning.id}
+                  Used for a partial's frequency ratio in tuning: ${tuning.id}
                   Frequency ratio expressions must evaluate to a positive number.
                 `);
               }
@@ -300,7 +299,7 @@ export default function validate(
             } catch (ex) {
               throw new Error(`
                 Error parsing expression string: "${frequency}"
-                Used for a partial's frequency ratio in spectrum: ${spectrum.name || spectrum.id}
+                Used for a partial's frequency ratio in spectrum: ${spectrum.id}
                 Frequency ratio expressions must evaluate to a positive number.
               `);
             }
@@ -311,7 +310,7 @@ export default function validate(
             } catch (ex) {
               throw new Error(`
                 Error parsing expression string: "${amplitude}"
-                Used for a partial's amplitude weight in spectrum: ${spectrum.name || spectrum.id}
+                Used for a partial's amplitude weight in spectrum: ${spectrum.id}
                 Amplitude weight expressions must evaluate to a positive number.
               `);
             }

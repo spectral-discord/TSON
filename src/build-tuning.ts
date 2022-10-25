@@ -3,7 +3,7 @@ import reduce, { ReducedSpectrum } from './reduce';
 import { round } from 'mathjs';
 import * as Joi from 'joi';
 
-interface BuildTuningOptions {
+export interface BuildTuningOptions {
   globalMin?: number,
   globalMax?: number,
   includeSpectra?: boolean,
@@ -27,7 +27,7 @@ export const buildTuningOptionsSchema = Joi.object().keys({
   })
 });
 
-interface Note {
+export interface BuiltNote {
   frequency: number,
   name?: string,
   spectrum?: ReducedSpectrum
@@ -37,7 +37,7 @@ export default function buildTuning(
   tuning: Tuning,
   spectra?: Spectrum[],
   options?: BuildTuningOptions
-): Note[] {
+): BuiltNote[] {
   options = Object.assign({
     globalMin: 10,
     globalMax: 24000,
@@ -53,7 +53,7 @@ export default function buildTuning(
     throw new Error('The `spectra` array doesn\'t include a spectrum with an ID that matches the provided `defaultSpectrumId`.');
   }
 
-  const notes: Note[] = [];
+  const notes: BuiltNote[] = [];
   const tson = new TSON({
     tunings: [ tuning ],
     ...(spectra && { spectra })
@@ -85,17 +85,14 @@ export default function buildTuning(
     }
 
     scale.notes.forEach(note => {
-      if (
-        note.ratio
-        && (min && note.ratio * referenceFreq > min)
-        && (max && note.ratio * referenceFreq < max)
-      ) {
+      if (note.ratio) {
         const freq = note.ratio * referenceFreq;
-        const builtNote: Note = {
+        const builtNote: BuiltNote = {
           frequency: round(freq, options?.precision),
           ...(note.name && { name: note.name }),
         };
 
+        // Add a spectrum to the note if one exists
         if (options?.includeSpectra) {
           if (options?.defaultSpectrumId || scale.spectrum) {
             const spectrumId = (!options?.overrideScaleSpectra && scale.spectrum) || options?.defaultSpectrumId;
@@ -104,11 +101,17 @@ export default function buildTuning(
           }
         }
 
+        // Add the built note to the notes array if it meets min/max/conflict criteria
         if (
           options?.allowConflicts
           || !notes.find(note => note.frequency === builtNote.frequency)
         ) {
-          notes.push(builtNote);
+          if (
+            (min && note.ratio * referenceFreq > min)
+            && (max && note.ratio * referenceFreq < max)
+          ) {
+            notes.push(builtNote);
+          }
         } else if (!options?.allowConflicts) {
           const problemNotes = [
             {

@@ -18,6 +18,7 @@ tunings:
 
 tuning systems:
   - name: a different tuning
+    id: another
     description: another tuning
     scales:
       - notes:

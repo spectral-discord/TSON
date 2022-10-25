@@ -2,6 +2,7 @@
 
 import validate, { ValidationOptions, validationOptionsSchema } from './validate';
 import standardize, { StandardizationOptions, standardizationOptionsSchema } from './standardize';
+import buildTuning, { BuildTuningOptions, BuiltNote } from './build-tuning';
 import reduce from './reduce';
 import YAML from 'yaml';
 import { assert } from 'joi';
@@ -54,14 +55,15 @@ export interface Spectrum {
 }
 
 interface SetMember {
-  'tuning system': string,
-  tuning: string,
-  spectrum: string,
-  'override scale spectra': boolean
+  'tuning system'?: string,
+  tuning?: string,
+  spectrum?: string,
+  'override scale spectra'?: boolean
 }
 
 export interface Set {
-  name: string,
+  id: string,
+  name?: string,
   description?: string,
   members: SetMember[]
 }
@@ -160,6 +162,14 @@ export class TSON implements TSON {
     return undefined;
   }
 
+  findSetById(id: string): Set | undefined {
+    if (this.sets) {
+      return this.sets.find(set => set.id === id);
+    }
+
+    return undefined;
+  }
+
   listTuningNames(): string[] {
     return (this.tunings || this['tuning systems'])?.reduce<string[]>((acc, cur) => cur.name && !acc.includes(cur.name) ? acc.concat(cur.name) : acc, []) || [];
   }
@@ -192,12 +202,42 @@ export class TSON implements TSON {
     }
 
     if (reduced.sets) {
-      this.sets = reduced.sets.concat(this.sets || []);
+      this.sets = reduced.sets;
     }
   }
 
-  buildTuning(tuningId: string) {
-    // TODO: This function should fetch all required spectra and call buildTuning
-    console.log(tuningId);
+  buildTuning(
+    tuningId: string,
+    buildTuningOptions?: BuildTuningOptions
+  ): BuiltNote[] {
+    const tuning = this.findTuningById(tuningId);
+
+    if (!tuning) {
+      throw new Error('A tuning with the provided `tuningId` was not found.');
+    }
+
+    const spectra: Spectrum[] = [];
+    const spectrumIds = tuning.scales.map(scale => scale.spectrum);
+
+    if (buildTuningOptions?.defaultSpectrumId) {
+      spectrumIds.push(buildTuningOptions?.defaultSpectrumId);
+    }
+
+    spectrumIds.forEach(id => {
+      if (id) {
+        const spectrum = this.findSpectrumById(id);
+
+        if (!spectrum) {
+          throw new Error(`
+            A spectrum with an ID referenced by a scale could not be found.
+            Referenced ID: ${id}
+          `);
+        }
+
+        spectra.push(spectrum);
+      }
+    });
+
+    return buildTuning(tuning, spectra.length > 0 ? spectra : undefined, buildTuningOptions);
   }
 }

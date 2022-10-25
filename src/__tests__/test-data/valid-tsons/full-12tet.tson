@@ -2,6 +2,7 @@ testName: a full, 12tet tuning exists
 
 tunings:
   - name: Full 12-tet
+    id: another
     scales:
       - reference:
           frequency: 440

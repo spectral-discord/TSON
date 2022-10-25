@@ -2,6 +2,7 @@ testName: a minimal, 12tet tuning exists
 
 tunings:
   - name: Minimal 12-tet
+    id: another
     scales:
       - reference: 
           frequency: 440

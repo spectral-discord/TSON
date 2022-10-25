@@ -14,6 +14,7 @@ tunings:
         max frequency: 2400
 
   - name: a different tuning
+    id: another
     description: another tuning
     scales:
       - notes:

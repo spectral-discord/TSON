@@ -2,6 +2,7 @@ testName: a simple, valid tuning exists
 
 tunings:
   - name: alpha
+    id: '1'
     description: Alpha scale created by Wendy Carlos
     scales:
       - reference: 

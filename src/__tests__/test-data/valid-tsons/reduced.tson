@@ -28,6 +28,7 @@ tunings:
         min: 800
         max: 2400
   - name: a different tuning
+    id: another
     description: another tuning
     scales:
       - notes:

@@ -58,7 +58,8 @@ interface SetMember {
 }
 
 interface Set {
-  name: string,
+  id: string,
+  name?: string,
   description?: string,
   members: SetMember[]
 }
