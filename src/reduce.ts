@@ -51,10 +51,10 @@ interface Tuning {
 }
 
 interface SetMember {
-  'tuning system': string,
-  tuning: string,
-  spectrum: string,
-  'override scale spectra': boolean
+  'tuning system'?: string,
+  tuning?: string,
+  spectrum?: string,
+  'override scale spectra'?: boolean
 }
 
 interface Set {
