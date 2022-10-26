@@ -3,46 +3,55 @@ import validate from './validate';
 import standardize, { StandardizationOptions } from './standardize';
 import { evaluate } from 'mathjs';
 
-interface Partial {
-  'frequency ratio'?: number,
-  ratio?: number,
-  'amplitude weight'?: number,
-  weight?: number
-}
+type Partial = (
+  { 'frequency ratio'?: number, ratio?: never }
+    | { 'frequency ratio'?: never, ratio?: number }
+) & (
+  { weight?: number, 'amplitude weight'?: never }
+    | { weight?: never, 'amplitude weight'?: number }
+)
 
-export interface ReducedSpectrum {
+export type ReducedSpectrum = {
   id: string,
   name?: string,
-  description?: string,
-  partials?: Partial[],
-  'partial distribution'?: Partial[]
-}
+  description?: string
+} & (
+  { partials?: Partial[], 'partial distribution'?: never }
+    | { partials?: never, 'partial distribution'?: Partial[] }
+);
 
-interface Note {
-  'frequency ratio'?: number,
-  ratio?: number,
+type Note = {
   name?: string
-}
+} & (
+  { 'frequency ratio'?: number, ratio?: never }
+    | { 'frequency ratio'?: never, ratio?: number }
+)
 
 interface Reference {
   frequency: number,
   note?: string
 }
 
-interface Scale {
+type Scale = {
   notes: Note[],
   reference: Reference,
-  'repeat ratio'?: number,
-  repeat?: number,
-  'max frequency'?: number,
-  maximum?: number,
-  max?: number,
-  'min frequency'?: number,
-  minimum?: number,
-  min?: number,
-  spectrum?: string,
-}
+  spectrum?: string
+} & (
+  { min?: number, minimum?: never, 'min frequency'?: never }
+    | { min?: never, minimum?: number, 'min frequency'?: never }
+    | { min?: never, minimum?: never, 'min frequency'?: number }
+) & (
+  { max?: number, maximum?: never , 'max frequency'?: never }
+    | { max?: never, maximum?: number , 'max frequency'?: never }
+    | { max?: never, maximum?: never , 'max frequency'?: number }
+) & (
+  { repeat?: number, 'repeat ratio'?: never }
+    | { repeat?: never, 'repeat ratio'?: number }
+);
 
+/**
+ * Something something
+ */
 interface Tuning {
   id: string,
   name?: string,
@@ -50,12 +59,13 @@ interface Tuning {
   scales: Scale[]
 }
 
-interface SetMember {
-  'tuning system'?: string,
-  tuning?: string,
+type SetMember = {
   spectrum?: string,
   'override scale spectra'?: boolean
-}
+} & (
+  { 'tuning system'?: string, tuning?: never }
+    | { 'tuning system'?: never, tuning?: string }
+)
 
 interface Set {
   id: string,
@@ -67,19 +77,30 @@ interface Set {
 /**
  *  Reduced TSON Type Interface
  *
- *  This type interface is basically the same as the regular
- *  TSON interface, except that notes are always objects, and
+ *  This type is essentially the same as the regular TSON
+ *  interface, except that notes are always objects, and
  *  frequencies, ratios, and weights are always numbers.
  */
-interface ReducedTSON {
-  tunings?: Tuning[],
-  'tuning systems'?: Tuning[],
+type ReducedTSON = {
   spectra?: ReducedSpectrum[],
   sets?: Set[]
-}
+} & (
+  { 'tuning systems'?: Tuning[], tunings?: never }
+    | { 'tuning systems'?: never, tunings?: Tuning[] }
+)
 
 /**
- * Standardizes variable names, evaluates expressions, normalizes spectra amplitude weights, and removes 'Hz' from frequencies
+ * Standardizes parameter keys, evaluates expressions, normalizes spectra amplitude weights, and removes 'Hz' from frequencies
+ *
+ * @param {TSON} tson The TSON object to be reduced
+ * @param {StandardizationOptions} standardizationOptions An object containing parameter key preferences
+ * @param {string} standardizationOptions.tuningSystems One of: [ 'tunings', 'tuning systems' ]
+ * @param {string} standardizationOptions.repeatRatio One of: [ 'repeat', 'repeat ratio' ]
+ * @param {string} standardizationOptions.minFrequency One of: [ 'min', 'minimum', 'min frequency' ]
+ * @param {string} standardizationOptions.maxFrequency One of: [ 'max', 'maximum', 'max frequency' ]
+ * @param {string} standardizationOptions.frequencyRatio One of: [ 'ratio', 'frequency ratio' ]
+ * @param {string} standardizationOptions.amplitudeWeight One of: [ 'weight', 'amplitude weight' ]
+ * @param {string} standardizationOptions.partialDistribution One of: [ 'partials', 'partial distribution' ]
  */
 export default function reduce(
   tson: TSON,

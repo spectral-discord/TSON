@@ -7,30 +7,34 @@ import reduce from './reduce';
 import YAML from 'yaml';
 import { assert } from 'joi';
 
-export interface Note {
-  'frequency ratio'?: string | number,
-  ratio?: string | number,
+type Note = {
   name?: string
-}
+} & (
+  { 'frequency ratio'?: string | number, ratio?: never }
+    | { 'frequency ratio'?: never, ratio?: string | number }
+)
 
 interface Reference {
   frequency: string | number,
   note?: string
 }
 
-export interface Scale {
+export type Scale = {
   notes: (Note | string | number)[],
   reference: Reference,
-  'repeat ratio'?: number,
-  repeat?: number,
-  'max frequency'?: string | number,
-  maximum?: string | number,
-  max?: string | number,
-  'min frequency'?: string | number,
-  minimum?: string | number,
-  min?: string | number,
   spectrum?: string
-}
+} & (
+  { 'min frequency'?: string | number, minimum?: never, min?: never }
+    | { 'min frequency'?: never, minimum?: string | number, min?: never }
+    | { 'min frequency'?: never, minimum?: never, min?: string | number }
+) & (
+  { 'max frequency'?: string | number, maximum?: never , max?: never }
+    | { 'max frequency'?: never, maximum?: string | number , max?: never }
+    | { 'max frequency'?: never, maximum?: never , max?: string | number }
+) & (
+  { 'repeat ratio'?: number, repeat?: never }
+    | { 'repeat ratio'?: never, repeat?: number }
+);
 
 export interface Tuning {
   id: string,
@@ -39,27 +43,30 @@ export interface Tuning {
   scales: Scale[]
 }
 
-export interface Partial {
-  'frequency ratio'?: string | number,
-  ratio?: string | number,
-  'amplitude weight'?: string | number,
-  weight?: string | number
-}
+type Partial = (
+  { 'frequency ratio'?: string | number, ratio?: never }
+    | { 'frequency ratio'?: never, ratio?: string | number }
+) & (
+  { 'amplitude weight'?: string | number, weight?: never }
+    | { 'amplitude weight'?: never, weight?: string | number }
+)
 
-export interface Spectrum {
+export type Spectrum = {
   id: string,
   name?: string,
-  description?: string,
-  partials?: Partial[],
-  'partial distribution'?: Partial[]
-}
+  description?: string
+} & (
+  { partials?: Partial[], 'partial distribution'?: never }
+    | { partials?: never, 'partial distribution'?: Partial[] }
+);
 
-interface SetMember {
-  'tuning system'?: string,
-  tuning?: string,
+type SetMember = {
   spectrum?: string,
   'override scale spectra'?: boolean
-}
+} & (
+  { 'tuning system'?: string, tuning?: never }
+    | { 'tuning system'?: never, tuning?: string }
+)
 
 export interface Set {
   id: string,
@@ -184,6 +191,14 @@ export class TSON implements TSON {
 
   listSpectrumIds(): string[] {
     return this.spectra?.map(tuning => tuning.id) || [];
+  }
+
+  listSetNames(): string[] {
+    return this.sets?.reduce<string[]>((acc, cur) => cur.name && !acc.includes(cur.name) ? acc.concat(cur.name) : acc, []) || [];
+  }
+
+  listSetIds(): string[] {
+    return this.sets?.map(set => set.id) || [];
   }
 
   reduce() {
