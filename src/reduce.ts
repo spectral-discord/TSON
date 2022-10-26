@@ -3,7 +3,14 @@ import validate from './validate';
 import standardize, { StandardizationOptions } from './standardize';
 import { evaluate } from 'mathjs';
 
-type Partial = (
+/**
+ *  Reduced Partial Type Interface
+ *
+ *  This type is essentially the same as the regular Partial
+ *  interface, except that frequencies ratios and amplitude
+ *  weights are always numbers, and amplitude weights sum to 1.
+ */
+type ReducedPartial = (
   { 'frequency ratio'?: number, ratio?: never }
     | { 'frequency ratio'?: never, ratio?: number }
 ) & (
@@ -11,16 +18,30 @@ type Partial = (
     | { weight?: never, 'amplitude weight'?: number }
 )
 
+/**
+ *  Reduced Spectrum Type Interface
+ *
+ *  This type is essentially the same as the regular Spectrum
+ *  interface, except that partial's frequencies ratios and
+ *  amplitude weights are always numbers, and amplitude
+ *  weights sum to 1.
+ */
 export type ReducedSpectrum = {
   id: string,
   name?: string,
   description?: string
 } & (
-  { partials?: Partial[], 'partial distribution'?: never }
-    | { partials?: never, 'partial distribution'?: Partial[] }
+  { partials?: ReducedPartial[], 'partial distribution'?: never }
+    | { partials?: never, 'partial distribution'?: ReducedPartial[] }
 );
 
-type Note = {
+/**
+ *  Reduced Note Type Interface
+ *
+ *  This type is essentially the same as the regular Note
+ *  interface, except that frequency ratios are always numbers.
+ */
+type ReducedNote = {
   name?: string
 } & (
   { 'frequency ratio'?: number, ratio?: never }
@@ -32,8 +53,15 @@ interface Reference {
   note?: string
 }
 
-type Scale = {
-  notes: Note[],
+/**
+ *  Reduced Scale Type Interface
+ *
+ *  This type is essentially the same as the regular Scale
+ *  interface, except that notes are always objects, and
+ *  frequencies and ratios are always numbers.
+ */
+type ReducedScale = {
+  notes: ReducedNote[],
   reference: Reference,
   spectrum?: string
 } & (
@@ -50,13 +78,17 @@ type Scale = {
 );
 
 /**
- * Something something
+ *  Reduced Tuning Type Interface
+ *
+ *  This type is essentially the same as the regular Tuning
+ *  interface, except that notes are always objects, and
+ *  frequencies and ratios are always numbers.
  */
-interface Tuning {
+interface ReducedTuning {
   id: string,
   name?: string,
   description?: string,
-  scales: Scale[]
+  scales: ReducedScale[]
 }
 
 type SetMember = {
@@ -85,8 +117,8 @@ type ReducedTSON = {
   spectra?: ReducedSpectrum[],
   sets?: Set[]
 } & (
-  { 'tuning systems'?: Tuning[], tunings?: never }
-    | { 'tuning systems'?: never, tunings?: Tuning[] }
+  { 'tuning systems'?: ReducedTuning[], tunings?: never }
+    | { 'tuning systems'?: never, tunings?: ReducedTuning[] }
 )
 
 /**
@@ -151,7 +183,7 @@ export default function reduce(
 
       spectrum[partialsPref]?.forEach(partial => {
         // Evaluate frequency ratio expressions
-        const reducedPartial: Partial = {};
+        const reducedPartial: ReducedPartial = {};
 
         try {
           const ratio = evaluate(String(partial[ratioPref]));
@@ -191,9 +223,9 @@ export default function reduce(
   if (tson[tuningsPref]) {
     reduced[tuningsPref] = [];
     tson[tuningsPref]?.forEach(tuning => {
-      const reducedTuning: Tuning = { ...tuning, scales: [] };
+      const reducedTuning: ReducedTuning = { ...tuning, scales: [] };
       tuning.scales.forEach(scale => {
-        const reducedScale: Scale = {
+        const reducedScale: ReducedScale = {
           notes: [],
           reference: { frequency: 0 },
           ...(scale.spectrum && { spectrum: scale.spectrum })
@@ -236,12 +268,10 @@ export default function reduce(
             try {
               const ratio = evaluate(String(note[ratioPref]));
               if (ratio > 0) {
-                const reducedNote: Note = {};
+                const reducedNote: ReducedNote = {
+                  ...(note.name && { name: note.name })
+                };
                 reducedNote[ratioPref] = ratio;
-
-                if (note.name) {
-                  reducedNote.name = note.name;
-                }
 
                 reducedScale.notes.push(reducedNote);
               } else throw new Error();
@@ -256,7 +286,7 @@ export default function reduce(
             try {
               const ratio = evaluate(String(note));
               if (ratio > 0) {
-                const reducedNote: Note = {};
+                const reducedNote: ReducedNote = {};
                 reducedNote[ratioPref] = ratio;
                 reducedScale.notes.push(reducedNote);
               } else throw new Error();

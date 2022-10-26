@@ -18,8 +18,8 @@ tunings:
     scales:
       - notes:
           - ratio: 1
-          - ratio: 1.122462048309373
-            name: B
+          - name: B
+            ratio: 1.122462048309373
           - ratio: 1.189207115002721
           - ratio: 2
         reference:
@@ -32,10 +32,10 @@ tunings:
     description: another tuning
     scales:
       - notes:
-          - ratio: 1
-            name: A
-          - ratio: 1.122462048309373
-            name: Something else
+          - name: A
+            ratio: 1
+          - name: Something else
+            ratio: 1.122462048309373
           - ratio: 1.4142135623730951
           - ratio: 2
         reference:
