@@ -122,7 +122,8 @@ type ReducedTSON = {
 )
 
 /**
- * Standardizes parameter keys, evaluates expressions, normalizes spectra amplitude weights, and removes 'Hz' from frequencies
+ * Standardizes parameter keys, evaluates expressions, normalizes
+ * partial amplitude weights, and removes 'Hz' from frequencies.
  *
  * @param {TSON} tson The TSON object to be reduced
  * @param {StandardizationOptions} standardizationOptions An object containing parameter key preferences
