@@ -8,129 +8,277 @@ import YAML from 'yaml';
 import { assert } from 'joi';
 
 /**
- * Note type
+ * Note interface
  *
- * @param {(string | number)} ratio alternatives: `frequency ratio` — A number or expression string representing the note's frequency relative to the scale's root
- * @param {string} [name] An optional name for the note
+ * @property {(string | number)} ratio alternatives: `frequency ratio` — A number or expression string representing the note's frequency relative to the scale's root
  */
 type Note = {
+  /**
+   * An optional name for the note
+   */
   name?: string
 } & (
-  { 'frequency ratio'?: string | number, ratio?: never }
-    | { 'frequency ratio'?: never, ratio?: string | number }
+  {
+    /**
+     * A number or expression string representing the note's frequency relative to the scale's root
+     */
+    'frequency ratio'?: string | number,
+    ratio?: never
+  } | {
+    /**
+     * A number or expression string representing the note's frequency relative to the scale's root
+     */
+     ratio?: string | number,
+    'frequency ratio'?: never
+  }
 )
 
 /**
- * Reference type
+ * Reference interface
  *
- * @param {(string | number)} frequency A frequency to be used as a reference for the scale when building its parent tuning.
- * @param {string} [note] The name of a note in the scale's `notes` array. If a name is not provided, the reference frequency will refer to the root ratio of `1`.
+ * An object containing a reference frequency data for use in building the tuning
  */
 interface Reference {
+  /**
+   * The reference frequency in Hz
+   */
   frequency: string | number,
+
+  /**
+   * The name  of a note from the notes array
+   */
   note?: string
 }
 
 /**
- * Scale type
+ * Scale interface
  *
- * @param {(Note | string | number)[]} notes An array of notes, which can be either `Note` objects, expression strings, or numbers
- * @param {Reference} reference An object containing a reference frequency, and an optional note name referencing a note in the `notes` array
- * @param {string} [spectrum] A spectrum to use for the scale
- * @param {string} [repeat] alternatives: `repeat` — A spectrum to use for the scale
- * @param {(string | number)} [min] alternatives: `minimum`, `min frequency` — A minimum frequency, below which none of the scale's notes should exist.
- * @param {(string | number)} [max] alternatives: `maximum`, `max frequency` — A maximum frequency, above which none of the scale's notes should exist.
+ * An object containing scale data
  */
 export type Scale = {
+  /**
+   * An array of notes, which can be either `Note` objects, expression strings, or numbers
+   */
   notes: (Note | string | number)[],
+
+  /**
+   * An object containing a reference frequency, and an optional note name referencing a note in the `notes` array
+   */
   reference: Reference,
+
+  /**
+   * A spectrum to use for the scale
+   */
   spectrum?: string
 } & (
-  { 'min frequency'?: string | number, minimum?: never, min?: never }
-    | { 'min frequency'?: never, minimum?: string | number, min?: never }
+  {
+    /**
+     * A minimum frequency, below which none of the scale's notes should exist
+     */
+    'min frequency'?: string | number,
+    minimum?: never,
+    min?: never
+  } | {
+    /**
+     * A minimum frequency, below which none of the scale's notes should exist
+     */
+    minimum?: string | number,
+    'min frequency'?: never,
+    min?: never }
     | { 'min frequency'?: never, minimum?: never, min?: string | number }
 ) & (
-  { 'max frequency'?: string | number, maximum?: never , max?: never }
-    | { 'max frequency'?: never, maximum?: string | number , max?: never }
-    | { 'max frequency'?: never, maximum?: never , max?: string | number }
+  {
+    /**
+     * A maximum frequency, above which none of the scale's notes should exist
+     */
+    'max frequency'?: string | number,
+    maximum?: never,
+    max?: never
+  } | {
+    /**
+     * A maximum frequency, above which none of the scale's notes should exist
+     */
+    maximum?: string | number,
+    'max frequency'?: never,
+    max?:never
+  } | {
+    /**
+     * A maximum frequency, above which none of the scale's notes should exist
+     */
+    max?: string | number,
+    'max frequency'?: never,
+    maximum?: never
+  }
 ) & (
-  { 'repeat ratio'?: number, repeat?: never }
-    | { 'repeat ratio'?: never, repeat?: number }
+  {
+    /**
+     * A frequency ratio at which the scale's notes should repeat
+     */
+    'repeat ratio'?: number,
+    repeat?: never
+  } | {
+    /**
+     * A frequency ratio at which the scale's notes should repeat
+     */
+    repeat?: number,
+    'repeat ratio'?: never
+  }
 );
 
 /**
- * Tuning type
+ * Tuning interface
  *
- * @param {string} id A unique ID for the tuning
- * @param {string} [name] A name for the tuning
- * @param {string} [description] A description for the tuning
- * @param {Scale[]} scales An array of `Scale` objects
+ * An object containing tuning data
  */
 export interface Tuning {
+  /**
+   * A unique ID for the tuning
+   */
   id: string,
+
+  /**
+   * A name for the tuning
+   */
   name?: string,
+
+  /**
+   * A description for the tuning
+   */
   description?: string,
+
+  /**
+   * An array of `Scale` objects
+   */
   scales: Scale[]
 }
 
 /**
- * Partial type
+ * Partial interface
  *
- * @param {string | number} ratio alternatives: `frequency ratio` — A number or expression string representing the partial's frequency relative to the spectrum's root
- * @param {string | number} weight alternatives: `amplitude weight` — A number or expression string representing the amount that the partial should contribute to the spectrum's overall sound, relative to the other partials
+ * An object containing a partial's frequency ratio and amplitude weight
  */
 type Partial = (
-  { 'frequency ratio'?: string | number, ratio?: never }
-    | { 'frequency ratio'?: never, ratio?: string | number }
+  {
+    /**
+     * A number or expression string representing the partial's frequency relative to the spectrum's root
+     */
+    'frequency ratio'?: string | number,
+    ratio?: never
+  } | {
+    /**
+     * A number or expression string representing the partial's frequency relative to the spectrum's root
+     */
+    ratio?: string | number,
+    'frequency ratio'?: never
+  }
 ) & (
-  { 'amplitude weight'?: string | number, weight?: never }
-    | { 'amplitude weight'?: never, weight?: string | number }
+  {
+    /**
+     * A number or expression string representing the amount that the partial should contribute to the spectrum's overall sound, relative to the other partials
+     */
+    'amplitude weight'?: string | number,
+    weight?: never
+  } | {
+    /**
+     * A number or expression string representing the amount that the partial should contribute to the spectrum's overall sound, relative to the other partials
+     */
+    weight?: string | number,
+    'amplitude weight'?: never
+  }
 )
 
 /**
- * Spectrum type
+ * Spectrum interface
  *
- * @param {string} id A unique ID for the spectrum
- * @param {string} [name] A name for the spectrum
- * @param {string} [description] A description for the spectrum
- * @param {Partial[]} partials alternatives: `partial distribution` — An array of `Partial` objects
+ * An object containing spectrum data
  */
 export type Spectrum = {
+  /**
+   * A unique ID for the spectrum
+   */
   id: string,
+
+  /**
+   * A name for the spectrum
+   */
   name?: string,
+
+  /**
+   * A description for the spectrum
+   */
   description?: string
 } & (
-  { partials?: Partial[], 'partial distribution'?: never }
-    | { partials?: never, 'partial distribution'?: Partial[] }
+  {
+    /**
+     * An array of `Partial` objects
+     */
+    partials?: Partial[],
+    'partial distribution'?: never
+  } | {
+    /**
+     * An array of `Partial` objects
+     */
+    'partial distribution'?: Partial[],
+    partials?: never
+
+  }
 );
 
 /**
- * SetMember type
+ * SetMember interface
  *
- * @param {string} [spectrum] A spectrum's `id`
- * @param {string} [tuning] alternatives: `tuning system` — A tuning system's `id`
- * @param {boolean} [overrideScaleSpectra] If true, the provided spectrum ID will be used when building the set's tuning, rather than spectrums referenced via `scale.spectrum`
+ * An object containing either a tuning, a spectrum, or both
  */
 type SetMember = {
+  /**
+   * A spectrum's `id`
+   */
   spectrum?: string,
+
+  /**
+   * If true, the provided spectrum ID will be used when building the set's tuning, rather than spectrums referenced via `scale.spectrum`
+   */
   'override scale spectra'?: boolean
 } & (
-  { 'tuning system'?: string, tuning?: never }
-    | { 'tuning system'?: never, tuning?: string }
+  {
+    /**
+     * A tuning system's `id`
+     */
+    'tuning system'?: string,
+    tuning?: never
+  } | {
+    /**
+     * A tuning system's `id`
+     */
+    tuning?: string,
+    'tuning system'?: never
+  }
 )
 
 /**
- * Spectrum type
+ * Set interface
  *
- * @param {string} id A unique ID for the set
- * @param {string} [name] A name for the set
- * @param {string} [description] A description for the set
- * @param {SetMember[]} members An array of `SetMember` objects
+ * An object used to store a set of tunings and spectra
  */
 export interface Set {
+  /**
+   * A unique ID for the set
+   */
   id: string,
+
+  /**
+   * A name for the set
+   */
   name?: string,
+
+  /**
+   * A description for the set
+   */
   description?: string,
+
+  /**
+   * An array of `SetMember` objects
+   */
   members: SetMember[]
 }
 
