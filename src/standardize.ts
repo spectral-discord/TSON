@@ -3,6 +3,9 @@
 import { TSON } from './tson';
 import * as Joi from 'joi';
 
+/**
+ * Standardization Options
+ */
 export interface StandardizationOptions {
   tuningSystems: 'tuning systems' | 'tunings',
   repeatRatio: 'repeat' | 'repeat ratio',
@@ -23,6 +26,13 @@ export const standardizationOptionsSchema = Joi.object().keys({
   partialDistribution: Joi.string().valid('partials', 'partial distribution').required()
 });
 
+/**
+ * Standardizes parameter names throughout the provided TSON
+ *
+ * @param {TSON} tson The TSON to standardize
+ * @param {StandardizationOptions} options Parameter name preferences to use
+ * @returns {TSON} The standardized TSON
+ */
 export default function standardize(
   tson: TSON,
   options: StandardizationOptions = {

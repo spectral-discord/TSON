@@ -167,12 +167,25 @@ export const validationOptionsSchema = Joi.object().keys({
 });
 
 export interface ValidationOptions {
+  /**
+   * If true, an error will be thrown when references to tuning or spectrum IDs can't be resolved
+   */
   includedIdsOnly?: boolean,
+
+  /**
+   * If true, additional properties that aren't defined in the TSON standard will be allowed
+   */
   allowUnknown?: boolean
 }
 
 /**
  * TSON syntax validation
+ *
+ * @param {TSON | string} input The TSON to validate
+ * @param {ValidationOptions} options An object containing validation options
+ * @param {boolean} options.includedIdsOnly (default: true) If true, an error will be thrown when references to tuning or spectrum IDs can't be resolved
+ * @param {boolean} options.allowUnknown (default: true) If true, additional properties that aren't defined in the TSON standard will be allowed
+ * @returns {boolean} True if valid
  */
 export default function validate(
   input: TSON | string,
