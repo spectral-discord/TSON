@@ -3,13 +3,43 @@ import reduce, { ReducedSpectrum } from './reduce';
 import { round } from 'mathjs';
 import * as Joi from 'joi';
 
+/**
+ * Options for building tunings
+ */
 export interface BuildTuningOptions {
+  /**
+   * The global minimum frequency for the tuning, below which no notes will exist
+   */
   globalMin?: number,
+
+  /**
+   * The global maximum frequency for the tuning, above which no notes will exist
+   */
   globalMax?: number,
+
+  /**
+   * If true, referenced spectra will be added to the returned `BuiltNote` objects
+   */
   includeSpectra?: boolean,
+
+  /**
+   * The `id` of a spectrum to apply to built notes by default
+   */
   defaultSpectrumId?: string,
+
+  /**
+   * If true, a `defaultSpectrumId` must be provided, and will be used instead of any spectrum IDs referenced in scales
+   */
   overrideScaleSpectra?: boolean,
+
+  /**
+   * If false, an error will be thrown when two notes have the same frequency
+   */
   allowConflicts?: boolean,
+
+  /**
+   * The decimal precision of the returned note frequencies
+   */
   precision?: number
 }
 
@@ -28,11 +58,30 @@ export const buildTuningOptionsSchema = Joi.object().keys({
 });
 
 export interface BuiltNote {
+  /**
+   * The note's frequency in Hz
+   */
   frequency: number,
+
+  /**
+   * The note's name
+   */
   name?: string,
+
+  /**
+   * The note's spectrum
+   */
   spectrum?: ReducedSpectrum
 }
 
+/**
+ * Builds a tuning from its scale data
+ *
+ * @param tuning The tuning to build
+ * @param spectra An array of spectra that are referenced by the scales or `options.defaultSpectrumId`
+ * @param options An object containing build options
+ * @returns An array of `BuiltNote` objects
+ */
 export default function buildTuning(
   tuning: Tuning,
   spectra?: Spectrum[],
