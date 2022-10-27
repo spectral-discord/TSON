@@ -7,6 +7,12 @@ function ratioToCents(ratio: number): number {
   return round(1200 * Math.log2(ratio), 5);
 }
 
+/**
+ * Exports a scale to the Scala (.scl) format
+ * @param {Scale} scale The scale to be exported
+ * @param {string} description A description of the scale
+ * @returns {string} A string containing the scale in Scala format
+ */
 export function toScala(scale: Scale, description?: string) {
   let ratios: number[] = scale.notes.map(note => {
     if (typeof(note) === 'object') {
