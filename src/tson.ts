@@ -294,7 +294,6 @@ type NameAndId = {
   id: string
 }
 
-// TODO: Add actual documentation everywhere
 /**
  * TSON class
  *
