@@ -307,7 +307,7 @@ export class TSON implements TSON {
 
   /**
    * TSON constructor
-   * @param {TSON | TSON[] | object | string} initial A TSON or array of TSONs to use for initialization. The TSONs can be another instance of this class, a javascript object, or a raw YAML string.
+   * @param {TSON | object | string | (TSON | object | string)[]} initial A TSON or array of TSONs to use for initialization. The TSONs can be another instance of this class, a javascript object, or a raw YAML string.
    * @param {ValidationOptions} validationOptions A set of validation options to use when initializing and adding TSONs.
    * @param {StandardizationOptions} standardizationOptions A set of standardization options to use when initializing and adding TSONs.
    */
