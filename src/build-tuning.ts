@@ -184,32 +184,34 @@ export default function buildTuning(
           while (min && lastFreq / scale.repeat > min) {
             lastFreq /= scale.repeat;
 
-            if (
-              options?.allowConflicts
-              || !notes.find(note => note.frequency === lastFreq)
-            ) {
-              notes.push({
-                ...builtNote,
-                frequency: round(lastFreq, options?.precision)
-              });
-            } else if (!options?.allowConflicts) {
-              const problemNotes = [
-                {
-                  name: builtNote.name,
-                  frequency: lastFreq
-                },
-                {
-                  name: notes.find(note => note.frequency === lastFreq)?.name,
-                  frequency: lastFreq
-                }
-              ];
+            if (max && lastFreq < max) {
+              if (
+                options?.allowConflicts
+                || !notes.find(note => note.frequency === lastFreq)
+              ) {
+                notes.push({
+                  ...builtNote,
+                  frequency: round(lastFreq, options?.precision)
+                });
+              } else if (!options?.allowConflicts) {
+                const problemNotes = [
+                  {
+                    name: builtNote.name,
+                    frequency: lastFreq
+                  },
+                  {
+                    name: notes.find(note => note.frequency === lastFreq)?.name,
+                    frequency: lastFreq
+                  }
+                ];
 
-              throw new Error(`
-                Conflicting note frequencies were found.
-                To allow multiple notes with the same frequency, set 'allowConflicts' to true.
-                Problem notes:
-                ${JSON.stringify(problemNotes)}
-              `);
+                throw new Error(`
+                  Conflicting note frequencies were found.
+                  To allow multiple notes with the same frequency, set 'allowConflicts' to true.
+                  Problem notes:
+                  ${JSON.stringify(problemNotes)}
+                `);
+              }
             }
           }
 
@@ -218,32 +220,34 @@ export default function buildTuning(
           while (max && lastFreq * scale.repeat < max) {
             lastFreq *= scale.repeat;
 
-            if (
-              options?.allowConflicts
-              || !notes.find(note => note.frequency === lastFreq)
-            ) {
-              notes.push({
-                ...builtNote,
-                frequency: round(lastFreq, options?.precision)
-              });
-            } else if (!options?.allowConflicts) {
-              const problemNotes = [
-                {
-                  name: builtNote.name,
-                  frequency: lastFreq
-                },
-                {
-                  name: notes.find(note => note.frequency === lastFreq)?.name,
-                  frequency: lastFreq
-                }
-              ];
+            if (min && lastFreq > min) {
+              if (
+                options?.allowConflicts
+                || !notes.find(note => note.frequency === lastFreq)
+              ) {
+                notes.push({
+                  ...builtNote,
+                  frequency: round(lastFreq, options?.precision)
+                });
+              } else if (!options?.allowConflicts) {
+                const problemNotes = [
+                  {
+                    name: builtNote.name,
+                    frequency: lastFreq
+                  },
+                  {
+                    name: notes.find(note => note.frequency === lastFreq)?.name,
+                    frequency: lastFreq
+                  }
+                ];
 
-              throw new Error(`
-                Conflicting note frequencies were found.
-                To allow multiple notes with the same frequency, set 'allowConflicts' to true.
-                Problem notes:
-                ${JSON.stringify(problemNotes)}
-              `);
+                throw new Error(`
+                  Conflicting note frequencies were found.
+                  To allow multiple notes with the same frequency, set 'allowConflicts' to true.
+                  Problem notes:
+                  ${JSON.stringify(problemNotes)}
+                `);
+              }
             }
           }
         }
