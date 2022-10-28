@@ -151,10 +151,7 @@ export default function buildTuning(
         }
 
         // Add the built note to the notes array if it meets min/max/conflict criteria
-        if (
-          options?.allowConflicts
-          || !notes.find(note => note.frequency === builtNote.frequency)
-        ) {
+        if (options?.allowConflicts || !notes.find(note => note.frequency === builtNote.frequency)) {
           if (
             (min && note.ratio * referenceFreq > min)
             && (max && note.ratio * referenceFreq < max)

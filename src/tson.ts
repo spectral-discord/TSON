@@ -307,20 +307,21 @@ export class TSON implements TSON {
 
   /**
    * TSON constructor
-   * @param {TSON | object | string} tson A TSON to use for initialization. It can be another instance of this class, a javascript object, or a raw YAML string.
+   * @param {TSON | TSON[] | object | string} initial A TSON or array of TSONs to use for initialization. The TSONs can be another instance of this class, a javascript object, or a raw YAML string.
    * @param {ValidationOptions} validationOptions A set of validation options to use when initializing and adding TSONs.
    * @param {StandardizationOptions} standardizationOptions A set of standardization options to use when initializing and adding TSONs.
    */
   constructor(
-    tson?: TSON | object | string,
+    initial?: TSON | object | string | (TSON | object | string)[],
     validationOptions?: ValidationOptions,
     standardizationOptions?: StandardizationOptions
   ) {
     this.validationOptions = validationOptions;
     this.standardizationOptions = standardizationOptions;
 
-    if (tson) {
-      this.load(tson);
+    if (initial) {
+      const tsonArray: (TSON | object | string)[] = [];
+      tsonArray.concat(initial).forEach(tson => this.load(tson));
     }
   }
 
