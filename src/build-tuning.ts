@@ -44,9 +44,9 @@ export interface BuildTuningOptions {
 }
 
 export const buildTuningOptionsSchema = Joi.object().keys({
-  globalMin: Joi.number().required(),
-  globalMax: Joi.number().required(),
-  precision: Joi.number().required(),
+  globalMin: Joi.number().positive().required(),
+  globalMax: Joi.number().positive().required(),
+  precision: Joi.number().integer().positive().required(),
   includeSpectra: Joi.boolean().required(),
   allowConflicts: Joi.boolean().required(),
   overrideScaleSpectra: Joi.boolean().required(),
