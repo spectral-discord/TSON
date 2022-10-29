@@ -1,6 +1,7 @@
 'use strict';
 
 import { Tuning } from './tson';
+import Joi from 'joi';
 
 function centsToExpression(cents: number): string {
   return `2^(${cents}/1200)`;
@@ -11,6 +12,12 @@ interface ScalaImportOptions {
   name?: string,
   referenceFrequency: number
 }
+
+export const fromScalaOptionsSchema = Joi.object().keys({
+  id: Joi.string().required(),
+  name: Joi.string().optional(),
+  referenceFrequency: Joi.number().required()
+});
 
 /**
  * Imports a tuning from the Scala (.scl) format
@@ -25,6 +32,7 @@ export function fromScala(
   scala: string,
   options: ScalaImportOptions
 ): Tuning {
+  Joi.assert(options, fromScalaOptionsSchema, 'Invalid ScalaImportOptions!\n');
   const { id, name, referenceFrequency } = options;
 
   const tuning: Tuning = {

@@ -96,7 +96,7 @@ export default function buildTuning(
     overrideScaleSpectra: false
   }, options);
 
-  Joi.assert(options, buildTuningOptionsSchema, 'Invalid build tuning options!');
+  Joi.assert(options, buildTuningOptionsSchema, 'Invalid BuildTuningOptions!\n');
 
   if (options.defaultSpectrumId && !spectra?.find(spectrum => spectrum.id === options?.defaultSpectrumId)) {
     throw new Error('The `spectra` array doesn\'t include a spectrum with an ID that matches the provided `defaultSpectrumId`.');

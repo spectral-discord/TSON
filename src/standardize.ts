@@ -45,7 +45,7 @@ export default function standardize(
     partialDistribution: 'partials',
   }
 ): TSON {
-  Joi.assert(options, standardizationOptionsSchema, 'Invalid standardization options!\n');
+  Joi.assert(options, standardizationOptionsSchema, 'Invalid StandardizationOptions!\n');
 
   return JSON.parse(
     JSON.stringify(tson)

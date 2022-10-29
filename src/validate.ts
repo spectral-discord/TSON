@@ -197,7 +197,7 @@ export default function validate(
     allowUnknown: true
   }, options);
 
-  Joi.assert(options, validationOptionsSchema, 'Invalid validation options!\n');
+  Joi.assert(options, validationOptionsSchema, 'Invalid ValidationOptions!\n');
 
   // Parse input if it's a YAML string
   const tson: TSON = typeof(input) === 'string' ? YAML.parse(input) : input;
