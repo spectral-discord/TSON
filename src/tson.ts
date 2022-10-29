@@ -114,13 +114,13 @@ export type Scale = {
     /**
      * A frequency ratio at which the scale's notes should repeat
      */
-    'repeat ratio'?: number,
+    'repeat ratio'?: number | string,
     repeat?: never
   } | {
     /**
      * A frequency ratio at which the scale's notes should repeat
      */
-    repeat?: number,
+    repeat?: number | string,
     'repeat ratio'?: never
   }
 );
