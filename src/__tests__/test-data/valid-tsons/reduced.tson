@@ -1,0 +1,54 @@
+spectra:
+  - id: some spectrum
+    partials:
+      - ratio: 1
+        weight: 0.3908794788273615
+      - ratio: 2
+        weight: 0.19869706840390877
+      - ratio: 2.7
+        weight: 0.26384364820846906
+      - ratio: 3.3
+        weight: 0.08143322475570032
+      - ratio: 4.5
+        weight: 0.06514657980456026
+    description: it's a spectrum
+tunings:
+  - name: a tuning
+    id: something
+    scales:
+      - notes:
+          - ratio: 1
+          - name: B
+            ratio: 1.122462048309373
+          - ratio: 1.189207115002721
+          - ratio: 2
+        reference:
+          frequency: 1234
+          note: B
+        min: 800
+        max: 2400
+  - name: a different tuning
+    id: another
+    description: another tuning
+    scales:
+      - notes:
+          - name: A
+            ratio: 1
+          - name: Something else
+            ratio: 1.122462048309373
+          - ratio: 1.4142135623730951
+          - ratio: 2
+        reference:
+          frequency: 234
+          note: Something else
+        min: 80
+        max: 1200
+        repeat: 2.6
+      - notes:
+          - ratio: 1
+          - ratio: 1.5
+          - ratio: 2
+        reference:
+          frequency: 123
+        min: 1500
+        repeat: 2.5

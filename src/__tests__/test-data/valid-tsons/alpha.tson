@@ -1,0 +1,12 @@
+testName: a simple, valid tuning exists
+
+tunings:
+  - name: alpha
+    id: '1'
+    description: Alpha scale created by Wendy Carlos
+    scales:
+      - reference: 
+          frequency: 500
+        repeat: 2^(77.96499/1200)
+        notes:
+          - 1

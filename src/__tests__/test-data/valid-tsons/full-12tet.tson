@@ -1,0 +1,34 @@
+testName: a full, 12tet tuning exists
+
+tunings:
+  - name: Full 12-tet
+    id: another
+    scales:
+      - reference:
+          frequency: 440
+        repeat: 2
+        notes:
+          - ratio: 1
+            name: A
+          - ratio: 2^(1/12)
+            name: A#
+          - ratio: 2^(2/12)
+            name: B
+          - ratio: 2^(3/12)
+            name: C
+          - ratio: 2^(4/12)
+            name: C#
+          - ratio: 2^(5/12)
+            name: D
+          - ratio: 2^(6/12)
+            name: D#
+          - ratio: 2^(7/12)
+            name: E
+          - ratio: 2^(8/12)
+            name: F
+          - ratio: 2^(9/12)
+            name: F#
+          - ratio: 2^(10/12)
+            name: G
+          - ratio: 2^(11/12)
+            name: G#

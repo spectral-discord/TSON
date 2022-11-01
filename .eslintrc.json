@@ -12,6 +12,7 @@
     {
       "files": ["src/**/*.test.ts"],
       "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
         "no-undef": "off"
       }
     }
@@ -29,7 +30,7 @@
     "quotes": [ "warn", "single" ],
     "semi": [ "warn", "always" ],
     "no-undef": [ "error" ],
-    "no-unused-vars": [ "error" ],
+    "no-trailing-spaces": [ "error" ],
     "@typescript-eslint/no-unused-vars": [ "error" ]
   }
 }

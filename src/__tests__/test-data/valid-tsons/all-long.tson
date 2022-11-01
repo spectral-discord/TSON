@@ -1,0 +1,55 @@
+testName: the TSON is valid and only uses long parameter names
+tuning systems:
+  - name: a tuning
+    id: something
+    scales:
+      - notes:
+          - 1
+          - frequency ratio: 2^(2/12)
+            name: B
+          - frequency ratio: 2^(3/12)
+          - frequency ratio: 2
+        reference:
+          frequency: 1234 Hz
+          note: B
+        min frequency: 800 Hz
+        max frequency: 2400
+  - name: a different tuning
+    id: another
+    description: another tuning
+    scales:
+      - notes:
+          - frequency ratio: 1
+            name: A
+          - frequency ratio: 2^(2/12)
+            name: Something else
+          - frequency ratio: 2^(6/12)
+          - 2
+        reference:
+          frequency: 234 Hz
+          note: Something else
+        min frequency: 80
+        max frequency: 1200
+        repeat ratio: 2.6
+      - notes:
+          - 1
+          - 2
+          - 1.5
+        reference: 
+          frequency: 123
+        repeat ratio: 2.5
+        min frequency: 1500
+spectra:
+  - id: some spectrum
+    description: it's a spectrum
+    partial distribution:
+      - frequency ratio: 1
+        amplitude weight: 1.2
+      - frequency ratio: 2
+        amplitude weight: 0.61
+      - frequency ratio: 2.7
+        amplitude weight: 0.81
+      - frequency ratio: 3.3
+        amplitude weight: 0.25
+      - frequency ratio: 4.5
+        amplitude weight: 0.2
