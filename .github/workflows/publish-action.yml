@@ -19,15 +19,14 @@ jobs:
     needs: [check-secret]
     if: needs.check-secret.outputs.my-key == 'true'
     steps:
-      - uses: Bhacaz/checkout-files@v2
-        with:
-          files: typescript
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 16.18
-      - run: yarn install
-      - run: yarn test
-      - run: yarn build
+      - run: yarn --cwd typescript install
+      - run: yarn --cwd typescript test
+      - run: yarn --cwd typescript build
       - uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_TOKEN }}
+          package: typescript/package.json
