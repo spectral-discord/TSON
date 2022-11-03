@@ -2,7 +2,7 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 if [ -f "package.json" ]; then
-  yarn test && yarn lint-staged
+  yarn --cwd typescript test && yarn --cwd typescript lint-staged
 fi
 
 # if [ $(git diff --cached --name-only src/validate.ts) ]; then
