@@ -1,4 +1,5 @@
 tasks:
-  - name: TSONify
+  - name: TSONify.ts
+    before: cd typescript
     init: ./scripts/gitpod-init.sh
     command: ./scripts/gitpod-start.sh

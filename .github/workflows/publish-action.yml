@@ -3,7 +3,7 @@ on:
     branches: [ main ]
 
 jobs:
-  check-secret:
+  check-npm-secret:
     runs-on: ubuntu-latest
     outputs:
       my-key: ${{ steps.my-key.outputs.defined }}
@@ -14,15 +14,17 @@ jobs:
         env:
             MY_KEY: ${{ secrets.NPM_TOKEN }}
 
-  publish:
+  publish-npm-package:
     runs-on: ubuntu-latest
     needs: [check-secret]
     if: needs.check-secret.outputs.my-key == 'true'
     steps:
-      - uses: actions/checkout@v3
+      - uses: Bhacaz/checkout-files@v2
+        with:
+          files: typescript
       - uses: actions/setup-node@v3
         with:
-          node-version: 14.18
+          node-version: 16.18
       - run: yarn install
       - run: yarn test
       - run: yarn build

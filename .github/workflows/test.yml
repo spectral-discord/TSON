@@ -6,8 +6,9 @@ jobs:
     outputs:
       package-exists: ${{ steps.check-package.outputs.files_exists }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v1
+      - uses: Bhacaz/checkout-files@v2
+        with:
+          files: typescript
       - name: "Check if package.json exists"
         id: check-package
         uses: andstor/file-existence-action@v1
@@ -19,7 +20,9 @@ jobs:
     needs: [check-package-exists]
     if: needs.check-package-exists.outputs.package-exists == 'true'
     steps:
-      - uses: actions/checkout@v3
+      - uses: Bhacaz/checkout-files@v2
+        with:
+          files: typescript
       - uses: actions/setup-node@v3
         with:
           node-version: 14.18
