@@ -81,7 +81,31 @@
                             "description": "The note's name"
                           }
                         },
-                        "additionalProperties": true
+                        "additionalProperties": true,
+                        "if": {
+                          "propertyNames": {
+                            "enum": [
+                              "frequency ratio",
+                              "ratio"
+                            ]
+                          },
+                          "minProperties": 2
+                        },
+                        "then": false,
+                        "else": {
+                          "oneOf": [
+                            {
+                              "required": [
+                                "frequency ratio"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "ratio"
+                              ]
+                            }
+                          ]
+                        }
                       }
                     ]
                   }
@@ -104,16 +128,7 @@
                     },
                     "note": {
                       "type": "string",
-                      "description": "The name of the note that should be mapped onto the reference frequency",
-                      "const": {
-                        "ref": {
-                          "path": [
-                            "notes"
-                          ],
-                          "ancestor": 2,
-                          "in": true
-                        }
-                      }
+                      "description": "The name of the note that should be mapped onto the reference frequency"
                     }
                   },
                   "required": [
@@ -226,7 +241,133 @@
                 "notes",
                 "reference"
               ],
-              "additionalProperties": true
+              "additionalProperties": true,
+              "allOf": [
+                {
+                  "not": {
+                    "required": [
+                      "repeat",
+                      "repeat ratio"
+                    ]
+                  }
+                },
+                {
+                  "oneOf": [
+                    {
+                      "required": [
+                        "min"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "minimum"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "min frequency"
+                      ]
+                    },
+                    {
+                      "not": {
+                        "oneOf": [
+                          {
+                            "required": [
+                              "min"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "minimum"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "min frequency"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "min",
+                              "minimum"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "min",
+                              "min frequency"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "minimum",
+                              "min frequency"
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "oneOf": [
+                    {
+                      "required": [
+                        "max"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "maximum"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "max frequency"
+                      ]
+                    },
+                    {
+                      "not": {
+                        "oneOf": [
+                          {
+                            "required": [
+                              "max"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "maximum"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "max frequency"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "max",
+                              "maximum"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "max",
+                              "max frequency"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "maximum",
+                              "max frequency"
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
             }
           }
         },
@@ -314,7 +455,31 @@
                             "description": "The note's name"
                           }
                         },
-                        "additionalProperties": true
+                        "additionalProperties": true,
+                        "if": {
+                          "propertyNames": {
+                            "enum": [
+                              "frequency ratio",
+                              "ratio"
+                            ]
+                          },
+                          "minProperties": 2
+                        },
+                        "then": false,
+                        "else": {
+                          "oneOf": [
+                            {
+                              "required": [
+                                "frequency ratio"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "ratio"
+                              ]
+                            }
+                          ]
+                        }
                       }
                     ]
                   }
@@ -337,16 +502,7 @@
                     },
                     "note": {
                       "type": "string",
-                      "description": "The name of the note that should be mapped onto the reference frequency",
-                      "const": {
-                        "ref": {
-                          "path": [
-                            "notes"
-                          ],
-                          "ancestor": 2,
-                          "in": true
-                        }
-                      }
+                      "description": "The name of the note that should be mapped onto the reference frequency"
                     }
                   },
                   "required": [
@@ -459,7 +615,133 @@
                 "notes",
                 "reference"
               ],
-              "additionalProperties": true
+              "additionalProperties": true,
+              "allOf": [
+                {
+                  "not": {
+                    "required": [
+                      "repeat",
+                      "repeat ratio"
+                    ]
+                  }
+                },
+                {
+                  "oneOf": [
+                    {
+                      "required": [
+                        "min"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "minimum"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "min frequency"
+                      ]
+                    },
+                    {
+                      "not": {
+                        "oneOf": [
+                          {
+                            "required": [
+                              "min"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "minimum"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "min frequency"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "min",
+                              "minimum"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "min",
+                              "min frequency"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "minimum",
+                              "min frequency"
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "oneOf": [
+                    {
+                      "required": [
+                        "max"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "maximum"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "max frequency"
+                      ]
+                    },
+                    {
+                      "not": {
+                        "oneOf": [
+                          {
+                            "required": [
+                              "max"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "maximum"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "max frequency"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "max",
+                              "maximum"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "max",
+                              "max frequency"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "maximum",
+                              "max frequency"
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
             }
           }
         },
@@ -547,7 +829,61 @@
                   ]
                 }
               },
-              "additionalProperties": true
+              "additionalProperties": true,
+              "allOf": [
+                {
+                  "if": {
+                    "propertyNames": {
+                      "enum": [
+                        "frequency ratio",
+                        "ratio"
+                      ]
+                    },
+                    "minProperties": 2
+                  },
+                  "then": false,
+                  "else": {
+                    "oneOf": [
+                      {
+                        "required": [
+                          "frequency ratio"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "ratio"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "if": {
+                    "propertyNames": {
+                      "enum": [
+                        "amplitude weight",
+                        "weight"
+                      ]
+                    },
+                    "minProperties": 2
+                  },
+                  "then": false,
+                  "else": {
+                    "oneOf": [
+                      {
+                        "required": [
+                          "amplitude weight"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "weight"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
             }
           },
           "partials": {
@@ -607,14 +943,92 @@
                   ]
                 }
               },
-              "additionalProperties": true
+              "additionalProperties": true,
+              "allOf": [
+                {
+                  "if": {
+                    "propertyNames": {
+                      "enum": [
+                        "frequency ratio",
+                        "ratio"
+                      ]
+                    },
+                    "minProperties": 2
+                  },
+                  "then": false,
+                  "else": {
+                    "oneOf": [
+                      {
+                        "required": [
+                          "frequency ratio"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "ratio"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "if": {
+                    "propertyNames": {
+                      "enum": [
+                        "amplitude weight",
+                        "weight"
+                      ]
+                    },
+                    "minProperties": 2
+                  },
+                  "then": false,
+                  "else": {
+                    "oneOf": [
+                      {
+                        "required": [
+                          "amplitude weight"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "weight"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
             }
           }
         },
         "required": [
           "id"
         ],
-        "additionalProperties": true
+        "additionalProperties": true,
+        "if": {
+          "propertyNames": {
+            "enum": [
+              "partials",
+              "partial distribution"
+            ]
+          },
+          "minProperties": 2
+        },
+        "then": false,
+        "else": {
+          "oneOf": [
+            {
+              "required": [
+                "partials"
+              ]
+            },
+            {
+              "required": [
+                "partial distribution"
+              ]
+            }
+          ]
+        }
       }
     },
     "sets": {
@@ -661,7 +1075,13 @@
                   "description": "If true, the set's spectrum should be applied to all scales in the set's tuning system, overriding any spectra that are references by the scales."
                 }
               },
-              "additionalProperties": true
+              "additionalProperties": true,
+              "not": {
+                "required": [
+                  "tuning system",
+                  "tuning"
+                ]
+              }
             }
           }
         },
@@ -673,5 +1093,39 @@
       }
     }
   },
-  "additionalProperties": true
+  "additionalProperties": true,
+  "allOf": [
+    {
+      "not": {
+        "required": [
+          "tuning systems",
+          "tunings"
+        ]
+      }
+    },
+    {
+      "anyOf": [
+        {
+          "required": [
+            "tuning systems"
+          ]
+        },
+        {
+          "required": [
+            "tunings"
+          ]
+        },
+        {
+          "required": [
+            "spectra"
+          ]
+        },
+        {
+          "required": [
+            "sets"
+          ]
+        }
+      ]
+    }
+  ]
 }

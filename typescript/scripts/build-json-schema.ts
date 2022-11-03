@@ -12,4 +12,4 @@ const json = {
   ...parse(tsonSchema, 'json')
 };
 
-writeFileSync(`${__dirname}/../schema/tson.json`, JSON.stringify(json, null, 2));
+writeFileSync(`${__dirname}/../../schema/tson.json`, JSON.stringify(json, null, 2));

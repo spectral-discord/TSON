@@ -80,7 +80,7 @@ const tunings = Joi.array().items(Joi.object().keys({
     minimum: frequency.description('A minimum frequency for the scale.\nWhen mapping the scale\'s notes onto actual frequencies, notes from this scale will not be mapped below the provided frequency.').optional(),
     min: frequency.description('A minimum frequency for the scale.\nWhen mapping the scale\'s notes onto actual frequencies, notes from this scale will not be mapped below the provided frequency.').optional(),
     spectrum: Joi.string().description('The spectrum of the tones that should be used for this tuning.\nThis enables multiple, scale-dependent spectra to be used within a single tuning system.').optional(),
-  }).oxor('repeat', 'repeat ratio')
+  }).nand('repeat', 'repeat ratio')
     .oxor('min', 'minimum', 'min frequency')
     .oxor('max', 'maximum', 'max frequency')
     .unknown()
@@ -151,13 +151,13 @@ export const tsonSchema = Joi.object().keys({
       tuning: Joi.string().description('A reference of a tuning system\'s ID').optional(),
       spectrum: Joi.string().description('A reference of a spectrum\'s ID').optional(),
       'override scale spectra': Joi.boolean().description('If true, the set\'s spectrum should be applied to all scales in the set\'s tuning system, overriding any spectra that are references by the scales.').optional()
-    }).oxor('tuning system', 'tuning').unknown())
+    }).nand('tuning system', 'tuning').unknown())
       .min(1)
       .unique((a, b) => a.id && b.id && a.id === b.id)
       .description('A list of set member objects')
       .required()
   }).unknown()).min(1).description('A list of set objects').optional()
-}).oxor('tuning systems', 'tunings')
+}).nand('tuning systems', 'tunings')
   .or('tuning systems', 'tunings', 'spectra', 'sets')
   .unknown();
 
