@@ -16,8 +16,8 @@ jobs:
 
   publish-npm-package:
     runs-on: ubuntu-latest
-    needs: [check-secret]
-    if: needs.check-secret.outputs.my-key == 'true'
+    needs: [check-npm-secret]
+    if: needs.check-npm-secret.outputs.my-key == 'true'
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
