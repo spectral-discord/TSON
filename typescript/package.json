@@ -1,6 +1,6 @@
 {
   "name": "tsonify",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "TSON Helper Library",
   "main": "dist/bundle.cjs.js",
   "module": "dist/bundle.es.js",
@@ -15,7 +15,7 @@
     "test": "jest --config jest.config.ts",
     "preversion": "yarn test && yarn lint",
     "prepublishOnly": "yarn test && yarn lint",
-    "prepare": "husky install",
+    "prepare": "cd .. && husky install",
     "build-schema": "ts-node -P tsconfig.scripts.json ./scripts/build-json-schema.ts"
   },
   "lint-staged": {

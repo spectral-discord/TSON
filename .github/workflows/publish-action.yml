@@ -3,7 +3,7 @@ on:
     branches: [ main ]
 
 jobs:
-  check-secret:
+  check-npm-secret:
     runs-on: ubuntu-latest
     outputs:
       my-key: ${{ steps.my-key.outputs.defined }}
@@ -14,7 +14,7 @@ jobs:
         env:
             MY_KEY: ${{ secrets.NPM_TOKEN }}
 
-  publish:
+  publish-npm-package:
     runs-on: ubuntu-latest
     needs: [check-secret]
     if: needs.check-secret.outputs.my-key == 'true'
@@ -22,10 +22,11 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 14.18
-      - run: yarn install
-      - run: yarn test
-      - run: yarn build
+          node-version: 16.18
+      - run: yarn --cwd typescript install
+      - run: yarn --cwd typescript test
+      - run: yarn --cwd typescript build
       - uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_TOKEN }}
+          package: typescript/package.json

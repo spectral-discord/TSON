@@ -10,6 +10,6 @@ const json = {
   '$schema': 'http://json-schema.org/draft-07/schema#',
   title: 'TSON Schema',
   ...parse(tsonSchema, 'json')
-}
+};
 
 writeFileSync(`${__dirname}/../schema/tson.json`, JSON.stringify(json, null, 2));
