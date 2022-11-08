@@ -6,6 +6,7 @@ import buildTuning, { BuildTuningOptions, BuiltNote } from './build-tuning';
 import reduce from './reduce';
 import YAML from 'yaml';
 import { assert } from 'joi';
+import { setIsSubset } from 'mathjs';
 
 /**
  * Note interface
@@ -229,7 +230,7 @@ export type Spectrum = {
  *
  * An object containing either a tuning, a spectrum, or both
  */
-type SetMember = {
+export type SetMember = {
   /**
    * A spectrum's `id`
    */
@@ -525,5 +526,61 @@ export class TSON implements TSON {
     });
 
     return buildTuning(tuning, spectra.length > 0 ? spectra : undefined, buildTuningOptions);
+  }
+
+  /**
+   * Build's a member of a set
+   *
+   * @param {SetMember} setMember The set member object to build
+   * @param buildTuningOptions Options for building the set member's tuning
+   * @returns {BuiltNote[] | Spectrum} A `BuiltNote` array or a `Spectrum`
+   */
+  buildSetMember(
+    setMember: SetMember,
+    buildTuningOptions?: BuildTuningOptions
+  ): BuiltNote[] | Spectrum {
+    const tuningId = setMember.tuning || setMember['tuning system'];
+
+    if (tuningId) {
+      return this.buildTuning(tuningId, {
+        ...buildTuningOptions,
+        ...(setMember.spectrum && {
+          defaultSpectrumId: setMember.spectrum
+        }),
+        ...(setMember['override scale spectra'] && {
+          overrideScaleSpectra: true
+        })
+      });
+    } else if (setMember.spectrum) {
+      const spectrum = this.findSpectrumById(setMember.spectrum);
+
+      if (!spectrum) {
+        throw new Error(`Spectrum not found with ID: ${setMember.spectrum}`);
+      }
+
+      return spectrum;
+    } else {
+      throw new Error('Set members must contain a spectrum and/or a tuning system');
+    }
+  }
+
+  /**
+   * Builds all members of a set
+   *
+   * @param {string} setId The ID of the set to build
+   * @param {BuildTuningOptions} buildTuningOptions Options for building the set's tunings
+   * @returns {(BuiltNote[] | Spectrum)[]} An array of `BuiltNote` arrays and/or `Spectrum` objects
+   */
+  buildSet(
+    setId: string,
+    buildTuningOptions?: BuildTuningOptions
+  ): (BuiltNote[] | Spectrum)[] {
+    const set = this.findSetById(setId);
+
+    if (!set) {
+      throw new Error(`A set could not be found with the ID: ${setId}`);
+    }
+
+    return set.members.map(mem => this.buildSetMember(mem, buildTuningOptions));
   }
 }
