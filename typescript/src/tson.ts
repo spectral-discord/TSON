@@ -6,6 +6,7 @@ import buildTuning, { BuildTuningOptions, BuiltNote } from './build-tuning';
 import reduce from './reduce';
 import YAML from 'yaml';
 import { assert } from 'joi';
+import { toTson } from './export';
 
 /**
  * Note interface
@@ -525,5 +526,12 @@ export class TSON implements TSON {
     });
 
     return buildTuning(tuning, spectra.length > 0 ? spectra : undefined, buildTuningOptions);
+  }
+
+  /**
+   * @returns A YAML string of the TSON data
+   */
+  stringify(): string {
+    return toTson(this);
   }
 }
