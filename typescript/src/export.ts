@@ -1,7 +1,8 @@
 'use strict';
 
 import { evaluate, round } from 'mathjs';
-import { Scale } from './tson';
+import YAML from 'yaml';
+import { Scale, TSON } from './tson';
 
 function ratioToCents(ratio: number): number {
   return round(1200 * Math.log2(ratio), 5);
@@ -48,4 +49,18 @@ export function toScala(scale: Scale, description?: string) {
   }
 
   return `${description || ''}\n${notesInCents.length}\n${notesInCents.join('\n')}`;
+}
+
+/**
+ * Exports a TSON object to YAML string
+ * @param {TSON} tson The TSON to be exported
+ * @returns {string} A YAML string of the TSON data
+ */
+export function toTson(tson: TSON): string {
+  return YAML.stringify({
+    ...(tson.tunings && { tunings: tson.tunings }),
+    ...(tson['tuning systems'] && { 'tuning systems': tson['tuning systems'] }),
+    ...(tson.spectra && { spectra: tson.spectra }),
+    ...(tson.sets && { sets: tson.sets }),
+  });
 }
