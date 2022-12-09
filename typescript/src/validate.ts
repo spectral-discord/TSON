@@ -1,7 +1,7 @@
 'use strict';
 
 import { TSON } from './tson';
-import * as Joi from 'joi';
+import Joi from 'joi';
 import { evaluate } from 'mathjs';
 import YAML from 'yaml';
 

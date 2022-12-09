@@ -1,26 +1,36 @@
 jest.deepUnmock('yaml');
 jest.unmock('../tson');
 
-import { readFileSync } from 'fs';
-import YAML from 'yaml';
-import { TSON } from '../tson';
-
-jest.mock('joi', () => ({
-  assert: jest.fn().mockReturnThis(),
-}));
-
 jest.mock('mathjs', () => ({
   evaluate: jest.fn(),
 }));
 
-jest.mock('../validate', () => jest.fn());
+jest.mock('joi', () => ({
+  assert: jest.fn(),
+}));
+
+jest.mock('../validate', () => ({
+  __esModule: true,
+  default: jest.fn().mockReturnValue(true),
+  validationOptionsSchema: jest.fn()
+}));
+
 jest.mock('../standardize', () => ({
-  default: jest.fn(),
+  __esModule: true,
+  default: jest.fn().mockImplementation(() => ({})),
   standardizationOptionsSchema: jest.fn()
 }));
+
 jest.mock('../build-tuning', () => ({
+  __esModule: true,
   default: jest.fn()
 }));
+
+import { readFileSync } from 'fs';
+import YAML from 'yaml';
+import { TSON } from '../tson';
+import * as validate from '../validate';
+import * as standardize from '../standardize';
 
 const dir = `${__dirname}/test-data/valid-tsons`;
 const importTsonFile = (file: string) => {
@@ -30,6 +40,7 @@ const importTsonFile = (file: string) => {
 describe('constructor tests', () => {
   afterEach(() => {
     jest.resetAllMocks();
+    jest.restoreAllMocks();
   });
 
   test('Shouldn\'t call load() when no initializer TSONs are provided', () => {
@@ -62,5 +73,16 @@ describe('constructor tests', () => {
     const fullTson = new TSON(full);
     new TSON([ complex, minimal, fullTson ]);
     expect(load).toHaveBeenCalledTimes(4);
+  });
+});
+
+describe('load tests', () => {
+  test('Should call validate when load is called', () => {
+    const complex = YAML.parse(importTsonFile('complex.tson'));
+    const tson = new TSON();
+    tson.load(complex);
+
+    expect(validate.default).toHaveBeenCalledTimes(1);
+    expect(standardize.default).toHaveBeenCalledTimes(1);
   });
 });

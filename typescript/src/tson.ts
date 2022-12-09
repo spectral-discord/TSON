@@ -316,8 +316,13 @@ export class TSON implements TSON {
     validationOptions?: ValidationOptions,
     standardizationOptions?: StandardizationOptions
   ) {
-    this.validationOptions = validationOptions;
-    this.standardizationOptions = standardizationOptions;
+    if (validationOptions) {
+      this.setValidationOptions(validationOptions);
+    }
+
+    if (standardizationOptions) {
+      this.setStandardizationOptions(standardizationOptions);
+    }
 
     if (initial) {
       const tsonArray: (TSON | object | string)[] = [];
@@ -336,19 +341,19 @@ export class TSON implements TSON {
 
     const formatted = standardize(tson, this.standardizationOptions);
 
-    if (formatted.tunings) {
+    if (formatted?.tunings) {
       this.tunings = formatted.tunings.concat(this.tunings || []);
     }
 
-    if (formatted['tuning systems']) {
+    if (formatted?.['tuning systems']) {
       this['tuning systems'] = formatted['tuning systems'].concat(this['tuning systems'] || []);
     }
 
-    if (formatted.spectra) {
+    if (formatted?.spectra) {
       this.spectra = formatted.spectra.concat(this.spectra || []);
     }
 
-    if (formatted.sets) {
+    if (formatted?.sets) {
       this.sets = formatted.sets.concat(this.sets || []);
     }
   }
@@ -438,7 +443,7 @@ export class TSON implements TSON {
    * Lists the IDs, names, and descriptions of all spectra in the class instance.
    * @returns {object[]} An array of objects containing spectrum `id`, `name`, and `description` values.
    */
-  listSpectra(): NameAndId[] {
+  describeSpectra(): NameAndId[] {
     return this.spectra?.map(spectrum => ({
       id: spectrum.id,
       ...(spectrum.name && { name: spectrum.name }),
@@ -450,7 +455,7 @@ export class TSON implements TSON {
    * Lists the IDs, names, and descriptions of all sets in the class instance.
    * @returns {object[]} An array of objects containing set `id`, `name`, and `description` values.
    */
-  listSets(): NameAndId[] {
+  describeSets(): NameAndId[] {
     return this.sets?.map(set => ({
       id: set.id,
       ...(set.name && { name: set.name }),
