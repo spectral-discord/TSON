@@ -7,7 +7,6 @@ import * as Joi from 'joi';
  * Standardization Options
  */
 export interface StandardizationOptions {
-  tuningSystems: 'tuning systems' | 'tunings',
   repeatRatio: 'repeat' | 'repeat ratio',
   minFrequency: 'min' | 'minimum' | 'min frequency',
   maxFrequency: 'max' | 'maximum' | 'max frequency',
@@ -17,7 +16,6 @@ export interface StandardizationOptions {
 }
 
 export const standardizationOptionsSchema = Joi.object().keys({
-  tuningSystems: Joi.string().valid('tuning systems', 'tunings').required(),
   repeatRatio: Joi.string().valid('repeat', 'repeat ratio').required(),
   minFrequency: Joi.string().valid('min', 'minimum', 'min frequency').required(),
   maxFrequency: Joi.string().valid('max', 'maximum', 'max frequency').required(),
@@ -36,7 +34,6 @@ export const standardizationOptionsSchema = Joi.object().keys({
 export default function standardize(
   tson: TSON,
   options: StandardizationOptions = {
-    tuningSystems: 'tunings',
     repeatRatio: 'repeat',
     minFrequency: 'min',
     maxFrequency: 'max',
@@ -49,7 +46,6 @@ export default function standardize(
 
   return JSON.parse(
     JSON.stringify(tson)
-      .replace(options.tuningSystems === 'tunings' ? /("tuning systems":)/g : /("tunings":)/g, `"${options.tuningSystems}":`)
       .replace(options.repeatRatio === 'repeat' ? /("repeat ratio":)/g : /("repeat":)/g, `"${options.repeatRatio}":`)
       .replace(options.minFrequency === 'min'
         ? /("min frequency":)|("minimum":)/g

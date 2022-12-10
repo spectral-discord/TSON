@@ -59,7 +59,6 @@ export function toScala(scale: Scale, description?: string) {
 export function toTson(tson: TSON): string {
   return YAML.stringify({
     ...(tson.tunings && { tunings: tson.tunings }),
-    ...(tson['tuning systems'] && { 'tuning systems': tson['tuning systems'] }),
     ...(tson.spectra && { spectra: tson.spectra }),
     ...(tson.sets && { sets: tson.sets }),
   });

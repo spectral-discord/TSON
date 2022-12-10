@@ -239,22 +239,13 @@ type SetMember = {
   /**
    * If true, the provided spectrum ID will be used when building the set's tuning, rather than spectrums referenced via `scale.spectrum`
    */
-  'override scale spectra'?: boolean
-} & (
-  {
-    /**
-     * A tuning system's `id`
+  'override scale spectra'?: boolean,
+
+  /**
+     * A tuning's `id`
      */
-    'tuning system'?: string,
-    tuning?: never
-  } | {
-    /**
-     * A tuning system's `id`
-     */
-    tuning?: string,
-    'tuning system'?: never
-  }
-)
+  tuning?: string
+}
 
 /**
  * Set interface
@@ -285,7 +276,6 @@ export interface Set {
 
 export interface TSON {
   tunings?: Tuning[],
-  'tuning systems'?: Tuning[],
   spectra?: Spectrum[],
   sets?: Set[]
 }
@@ -345,10 +335,6 @@ export class TSON implements TSON {
       this.tunings = formatted.tunings.concat(this.tunings || []);
     }
 
-    if (formatted?.['tuning systems']) {
-      this['tuning systems'] = formatted['tuning systems'].concat(this['tuning systems'] || []);
-    }
-
     if (formatted?.spectra) {
       this.spectra = formatted.spectra.concat(this.spectra || []);
     }
@@ -369,7 +355,6 @@ export class TSON implements TSON {
     const reformatted = standardize(this, this.standardizationOptions);
 
     this.tunings = reformatted.tunings;
-    this['tuning systems'] = reformatted['tuning systems'];
     this.spectra = reformatted.spectra;
     this.sets = reformatted.sets;
   }
@@ -390,15 +375,7 @@ export class TSON implements TSON {
    * @returns {Tuning | undefined } Returns a `Tuning` object if a matching tuning was found, otherwise undefined.
    */
   findTuningById(id: string): Tuning | undefined {
-    if (this.tunings) {
-      return this.tunings.find(tuning => tuning.id === id);
-    }
-
-    if (this['tuning systems']) {
-      return this['tuning systems'].find(tuning => tuning.id === id);
-    }
-
-    return undefined;
+    return this.tunings?.find(tuning => tuning.id === id);
   }
 
   /**
@@ -407,11 +384,7 @@ export class TSON implements TSON {
    * @returns {Spectrum | undefined } Returns a `Spectrum` object if a matching spectrum was found, otherwise undefined.
    */
   findSpectrumById(id: string): Spectrum | undefined {
-    if (this.spectra) {
-      return this.spectra.find(spectrum => spectrum.id === id);
-    }
-
-    return undefined;
+    return this.spectra?.find(spectrum => spectrum.id === id);
   }
 
   /**
@@ -420,11 +393,7 @@ export class TSON implements TSON {
    * @returns {Set | undefined } A `Set` object if a matching set was found, otherwise undefined.
    */
   findSetById(id: string): Set | undefined {
-    if (this.sets) {
-      return this.sets.find(set => set.id === id);
-    }
-
-    return undefined;
+    return this.sets?.find(set => set.id === id);
   }
 
   /**
@@ -432,7 +401,7 @@ export class TSON implements TSON {
    * @returns {object[]} An array of objects containing tuning `id`, `name`, and `description` values.
    */
   describeTunings(): NameAndId[] {
-    return (this.tunings || this['tuning systems'])?.map(tuning => ({
+    return this.tunings?.map(tuning => ({
       id: tuning.id,
       ...(tuning.name && { name: tuning.name }),
       ...(tuning.description && { description: tuning.description })
@@ -475,10 +444,6 @@ export class TSON implements TSON {
 
     if (reduced.tunings) {
       this.tunings = reduced.tunings;
-    }
-
-    if (reduced['tuning systems']) {
-      this['tuning systems'] = reduced['tuning systems'];
     }
 
     if (reduced.spectra) {

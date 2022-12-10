@@ -62,9 +62,9 @@ const noteNamesRef = Joi.ref('...notes', {
 });
 
 const tunings = Joi.array().items(Joi.object().keys({
-  name: Joi.string().description('The tuning system\'s name').optional(),
-  description: Joi.string().description('A description of the tuning system').optional(),
-  id: Joi.string().description('A unique identifier for the tuning system').required(),
+  name: Joi.string().description('The tuning\'s name').optional(),
+  description: Joi.string().description('A description of the tuning').optional(),
+  id: Joi.string().description('A unique identifier for the tuning').required(),
   scales: Joi.array().items(Joi.object().keys({
     notes: notes.required(),
     reference: Joi.object().keys({
@@ -79,7 +79,7 @@ const tunings = Joi.array().items(Joi.object().keys({
     'min frequency': frequency.description('A minimum frequency for the scale.\nWhen mapping the scale\'s notes onto actual frequencies, notes from this scale will not be mapped below the provided frequency.').optional(),
     minimum: frequency.description('A minimum frequency for the scale.\nWhen mapping the scale\'s notes onto actual frequencies, notes from this scale will not be mapped below the provided frequency.').optional(),
     min: frequency.description('A minimum frequency for the scale.\nWhen mapping the scale\'s notes onto actual frequencies, notes from this scale will not be mapped below the provided frequency.').optional(),
-    spectrum: Joi.string().description('The spectrum of the tones that should be used for this tuning.\nThis enables multiple, scale-dependent spectra to be used within a single tuning system.').optional(),
+    spectrum: Joi.string().description('The spectrum of the tones that should be used for this tuning.\nThis enables multiple, scale-dependent spectra to be used within a single tuning.').optional(),
   }).nand('repeat', 'repeat ratio')
     .oxor('min', 'minimum', 'min frequency')
     .oxor('max', 'maximum', 'max frequency')
@@ -88,7 +88,7 @@ const tunings = Joi.array().items(Joi.object().keys({
 }).unknown())
   .min(1)
   .unique((a, b) => a.id && b.id && a.id === b.id)
-  .description('List of tuning system objects').optional();
+  .description('List of tuning objects').optional();
 
 const partials = Joi.array().items(
   Joi.object().keys({
@@ -139,7 +139,6 @@ const spectrumSchema = Joi.array().items(Joi.object().keys({
  * Doesn't parse expressions, but does validate that expression strings only contain allowed substrings.
  */
 export const tsonSchema = Joi.object().keys({
-  'tuning systems': tunings,
   tunings,
   spectra: spectrumSchema,
   sets: Joi.array().items(Joi.object().keys({
@@ -147,18 +146,16 @@ export const tsonSchema = Joi.object().keys({
     name: Joi.string().description('The set\'s name').optional(),
     description: Joi.string().description('A description of the set').optional(),
     members: Joi.array().items(Joi.object().keys({
-      'tuning system': Joi.string().description('A reference of a tuning system\'s ID').optional(),
-      tuning: Joi.string().description('A reference of a tuning system\'s ID').optional(),
+      tuning: Joi.string().description('A reference of a tuning\'s ID').optional(),
       spectrum: Joi.string().description('A reference of a spectrum\'s ID').optional(),
-      'override scale spectra': Joi.boolean().description('If true, the set\'s spectrum should be applied to all scales in the set\'s tuning system, overriding any spectra that are references by the scales.').optional()
-    }).nand('tuning system', 'tuning').unknown())
+      'override scale spectra': Joi.boolean().description('If true, the set\'s spectrum should be applied to all scales in the set\'s tuning, overriding any spectra that are references by the scales.').optional()
+    }).unknown())
       .min(1)
       .unique((a, b) => a.id && b.id && a.id === b.id)
       .description('A list of set member objects')
       .required()
   }).unknown()).min(1).description('A list of set objects').optional()
-}).nand('tuning systems', 'tunings')
-  .or('tuning systems', 'tunings', 'spectra', 'sets')
+}).or('tunings', 'spectra', 'sets')
   .unknown();
 
 export const validationOptionsSchema = Joi.object().keys({
@@ -208,8 +205,6 @@ export default function validate(
     allowUnknown: options.allowUnknown
   });
 
-  const tunings = tson.tunings || tson['tuning systems'];
-
   if (options.includedIdsOnly) {
     // Ensure that tuning/spectrum ID references are internally resolvable
     const tuningIds: string[] = [];
@@ -221,8 +216,8 @@ export default function validate(
       }
     }
 
-    if (tunings) {
-      for (const tuning of tunings) {
+    if (tson.tunings) {
+      for (const tuning of tson.tunings) {
         tuningIds.push(tuning.id);
 
         for (const scale of tuning.scales) {
@@ -248,8 +243,8 @@ export default function validate(
   }
 
   // Ensure that expressions can be evaluated
-  if (tunings) {
-    for (const tuning of tunings) {
+  if (tson.tunings) {
+    for (const tuning of tson.tunings) {
       for (const scale of tuning.scales) {
         const repeat = scale.repeat || scale['repeat ratio'];
         if (repeat) {

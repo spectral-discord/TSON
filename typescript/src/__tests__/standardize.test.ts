@@ -25,7 +25,6 @@ describe('TSON standardization tests', () => {
   //     maxFrequency: 'max frequency',
   //     frequencyRatio: 'frequency ratio',
   //     amplitudeWeight: 'amplitude weight',
-  //     tuningSystems: 'tuning systems',
   //     partialDistribution: 'partial distribution',
   //     repeatRatio: 'repeat ratio'
   //   })));
@@ -52,7 +51,6 @@ describe('TSON standardization tests', () => {
       maxFrequency: 'max frequency',
       frequencyRatio: 'frequency ratio',
       amplitudeWeight: 'amplitude weight',
-      tuningSystems: 'tuning systems',
       partialDistribution: 'partial distribution',
       repeatRatio: 'repeat ratio'
     });

@@ -1,5 +1,5 @@
 testName: the TSON is valid and only uses long parameter names
-tuning systems:
+tunings:
   - name: a tuning
     id: something
     scales:

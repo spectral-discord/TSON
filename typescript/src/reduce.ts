@@ -94,10 +94,8 @@ interface ReducedTuning {
 type SetMember = {
   spectrum?: string,
   'override scale spectra'?: boolean
-} & (
-  { 'tuning system'?: string, tuning?: never }
-    | { 'tuning system'?: never, tuning?: string }
-)
+  tuning?: string
+}
 
 interface Set {
   id: string,
@@ -115,11 +113,9 @@ interface Set {
  */
 type ReducedTSON = {
   spectra?: ReducedSpectrum[],
-  sets?: Set[]
-} & (
-  { 'tuning systems'?: ReducedTuning[], tunings?: never }
-    | { 'tuning systems'?: never, tunings?: ReducedTuning[] }
-)
+  sets?: Set[],
+  tunings?: ReducedTuning[]
+}
 
 /**
  * Standardizes parameter keys, evaluates expressions, normalizes
@@ -127,7 +123,6 @@ type ReducedTSON = {
  *
  * @param {TSON} tson The TSON object to be reduced
  * @param {StandardizationOptions} standardizationOptions An object containing parameter key preferences
- * @param {string} standardizationOptions.tuningSystems One of: [ 'tunings', 'tuning systems' ]
  * @param {string} standardizationOptions.repeatRatio One of: [ 'repeat', 'repeat ratio' ]
  * @param {string} standardizationOptions.minFrequency One of: [ 'min', 'minimum', 'min frequency' ]
  * @param {string} standardizationOptions.maxFrequency One of: [ 'max', 'maximum', 'max frequency' ]
@@ -138,7 +133,6 @@ type ReducedTSON = {
 export default function reduce(
   tson: TSON,
   standardizationOptions: StandardizationOptions = {
-    tuningSystems: 'tunings',
     repeatRatio: 'repeat',
     minFrequency: 'min',
     maxFrequency: 'max',
@@ -156,7 +150,6 @@ export default function reduce(
     reduced.sets = tson.sets;
   }
 
-  const tuningsPref = standardizationOptions.tuningSystems;
   const minPref = standardizationOptions.minFrequency;
   const maxPref = standardizationOptions.maxFrequency;
   const repeatPref = standardizationOptions.repeatRatio;
@@ -221,9 +214,9 @@ export default function reduce(
     });
   }
 
-  if (tson[tuningsPref]) {
-    reduced[tuningsPref] = [];
-    tson[tuningsPref]?.forEach(tuning => {
+  if (tson.tunings) {
+    reduced.tunings = [];
+    tson.tunings?.forEach(tuning => {
       const reducedTuning: ReducedTuning = { ...tuning, scales: [] };
       tuning.scales.forEach(scale => {
         const reducedScale: ReducedScale = {
@@ -305,7 +298,7 @@ export default function reduce(
         reducedTuning.scales.push(reducedScale);
       });
 
-      reduced[tuningsPref]?.push(reducedTuning);
+      reduced.tunings?.push(reducedTuning);
     });
   }
 
