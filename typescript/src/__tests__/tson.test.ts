@@ -11,13 +11,13 @@ jest.mock('joi', () => ({
 
 jest.mock('../validate', () => ({
   __esModule: true,
-  default: jest.fn().mockReturnValue(true),
+  default: jest.fn(),
   validationOptionsSchema: jest.fn()
 }));
 
 jest.mock('../standardize', () => ({
   __esModule: true,
-  default: jest.fn().mockImplementation(() => ({})),
+  default: jest.fn().mockImplementation(tson => tson),
   standardizationOptionsSchema: jest.fn()
 }));
 
@@ -26,11 +26,24 @@ jest.mock('../build-tuning', () => ({
   default: jest.fn()
 }));
 
+jest.mock('../reduce', () => ({
+  __esModule: true,
+  default: jest.fn()
+}));
+
+jest.mock('../export', () => ({
+  __esModule: true,
+  toTson: jest.fn()
+}));
+
 import { readFileSync } from 'fs';
 import YAML from 'yaml';
 import { TSON } from '../tson';
 import * as validate from '../validate';
 import * as standardize from '../standardize';
+import * as reduce from '../reduce';
+import { assert } from 'joi';
+import { toTson } from '../export';
 
 const dir = `${__dirname}/test-data/valid-tsons`;
 const importTsonFile = (file: string) => {
@@ -77,12 +90,112 @@ describe('constructor tests', () => {
 });
 
 describe('load tests', () => {
-  test('Should call validate when load is called', () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+    jest.restoreAllMocks();
+  });
+
+  test('Should call validate() and standardize() when load is called', () => {
     const complex = YAML.parse(importTsonFile('complex.tson'));
     const tson = new TSON();
     tson.load(complex);
 
     expect(validate.default).toHaveBeenCalledTimes(1);
     expect(standardize.default).toHaveBeenCalledTimes(1);
+  });
+
+  test('Should call assert() and standardize() when setStandardizationOptions() is called', () => {
+    const tson = new TSON();
+
+    interface StandardizationOptions {
+      repeatRatio: 'repeat' | 'repeat ratio',
+      minFrequency: 'min' | 'minimum' | 'min frequency',
+      maxFrequency: 'max' | 'maximum' | 'max frequency',
+      frequencyRatio: 'frequency ratio' | 'ratio',
+      amplitudeWeight: 'amplitude weight' | 'weight',
+      partialDistribution: 'partials' | 'partial distribution',
+    }
+
+    const options: StandardizationOptions = {
+      repeatRatio: 'repeat',
+      minFrequency: 'min',
+      maxFrequency: 'max',
+      frequencyRatio: 'ratio',
+      amplitudeWeight: 'weight',
+      partialDistribution: 'partials'
+    };
+
+    tson.setStandardizationOptions(options);
+
+    const assertMock: any = assert;
+    expect(assertMock).toHaveBeenCalledTimes(1);
+    expect(assertMock.mock.calls[0][0]).toBe(options);
+    expect(assertMock.mock.calls[0][1]).toBe(standardize.standardizationOptionsSchema);
+    expect(standardize.default).toHaveBeenCalledTimes(1);
+  });
+
+  test('Should call assert() and validate() when setValidationOptions() is called', () => {
+    const tson = new TSON();
+
+    interface ValidationOptions {
+      includedIdsOnly: boolean,
+      allowUnknown: boolean
+    }
+
+    const options: ValidationOptions = {
+      includedIdsOnly: true,
+      allowUnknown: false
+    };
+
+    tson.setValidationOptions(options);
+
+    const assertMock: any = assert;
+    expect(assertMock).toHaveBeenCalledTimes(1);
+    expect(assertMock.mock.calls[0][0]).toBe(options);
+    expect(assertMock.mock.calls[0][1]).toBe(validate.validationOptionsSchema);
+    expect(validate.default).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('processing TSON data tests', () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+    jest.restoreAllMocks();
+  });
+
+  test('Should call reduce() when reduce() is called', () => {
+    const tson = new TSON();
+    interface StandardizationOptions {
+      repeatRatio: 'repeat' | 'repeat ratio',
+      minFrequency: 'min' | 'minimum' | 'min frequency',
+      maxFrequency: 'max' | 'maximum' | 'max frequency',
+      frequencyRatio: 'frequency ratio' | 'ratio',
+      amplitudeWeight: 'amplitude weight' | 'weight',
+      partialDistribution: 'partials' | 'partial distribution',
+    }
+
+    const options: StandardizationOptions = {
+      repeatRatio: 'repeat',
+      minFrequency: 'min',
+      maxFrequency: 'max',
+      frequencyRatio: 'ratio',
+      amplitudeWeight: 'weight',
+      partialDistribution: 'partials'
+    };
+
+    tson.setStandardizationOptions(options);
+    tson.reduce();
+
+    const reduceMock: any = reduce.default;
+    expect(reduceMock).toHaveBeenCalledTimes(1);
+    expect(reduceMock.mock.calls[0][0]).toBe(tson);
+    expect(reduceMock.mock.calls[0][1]).toBe(options);
+  });
+
+  test('Should stringify the TSON data when stringify() is called', () => {
+    const tson = new TSON();
+    tson.stringify();
+
+    expect(toTson).toHaveBeenCalledTimes(1);
   });
 });

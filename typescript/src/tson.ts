@@ -326,9 +326,7 @@ export class TSON implements TSON {
    */
   load (input: TSON | object | string): void {
     const tson: TSON = typeof(input) === 'string' ? YAML.parse(input) : input;
-
     validate(tson, this.validationOptions);
-
     const formatted = standardize(tson, this.standardizationOptions);
 
     if (formatted?.tunings) {
@@ -354,9 +352,9 @@ export class TSON implements TSON {
 
     const reformatted = standardize(this, this.standardizationOptions);
 
-    this.tunings = reformatted.tunings;
-    this.spectra = reformatted.spectra;
-    this.sets = reformatted.sets;
+    this.tunings = reformatted?.tunings;
+    this.spectra = reformatted?.spectra;
+    this.sets = reformatted?.sets;
   }
 
   /**
@@ -442,15 +440,15 @@ export class TSON implements TSON {
   reduce() {
     const reduced = reduce(this, this.standardizationOptions);
 
-    if (reduced.tunings) {
+    if (reduced?.tunings) {
       this.tunings = reduced.tunings;
     }
 
-    if (reduced.spectra) {
+    if (reduced?.spectra) {
       this.spectra = reduced.spectra;
     }
 
-    if (reduced.sets) {
+    if (reduced?.sets) {
       this.sets = reduced.sets;
     }
   }
