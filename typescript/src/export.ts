@@ -56,8 +56,21 @@ export function toScala(scale: Scale, description?: string) {
  * @param {TSON} tson The TSON to be exported
  * @returns {string} A YAML string of the TSON data
  */
-export function toTson(tson: TSON): string {
+export function toTSON(tson: TSON): string {
   return YAML.stringify({
+    ...(tson.tunings && { tunings: tson.tunings }),
+    ...(tson.spectra && { spectra: tson.spectra }),
+    ...(tson.sets && { sets: tson.sets }),
+  });
+}
+
+/**
+ * Exports a TSON object to JSON string
+ * @param {TSON} tson The TSON to be exported
+ * @returns {string} A JSON string of the TSON data
+ */
+export function toJSON(tson: TSON): string {
+  return JSON.stringify({
     ...(tson.tunings && { tunings: tson.tunings }),
     ...(tson.spectra && { spectra: tson.spectra }),
     ...(tson.sets && { sets: tson.sets }),

@@ -33,7 +33,7 @@ jest.mock('../reduce', () => ({
 
 jest.mock('../export', () => ({
   __esModule: true,
-  toTson: jest.fn()
+  toTSON: jest.fn()
 }));
 
 import { readFileSync } from 'fs';
@@ -43,7 +43,7 @@ import * as validate from '../validate';
 import * as standardize from '../standardize';
 import * as reduce from '../reduce';
 import { assert } from 'joi';
-import { toTson } from '../export';
+import { toTSON } from '../export';
 
 const dir = `${__dirname}/test-data/valid-tsons`;
 const importTsonFile = (file: string) => {
@@ -196,6 +196,6 @@ describe('processing TSON data tests', () => {
     const tson = new TSON();
     tson.stringify();
 
-    expect(toTson).toHaveBeenCalledTimes(1);
+    expect(toTSON).toHaveBeenCalledTimes(1);
   });
 });

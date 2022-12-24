@@ -10,7 +10,9 @@ import { evaluate } from 'mathjs';
  *  interface, except that frequencies ratios and amplitude
  *  weights are always numbers, and amplitude weights sum to 1.
  */
-type ReducedPartial = (
+type ReducedPartial = {
+  [key: string]: unknown
+} & (
   { 'frequency ratio'?: number, ratio?: never }
     | { 'frequency ratio'?: never, ratio?: number }
 ) & (
@@ -29,7 +31,8 @@ type ReducedPartial = (
 export type ReducedSpectrum = {
   id: string,
   name?: string,
-  description?: string
+  description?: string,
+  [key: string]: unknown
 } & (
   { partials?: ReducedPartial[], 'partial distribution'?: never }
     | { partials?: never, 'partial distribution'?: ReducedPartial[] }
@@ -42,7 +45,8 @@ export type ReducedSpectrum = {
  *  interface, except that frequency ratios are always numbers.
  */
 type ReducedNote = {
-  name?: string
+  name?: string,
+  [key: string]: unknown
 } & (
   { 'frequency ratio'?: number, ratio?: never }
     | { 'frequency ratio'?: never, ratio?: number }
@@ -50,7 +54,8 @@ type ReducedNote = {
 
 interface Reference {
   frequency: number,
-  note?: string
+  note?: string,
+  [key: string]: unknown
 }
 
 /**
@@ -63,7 +68,8 @@ interface Reference {
 type ReducedScale = {
   notes: ReducedNote[],
   reference: Reference,
-  spectrum?: string
+  spectrum?: string,
+  [key: string]: unknown
 } & (
   { min?: number, minimum?: never, 'min frequency'?: never }
     | { min?: never, minimum?: number, 'min frequency'?: never }
@@ -88,20 +94,23 @@ interface ReducedTuning {
   id: string,
   name?: string,
   description?: string,
-  scales: ReducedScale[]
+  scales: ReducedScale[],
+  [key: string]: unknown
 }
 
 type SetMember = {
   spectrum?: string,
   'override scale spectra'?: boolean
-  tuning?: string
+  tuning?: string,
+  [key: string]: unknown
 }
 
 interface Set {
   id: string,
   name?: string,
   description?: string,
-  members: SetMember[]
+  members: SetMember[],
+  [key: string]: unknown
 }
 
 /**

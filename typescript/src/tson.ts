@@ -6,7 +6,7 @@ import buildTuning, { BuildTuningOptions, BuiltNote } from './build-tuning';
 import reduce from './reduce';
 import YAML from 'yaml';
 import { assert } from 'joi';
-import { toTson } from './export';
+import { toTSON } from './export';
 
 /**
  * Note interface
@@ -17,7 +17,9 @@ type Note = {
   /**
    * An optional name for the note
    */
-  name?: string
+  name?: string,
+
+  [key: string]: unknown
 } & (
   {
     /**
@@ -48,7 +50,9 @@ interface Reference {
   /**
    * The name  of a note from the notes array
    */
-  note?: string
+  note?: string,
+
+  [key: string]: unknown
 }
 
 /**
@@ -70,7 +74,9 @@ export type Scale = {
   /**
    * A spectrum to use for the scale
    */
-  spectrum?: string
+  spectrum?: string,
+
+  [key: string]: unknown
 } & (
   {
     /**
@@ -150,7 +156,9 @@ export interface Tuning {
   /**
    * An array of `Scale` objects
    */
-  scales: Scale[]
+  scales: Scale[],
+
+  [key: string]: unknown
 }
 
 /**
@@ -158,7 +166,9 @@ export interface Tuning {
  *
  * An object containing a partial's frequency ratio and amplitude weight
  */
-type Partial = (
+type Partial = {
+    [key: string]: unknown
+  } & (
   {
     /**
      * A number or expression string representing the partial's frequency relative to the spectrum's root
@@ -207,7 +217,9 @@ export type Spectrum = {
   /**
    * A description for the spectrum
    */
-  description?: string
+  description?: string,
+
+  [key: string]: unknown
 } & (
   {
     /**
@@ -244,7 +256,9 @@ type SetMember = {
   /**
      * A tuning's `id`
      */
-  tuning?: string
+  tuning?: string,
+
+  [key: string]: unknown
 }
 
 /**
@@ -271,7 +285,9 @@ export interface Set {
   /**
    * An array of `SetMember` objects
    */
-  members: SetMember[]
+  members: SetMember[],
+
+  [key: string]: unknown
 }
 
 export interface TSON {
@@ -500,6 +516,6 @@ export class TSON implements TSON {
    * @returns A YAML string of the TSON data
    */
   stringify(): string {
-    return toTson(this);
+    return toTSON(this);
   }
 }
