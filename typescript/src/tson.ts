@@ -166,7 +166,7 @@ export interface Tuning {
  *
  * An object containing a partial's frequency ratio and amplitude weight
  */
-type Partial = {
+export type Partial = {
     [key: string]: unknown
   } & (
   {
