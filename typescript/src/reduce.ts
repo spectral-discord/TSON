@@ -74,7 +74,7 @@ interface ReducedScale {
  *  interface, except that notes are always objects, and
  *  frequencies and ratios are always numbers.
  */
-interface ReducedTuning {
+export interface ReducedTuning {
   id: string,
   name?: string,
   description?: string,
@@ -104,7 +104,7 @@ interface Set {
  *  interface, except that notes are always objects, and
  *  frequencies, ratios, and weights are always numbers.
  */
-type ReducedTSON = {
+export interface ReducedTSON {
   spectra?: ReducedSpectrum[],
   sets?: Set[],
   tunings?: ReducedTuning[]
