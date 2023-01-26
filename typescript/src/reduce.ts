@@ -1,6 +1,6 @@
 import { TSON } from './tson';
 import validate from './validate';
-import standardize, { StandardizationOptions } from './standardize';
+import standardize from './standardize';
 import { evaluate } from 'mathjs';
 
 /**
@@ -10,15 +10,11 @@ import { evaluate } from 'mathjs';
  *  interface, except that frequencies ratios and amplitude
  *  weights are always numbers, and amplitude weights sum to 1.
  */
-type ReducedPartial = {
+interface ReducedPartial {
+  ratio: number,
+  weight: number,
   [key: string]: unknown
-} & (
-  { 'frequency ratio'?: number, ratio?: never }
-    | { 'frequency ratio'?: never, ratio?: number }
-) & (
-  { weight?: number, 'amplitude weight'?: never }
-    | { weight?: never, 'amplitude weight'?: number }
-)
+}
 
 /**
  *  Reduced Spectrum Type Interface
@@ -28,15 +24,13 @@ type ReducedPartial = {
  *  amplitude weights are always numbers, and amplitude
  *  weights sum to 1.
  */
-export type ReducedSpectrum = {
+export interface ReducedSpectrum {
   id: string,
   name?: string,
   description?: string,
+  partials: ReducedPartial[]
   [key: string]: unknown
-} & (
-  { partials?: ReducedPartial[], 'partial distribution'?: never }
-    | { partials?: never, 'partial distribution'?: ReducedPartial[] }
-);
+}
 
 /**
  *  Reduced Note Type Interface
@@ -44,13 +38,11 @@ export type ReducedSpectrum = {
  *  This type is essentially the same as the regular Note
  *  interface, except that frequency ratios are always numbers.
  */
-type ReducedNote = {
+interface ReducedNote {
   name?: string,
+  ratio: number
   [key: string]: unknown
-} & (
-  { 'frequency ratio'?: number, ratio?: never }
-    | { 'frequency ratio'?: never, ratio?: number }
-)
+}
 
 interface Reference {
   frequency: number,
@@ -65,23 +57,15 @@ interface Reference {
  *  interface, except that notes are always objects, and
  *  frequencies and ratios are always numbers.
  */
-type ReducedScale = {
+interface ReducedScale {
   notes: ReducedNote[],
   reference: Reference,
   spectrum?: string,
+  min?: number,
+  max?: number,
+  repeat?: number,
   [key: string]: unknown
-} & (
-  { min?: number, minimum?: never, 'min frequency'?: never }
-    | { min?: never, minimum?: number, 'min frequency'?: never }
-    | { min?: never, minimum?: never, 'min frequency'?: number }
-) & (
-  { max?: number, maximum?: never , 'max frequency'?: never }
-    | { max?: never, maximum?: number , 'max frequency'?: never }
-    | { max?: never, maximum?: never , 'max frequency'?: number }
-) & (
-  { repeat?: number, 'repeat ratio'?: never }
-    | { repeat?: never, 'repeat ratio'?: number }
-);
+}
 
 /**
  *  Reduced Tuning Type Interface
@@ -131,27 +115,10 @@ type ReducedTSON = {
  * partial amplitude weights, and removes 'Hz' from frequencies.
  *
  * @param {TSON} tson The TSON object to be reduced
- * @param {StandardizationOptions} standardizationOptions An object containing parameter key preferences
- * @param {string} standardizationOptions.repeatRatio One of: [ 'repeat', 'repeat ratio' ]
- * @param {string} standardizationOptions.minFrequency One of: [ 'min', 'minimum', 'min frequency' ]
- * @param {string} standardizationOptions.maxFrequency One of: [ 'max', 'maximum', 'max frequency' ]
- * @param {string} standardizationOptions.frequencyRatio One of: [ 'ratio', 'frequency ratio' ]
- * @param {string} standardizationOptions.amplitudeWeight One of: [ 'weight', 'amplitude weight' ]
- * @param {string} standardizationOptions.partialDistribution One of: [ 'partials', 'partial distribution' ]
  */
-export default function reduce(
-  tson: TSON,
-  standardizationOptions: StandardizationOptions = {
-    repeatRatio: 'repeat',
-    minFrequency: 'min',
-    maxFrequency: 'max',
-    frequencyRatio: 'ratio',
-    amplitudeWeight: 'weight',
-    partialDistribution: 'partials',
-  }
-): ReducedTSON {
+export default function reduce(tson: TSON): ReducedTSON {
   validate(tson);
-  tson = standardize(tson, standardizationOptions);
+  tson = standardize(tson);
 
   const reduced: ReducedTSON = {};
 
@@ -159,18 +126,13 @@ export default function reduce(
     reduced.sets = tson.sets;
   }
 
-  const minPref = standardizationOptions.minFrequency;
-  const maxPref = standardizationOptions.maxFrequency;
-  const repeatPref = standardizationOptions.repeatRatio;
-  const ratioPref = standardizationOptions.frequencyRatio;
-  const weightPref = standardizationOptions.amplitudeWeight;
-  const partialsPref = standardizationOptions.partialDistribution;
-
   if (tson.spectra) {
     reduced.spectra = [];
     tson.spectra.forEach(spectrum =>  {
-      const reducedSpectrum: ReducedSpectrum = { id: spectrum.id };
-      reducedSpectrum[partialsPref] = [];
+      const reducedSpectrum: ReducedSpectrum = {
+        id: spectrum.id,
+        partials: []
+      };
 
       if (spectrum.description) {
         reducedSpectrum.description = spectrum.description;
@@ -180,22 +142,25 @@ export default function reduce(
         reducedSpectrum.name = spectrum.name;
       }
 
-      const totalWeight = spectrum[partialsPref]
-        ?.map(partial => evaluate(String(partial[weightPref])))
+      const totalWeight = spectrum.partials
+        ?.map(partial => evaluate(String(partial.weight)))
         .reduce((a, b) => a + b, 0);
 
-      spectrum[partialsPref]?.forEach(partial => {
+      spectrum.partials?.forEach(partial => {
         // Evaluate frequency ratio expressions
-        const reducedPartial: ReducedPartial = {};
+        const reducedPartial: ReducedPartial = {
+          ratio: 0,
+          weight: 0
+        };
 
         try {
-          const ratio = evaluate(String(partial[ratioPref]));
+          const ratio = evaluate(String(partial.ratio));
           if (ratio > 0) {
-            reducedPartial[ratioPref] = ratio;
+            reducedPartial.ratio = ratio;
           } else throw new Error();
         } catch (ex) {
           throw new Error(`
-            Error parsing expression string: "${partial[ratioPref]}"
+            Error parsing expression string: "${partial.ratio}"
             Used for a partial's frequency ratio in spectrum: ${spectrum.name || spectrum.id}
             Frequency ratio expressions must evaluate to a positive number.
           `);
@@ -203,22 +168,22 @@ export default function reduce(
 
         // Evaluate amplitude weight expressions & normalize
         try {
-          const weight = evaluate(String(partial[weightPref]));
+          const weight = evaluate(String(partial.weight));
           if (weight > 0) {
-            reducedPartial[weightPref] = weight / totalWeight;
+            reducedPartial.weight = weight / totalWeight;
           } else throw new Error();
         } catch (ex) {
           throw new Error(`
-            Error parsing expression string: "${partial[weightPref]}"
+            Error parsing expression string: "${partial.weight}"
             Used for a partial's amplitude weight in spectrum: ${spectrum.name || spectrum.id}
             Amplitude weight expressions must evaluate to a positive number.
           `);
         }
 
-        reducedSpectrum[partialsPref]?.push(reducedPartial);
+        reducedSpectrum.partials.push(reducedPartial);
       });
 
-      reducedSpectrum[partialsPref]?.sort((a, b) => (a[ratioPref] || 0) - (b[ratioPref] || 0));
+      reducedSpectrum.partials.sort((a, b) => a.ratio - b.ratio);
       reduced.spectra?.push(reducedSpectrum);
     });
   }
@@ -241,24 +206,24 @@ export default function reduce(
           reducedScale.reference.note = scale.reference.note;
         }
 
-        if (scale[minPref]) {
-          reducedScale[minPref] = parseFloat(String(scale[minPref]));
+        if (scale.min) {
+          reducedScale.min = parseFloat(String(scale.min));
         }
 
-        if (scale[maxPref]) {
-          reducedScale[maxPref] = parseFloat(String(scale[maxPref]));
+        if (scale.max) {
+          reducedScale.max = parseFloat(String(scale.max));
         }
 
         // Evaluate repeat ratio expressions
-        if (scale[repeatPref]) {
+        if (scale.repeat) {
           try {
-            const repeat = evaluate(String(scale[repeatPref]));
+            const repeat = evaluate(String(scale.repeat));
             if (repeat > 0) {
-              reducedScale[repeatPref] = repeat;
+              reducedScale.repeat = repeat;
             } else throw new Error();
           } catch (ex) {
             throw new Error(`
-              Error parsing expression string: "${scale[repeatPref]}"
+              Error parsing expression string: "${scale.repeat}"
               Used for a repeat ratio in tuning: ${tuning.name || tuning.id}
               Frequency ratio expressions must evaluate to a positive number.
             `);
@@ -269,18 +234,16 @@ export default function reduce(
           // Evaluate note frequency ratio expressions
           if (typeof(note) === 'object') {
             try {
-              const ratio = evaluate(String(note[ratioPref]));
+              const ratio = evaluate(String(note.ratio));
               if (ratio > 0) {
-                const reducedNote: ReducedNote = {
-                  ...(note.name && { name: note.name })
-                };
-                reducedNote[ratioPref] = ratio;
-
-                reducedScale.notes.push(reducedNote);
+                reducedScale.notes.push({
+                  ...(note.name && { name: note.name }),
+                  ratio
+                });
               } else throw new Error();
             } catch (ex) {
               throw new Error(`
-                Error parsing expression string: "${note[ratioPref]}"
+                Error parsing expression string: "${note.ratio}"
                 Used for a partial's frequency ratio in tuning: ${tuning.name || tuning.id}
                 Frequency ratio expressions must evaluate to a positive number.
               `);
@@ -289,9 +252,7 @@ export default function reduce(
             try {
               const ratio = evaluate(String(note));
               if (ratio > 0) {
-                const reducedNote: ReducedNote = {};
-                reducedNote[ratioPref] = ratio;
-                reducedScale.notes.push(reducedNote);
+                reducedScale.notes.push({ ratio });
               } else throw new Error();
             } catch (ex) {
               throw new Error(`
@@ -303,7 +264,7 @@ export default function reduce(
           }
         });
 
-        reducedScale.notes.sort((a, b) => (a[ratioPref] || 0) - (b[ratioPref] || 0));
+        reducedScale.notes.sort((a, b) => a.ratio - b.ratio);
         reducedTuning.scales.push(reducedScale);
       });
 

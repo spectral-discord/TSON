@@ -165,31 +165,12 @@ describe('processing TSON data tests', () => {
 
   test('Should call reduce() when reduce() is called', () => {
     const tson = new TSON();
-    interface StandardizationOptions {
-      repeatRatio: 'repeat' | 'repeat ratio',
-      minFrequency: 'min' | 'minimum' | 'min frequency',
-      maxFrequency: 'max' | 'maximum' | 'max frequency',
-      frequencyRatio: 'frequency ratio' | 'ratio',
-      amplitudeWeight: 'amplitude weight' | 'weight',
-      partialDistribution: 'partials' | 'partial distribution',
-    }
 
-    const options: StandardizationOptions = {
-      repeatRatio: 'repeat',
-      minFrequency: 'min',
-      maxFrequency: 'max',
-      frequencyRatio: 'ratio',
-      amplitudeWeight: 'weight',
-      partialDistribution: 'partials'
-    };
-
-    tson.setStandardizationOptions(options);
     tson.reduce();
 
     const reduceMock: any = reduce.default;
     expect(reduceMock).toHaveBeenCalledTimes(1);
     expect(reduceMock.mock.calls[0][0]).toBe(tson);
-    expect(reduceMock.mock.calls[0][1]).toBe(options);
   });
 
   test('Should stringify the TSON data when stringify() is called', () => {

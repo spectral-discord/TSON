@@ -25,13 +25,13 @@ type Note = {
     /**
      * A number or expression string representing the note's frequency relative to the scale's root
      */
-    'frequency ratio'?: string | number,
+    'frequency ratio': string | number,
     ratio?: never
   } | {
     /**
      * A number or expression string representing the note's frequency relative to the scale's root
      */
-     ratio?: string | number,
+     ratio: string | number,
     'frequency ratio'?: never
   }
 )
@@ -173,13 +173,13 @@ export type Partial = {
     /**
      * A number or expression string representing the partial's frequency relative to the spectrum's root
      */
-    'frequency ratio'?: string | number,
+    'frequency ratio': string | number,
     ratio?: never
   } | {
     /**
      * A number or expression string representing the partial's frequency relative to the spectrum's root
      */
-    ratio?: string | number,
+    ratio: string | number,
     'frequency ratio'?: never
   }
 ) & (
@@ -187,13 +187,13 @@ export type Partial = {
     /**
      * A number or expression string representing the amount that the partial should contribute to the spectrum's overall sound, relative to the other partials
      */
-    'amplitude weight'?: string | number,
+    'amplitude weight': string | number,
     weight?: never
   } | {
     /**
      * A number or expression string representing the amount that the partial should contribute to the spectrum's overall sound, relative to the other partials
      */
-    weight?: string | number,
+    weight: string | number,
     'amplitude weight'?: never
   }
 )
@@ -225,13 +225,13 @@ export type Spectrum = {
     /**
      * An array of `Partial` objects
      */
-    partials?: Partial[],
+    partials: Partial[],
     'partial distribution'?: never
   } | {
     /**
      * An array of `Partial` objects
      */
-    'partial distribution'?: Partial[],
+    'partial distribution': Partial[],
     partials?: never
 
   }
@@ -454,7 +454,7 @@ export class TSON implements TSON {
    * weights, and remove 'Hz' from frequencies.
    */
   reduce() {
-    const reduced = reduce(this, this.standardizationOptions);
+    const reduced = reduce(this);
 
     if (reduced?.tunings) {
       this.tunings = reduced.tunings;
