@@ -1,4 +1,4 @@
-import { TSON } from './tson';
+import { TSON, Set } from './tson';
 import validate from './validate';
 import standardize from './standardize';
 import { evaluate } from 'mathjs';
@@ -10,7 +10,7 @@ import { evaluate } from 'mathjs';
  *  interface, except that frequencies ratios and amplitude
  *  weights are always numbers, and amplitude weights sum to 1.
  */
-interface ReducedPartial {
+export interface ReducedPartial {
   ratio: number,
   weight: number,
   [key: string]: unknown
@@ -38,7 +38,7 @@ export interface ReducedSpectrum {
  *  This type is essentially the same as the regular Note
  *  interface, except that frequency ratios are always numbers.
  */
-interface ReducedNote {
+export interface ReducedNote {
   name?: string,
   ratio: number
   [key: string]: unknown
@@ -57,7 +57,7 @@ interface Reference {
  *  interface, except that notes are always objects, and
  *  frequencies and ratios are always numbers.
  */
-interface ReducedScale {
+export interface ReducedScale {
   notes: ReducedNote[],
   reference: Reference,
   spectrum?: string,
@@ -82,21 +82,6 @@ export interface ReducedTuning {
   [key: string]: unknown
 }
 
-type SetMember = {
-  spectrum?: string,
-  'override scale spectra'?: boolean
-  tuning?: string,
-  [key: string]: unknown
-}
-
-interface Set {
-  id: string,
-  name?: string,
-  description?: string,
-  members: SetMember[],
-  [key: string]: unknown
-}
-
 /**
  *  Reduced TSON Type Interface
  *
@@ -105,9 +90,9 @@ interface Set {
  *  frequencies, ratios, and weights are always numbers.
  */
 export interface ReducedTSON {
+  tunings?: ReducedTuning[],
   spectra?: ReducedSpectrum[],
-  sets?: Set[],
-  tunings?: ReducedTuning[]
+  sets?: Set[]
 }
 
 /**

@@ -13,7 +13,7 @@ import { toTSON } from './export';
  *
  * @property {(string | number)} ratio alternatives: `frequency ratio` — A number or expression string representing the note's frequency relative to the scale's root
  */
-type Note = {
+export type Note = {
   /**
    * An optional name for the note
    */
@@ -242,7 +242,7 @@ export type Spectrum = {
  *
  * An object containing either a tuning, a spectrum, or both
  */
-type SetMember = {
+export interface SetMember {
   /**
    * A spectrum's `id`
    */
@@ -296,9 +296,10 @@ export interface TSON {
   sets?: Set[]
 }
 
-interface NameAndId {
+interface Description {
   name?: string,
-  id: string
+  id: string,
+  description?: string
 }
 
 interface TSONOptions {
@@ -439,7 +440,7 @@ export class TSON implements TSON {
    * Lists the IDs, names, and descriptions of all tunings in the class instance.
    * @returns {object[]} An array of objects containing tuning `id`, `name`, and `description` values.
    */
-  describeTunings(): NameAndId[] {
+  describeTunings(): Description[] {
     return this.tunings?.map(tuning => ({
       id: tuning.id,
       ...(tuning.name && { name: tuning.name }),
@@ -451,7 +452,7 @@ export class TSON implements TSON {
    * Lists the IDs, names, and descriptions of all spectra in the class instance.
    * @returns {object[]} An array of objects containing spectrum `id`, `name`, and `description` values.
    */
-  describeSpectra(): NameAndId[] {
+  describeSpectra(): Description[] {
     return this.spectra?.map(spectrum => ({
       id: spectrum.id,
       ...(spectrum.name && { name: spectrum.name }),
@@ -463,7 +464,7 @@ export class TSON implements TSON {
    * Lists the IDs, names, and descriptions of all sets in the class instance.
    * @returns {object[]} An array of objects containing set `id`, `name`, and `description` values.
    */
-  describeSets(): NameAndId[] {
+  describeSets(): Description[] {
     return this.sets?.map(set => ({
       id: set.id,
       ...(set.name && { name: set.name }),
