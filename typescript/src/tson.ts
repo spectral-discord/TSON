@@ -341,20 +341,23 @@ export class TSON implements TSON {
    * @param {TSON | object | string} input A TSON to use for initialization. It can be another instance of this class, a javascript object, or a raw YAML string.
    */
   load (input: TSON | object | string): void {
-    const tson: TSON = typeof(input) === 'string' ? YAML.parse(input) : input;
+    let tson: TSON = typeof(input) === 'string' ? YAML.parse(input) : input;
     validate(tson, this.validationOptions);
-    const formatted = standardize(tson, this.standardizationOptions);
 
-    if (formatted?.tunings) {
-      this.tunings = formatted.tunings.concat(this.tunings || []);
+    if (this.standardizationOptions) {
+      tson = standardize(tson, this.standardizationOptions);
     }
 
-    if (formatted?.spectra) {
-      this.spectra = formatted.spectra.concat(this.spectra || []);
+    if (tson?.tunings) {
+      this.tunings = tson.tunings.concat(this.tunings || []);
     }
 
-    if (formatted?.sets) {
-      this.sets = formatted.sets.concat(this.sets || []);
+    if (tson?.spectra) {
+      this.spectra = tson.spectra.concat(this.spectra || []);
+    }
+
+    if (tson?.sets) {
+      this.sets = tson.sets.concat(this.sets || []);
     }
   }
 
