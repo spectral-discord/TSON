@@ -296,9 +296,14 @@ export interface TSON {
   sets?: Set[]
 }
 
-type NameAndId = {
+interface NameAndId {
   name?: string,
   id: string
+}
+
+interface TSONOptions {
+  validationOptions?: ValidationOptions,
+  standardizationOptions?: StandardizationOptions
 }
 
 /**
@@ -314,20 +319,22 @@ export class TSON implements TSON {
   /**
    * TSON constructor
    * @param {TSON | object | string | (TSON | object | string)[]} initial A TSON or array of TSONs to use for initialization. The TSONs can be another instance of this class, a javascript object, or a raw YAML string.
-   * @param {ValidationOptions} validationOptions A set of validation options to use when initializing and adding TSONs.
-   * @param {StandardizationOptions} standardizationOptions A set of standardization options to use when initializing and adding TSONs.
+   * @param {TSONOptions} options An options object
+   * @param {ValidationOptions} options.validationOptions A set of validation options to use when initializing and adding TSONs.
+   * @param {StandardizationOptions} options.standardizationOptions A set of standardization options to use when initializing and adding TSONs.
    */
   constructor(
     initial?: TSON | object | string | (TSON | object | string)[],
-    validationOptions?: ValidationOptions,
-    standardizationOptions?: StandardizationOptions
+    options?: TSONOptions
   ) {
-    if (validationOptions) {
-      this.setValidationOptions(validationOptions);
+    if (options?.validationOptions) {
+      assert(options.validationOptions, validationOptionsSchema, 'Invalid validation options!\n');
+      this.validationOptions = options.validationOptions;
     }
 
-    if (standardizationOptions) {
-      this.setStandardizationOptions(standardizationOptions);
+    if (options?.standardizationOptions) {
+      assert(options.standardizationOptions, standardizationOptionsSchema, 'Invalid standardization options!\n');
+      this.standardizationOptions = options.standardizationOptions;
     }
 
     if (initial) {

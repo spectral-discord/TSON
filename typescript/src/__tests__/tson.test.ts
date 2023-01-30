@@ -95,9 +95,27 @@ describe('load tests', () => {
     jest.restoreAllMocks();
   });
 
-  test('Should call validate() and standardize() when load is called', () => {
+  test('Should call validate() when load is called and no standardization options are set', () => {
     const complex = YAML.parse(importTsonFile('complex.tson'));
     const tson = new TSON();
+    tson.load(complex);
+
+    expect(validate.default).toHaveBeenCalledTimes(1);
+    expect(standardize.default).toHaveBeenCalledTimes(0);
+  });
+
+  test('Should call validate() and standardize() when load is called and standardization options are set', () => {
+    const complex = YAML.parse(importTsonFile('complex.tson'));
+    const tson = new TSON(undefined, {
+      standardizationOptions: {
+        repeatRatio: 'repeat',
+        minFrequency: 'min',
+        maxFrequency: 'max',
+        frequencyRatio: 'ratio',
+        amplitudeWeight: 'weight',
+        partialDistribution: 'partials',
+      }
+    });
     tson.load(complex);
 
     expect(validate.default).toHaveBeenCalledTimes(1);
