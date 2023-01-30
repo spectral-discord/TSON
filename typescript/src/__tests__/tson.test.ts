@@ -122,6 +122,58 @@ describe('load tests', () => {
     expect(standardize.default).toHaveBeenCalledTimes(1);
   });
 
+  test('Should call reduce() but not standardize() when load is called and both standardization options exist and reduce is set to true', () => {
+    const complex = YAML.parse(importTsonFile('complex.tson'));
+    const tson = new TSON(undefined, {
+      standardizationOptions: {
+        repeatRatio: 'repeat',
+        minFrequency: 'min',
+        maxFrequency: 'max',
+        frequencyRatio: 'ratio',
+        amplitudeWeight: 'weight',
+        partialDistribution: 'partials',
+      }
+    });
+    tson.load(complex, { reduce: true });
+
+    expect(standardize.default).toHaveBeenCalledTimes(0);
+    expect(reduce.default).toHaveBeenCalledTimes(1);
+  });
+
+  test('Should not call standardize() when load is called and standardization options exist but standardize is set to false', () => {
+    const complex = YAML.parse(importTsonFile('complex.tson'));
+    const tson = new TSON(undefined, {
+      standardizationOptions: {
+        repeatRatio: 'repeat',
+        minFrequency: 'min',
+        maxFrequency: 'max',
+        frequencyRatio: 'ratio',
+        amplitudeWeight: 'weight',
+        partialDistribution: 'partials',
+      }
+    });
+    tson.load(complex, { standardize: false });
+
+    expect(standardize.default).toHaveBeenCalledTimes(0);
+  });
+
+  test('Should call reduce() but not standardize() when load is called and both standardize and reduce is set to true', () => {
+    const complex = YAML.parse(importTsonFile('complex.tson'));
+    const tson = new TSON();
+    tson.load(complex, { reduce: true, standardize: true });
+
+    expect(standardize.default).toHaveBeenCalledTimes(0);
+    expect(reduce.default).toHaveBeenCalledTimes(1);
+  });
+
+  test('Should call reduce() but not standardize() when load is called and standardize is set to true but no standardization options exist', () => {
+    const complex = YAML.parse(importTsonFile('complex.tson'));
+    const tson = new TSON();
+    tson.load(complex, { standardize: true });
+
+    expect(standardize.default).toHaveBeenCalledTimes(1);
+  });
+
   test('Should call assert() and standardize() when setStandardizationOptions() is called', () => {
     const tson = new TSON();
 

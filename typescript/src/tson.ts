@@ -303,14 +303,20 @@ interface NameAndId {
 
 interface TSONOptions {
   validationOptions?: ValidationOptions,
-  standardizationOptions?: StandardizationOptions
+  standardizationOptions?: StandardizationOptions,
+  reduce?: boolean
+}
+
+interface LoadOptions {
+  reduce?: boolean,
+  standardize?: boolean
 }
 
 /**
  * TSON class
  *
  * This class can be used to aggregate, validate, standardize,
- * and reduce TSONs, as well as for building tunings.
+ * and reduce TSON data, as well as build tunings.
  */
 export class TSON implements TSON {
   private validationOptions?: ValidationOptions;
@@ -318,10 +324,11 @@ export class TSON implements TSON {
 
   /**
    * TSON constructor
-   * @param {TSON | object | string | (TSON | object | string)[]} initial A TSON or array of TSONs to use for initialization. The TSONs can be another instance of this class, a javascript object, or a raw YAML string.
-   * @param {TSONOptions} options An options object
+   * @param {TSON | object | string | (TSON | object | string)[]} initial A TSON, or array of TSONs, to use for initialization. The TSONs can be another instance of this class, a javascript object, or a raw YAML string.
+   * @param {TSONOptions} options
    * @param {ValidationOptions} options.validationOptions A set of validation options to use when initializing and adding TSONs.
    * @param {StandardizationOptions} options.standardizationOptions A set of standardization options to use when initializing and adding TSONs.
+   * @param {boolean} options.reduce If true, reduce() will be called for any TSON data being used to initialize the object
    */
   constructor(
     initial?: TSON | object | string | (TSON | object | string)[],
@@ -339,7 +346,7 @@ export class TSON implements TSON {
 
     if (initial) {
       const tsonArray: (TSON | object | string)[] = [];
-      tsonArray.concat(initial).forEach(tson => this.load(tson));
+      tsonArray.concat(initial).forEach(tson => this.load(tson, { reduce: options?.reduce }));
     }
   }
 
@@ -347,11 +354,19 @@ export class TSON implements TSON {
    * Validates and standardizes a TSON, and adds it to the class instance
    * @param {TSON | object | string} input A TSON to use for initialization. It can be another instance of this class, a javascript object, or a raw YAML string.
    */
-  load (input: TSON | object | string): void {
+  load (input: TSON | object | string, options?: LoadOptions): void {
     let tson: TSON = typeof(input) === 'string' ? YAML.parse(input) : input;
     validate(tson, this.validationOptions);
 
-    if (this.standardizationOptions) {
+    if (options?.reduce) {
+      tson = new TSON(reduce(tson));
+    } else if (
+      options?.standardize
+      || (
+        this.standardizationOptions
+        && !(typeof(options?.standardize) === 'boolean' && !options.standardize)
+      )
+    ) {
       tson = standardize(tson, this.standardizationOptions);
     }
 
