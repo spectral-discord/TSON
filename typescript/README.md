@@ -1,4 +1,4 @@
-## TSONify NPM Package
+## TSONify.js
 
 [![npm](https://img.shields.io/npm/v/tsonify)](https://www.npmjs.com/package/tsonify)
 [![NPM](https://img.shields.io/npm/l/tsonify)](https://unlicense.org/)
