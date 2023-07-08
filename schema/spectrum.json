@@ -1,0 +1,276 @@
+{
+  "$id": "https://raw.githubusercontent.com/spectral-discord/TSON/main/schema/spectrum.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TSON Spectrum Schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The spectrum's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "A description of the spectrum"
+    },
+    "id": {
+      "type": "string",
+      "description": "A unique identifier for the spectrum"
+    },
+    "partial distribution": {
+      "type": "array",
+      "description": "A list of partials that should be used to reconstruct the spectrum",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "properties": {
+          "frequency ratio": {
+            "description": "The partial's frequency ratio",
+            "oneOf": [
+              {
+                "type": "string",
+                "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "ratio": {
+            "description": "The partial's frequency ratio",
+            "oneOf": [
+              {
+                "type": "string",
+                "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "amplitude weight": {
+            "description": "The partial's amplitude weight.\nThis determines how much the partial contributes to the overall power (ie., loudness) of the reconstructed spectrum.",
+            "oneOf": [
+              {
+                "type": "string",
+                "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "weight": {
+            "description": "The partial's amplitude weight.\nThis determines how much the partial contributes to the overall power (ie., loudness) of the reconstructed spectrum.",
+            "oneOf": [
+              {
+                "type": "string",
+                "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          }
+        },
+        "additionalProperties": true,
+        "allOf": [
+          {
+            "if": {
+              "propertyNames": {
+                "enum": [
+                  "frequency ratio",
+                  "ratio"
+                ]
+              },
+              "minProperties": 2
+            },
+            "then": false,
+            "else": {
+              "oneOf": [
+                {
+                  "required": [
+                    "frequency ratio"
+                  ]
+                },
+                {
+                  "required": [
+                    "ratio"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "if": {
+              "propertyNames": {
+                "enum": [
+                  "amplitude weight",
+                  "weight"
+                ]
+              },
+              "minProperties": 2
+            },
+            "then": false,
+            "else": {
+              "oneOf": [
+                {
+                  "required": [
+                    "amplitude weight"
+                  ]
+                },
+                {
+                  "required": [
+                    "weight"
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "partials": {
+      "type": "array",
+      "description": "A list of partials that should be used to reconstruct the spectrum",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "properties": {
+          "frequency ratio": {
+            "description": "The partial's frequency ratio",
+            "oneOf": [
+              {
+                "type": "string",
+                "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "ratio": {
+            "description": "The partial's frequency ratio",
+            "oneOf": [
+              {
+                "type": "string",
+                "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "amplitude weight": {
+            "description": "The partial's amplitude weight.\nThis determines how much the partial contributes to the overall power (ie., loudness) of the reconstructed spectrum.",
+            "oneOf": [
+              {
+                "type": "string",
+                "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "weight": {
+            "description": "The partial's amplitude weight.\nThis determines how much the partial contributes to the overall power (ie., loudness) of the reconstructed spectrum.",
+            "oneOf": [
+              {
+                "type": "string",
+                "pattern": "^([1234567890.+\\-*/^%()e ]|(pi)|(tau)|(abs))+$"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          }
+        },
+        "additionalProperties": true,
+        "allOf": [
+          {
+            "if": {
+              "propertyNames": {
+                "enum": [
+                  "frequency ratio",
+                  "ratio"
+                ]
+              },
+              "minProperties": 2
+            },
+            "then": false,
+            "else": {
+              "oneOf": [
+                {
+                  "required": [
+                    "frequency ratio"
+                  ]
+                },
+                {
+                  "required": [
+                    "ratio"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "if": {
+              "propertyNames": {
+                "enum": [
+                  "amplitude weight",
+                  "weight"
+                ]
+              },
+              "minProperties": 2
+            },
+            "then": false,
+            "else": {
+              "oneOf": [
+                {
+                  "required": [
+                    "amplitude weight"
+                  ]
+                },
+                {
+                  "required": [
+                    "weight"
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": true,
+  "if": {
+    "propertyNames": {
+      "enum": [
+        "partials",
+        "partial distribution"
+      ]
+    },
+    "minProperties": 2
+  },
+  "then": false,
+  "else": {
+    "oneOf": [
+      {
+        "required": [
+          "partials"
+        ]
+      },
+      {
+        "required": [
+          "partial distribution"
+        ]
+      }
+    ]
+  }
+}

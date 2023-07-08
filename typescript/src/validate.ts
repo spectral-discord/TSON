@@ -61,7 +61,7 @@ const noteNamesRef = Joi.ref('...notes', {
   }, []),
 });
 
-const tunings = Joi.array().items(Joi.object().keys({
+export const tuningSchema = Joi.object().keys({
   name: Joi.string().description('The tuning\'s name').optional(),
   description: Joi.string().description('A description of the tuning').optional(),
   id: Joi.string().description('A unique identifier for the tuning').required(),
@@ -85,10 +85,7 @@ const tunings = Joi.array().items(Joi.object().keys({
     .oxor('max', 'maximum', 'max frequency')
     .unknown()
   ).min(1).description('List of scale objects').required()
-}).unknown())
-  .min(1)
-  .unique((a, b) => a.id && b.id && a.id === b.id)
-  .description('List of tuning objects').optional();
+}).unknown();
 
 const partials = Joi.array().items(
   Joi.object().keys({
@@ -120,18 +117,28 @@ const partials = Joi.array().items(
   })
   .description('A list of partials that should be used to reconstruct the spectrum');
 
-const spectrumSchema = Joi.array().items(Joi.object().keys({
+export const spectrumSchema = Joi.object().keys({
   name: Joi.string().description('The spectrum\'s name').optional(),
   description: Joi.string().description('A description of the spectrum').optional(),
   id: Joi.string().description('A unique identifier for the spectrum').required(),
   'partial distribution': partials.optional(),
   partials: partials.optional()
 }).xor('partials', 'partial distribution')
-  .unknown()
-).min(1)
-  .unique((a, b) => a.id && b.id && a.id === b.id)
-  .description('A list of spectrum objects')
-  .optional();
+  .unknown();
+
+export const setSchema = Joi.object().keys({
+  id: Joi.string().description('A unique identifier for the set').required(),
+  name: Joi.string().description('The set\'s name').optional(),
+  description: Joi.string().description('A description of the set').optional(),
+  members: Joi.array().items(Joi.object().keys({
+    tuning: Joi.string().description('A reference of a tuning\'s ID').optional(),
+    spectrum: Joi.string().description('A reference of a spectrum\'s ID').optional(),
+    'override scale spectra': Joi.boolean().description('If true, the set\'s spectrum should be applied to all scales in the set\'s tuning, overriding any spectra that are references by the scales.').optional()
+  }).unknown())
+    .min(1)
+    .description('A list of set member objects')
+    .required()
+}).unknown();
 
 /**
  * Joi schema for validating TSON objects.
@@ -139,22 +146,21 @@ const spectrumSchema = Joi.array().items(Joi.object().keys({
  * Doesn't parse expressions, but does validate that expression strings only contain allowed substrings.
  */
 export const tsonSchema = Joi.object().keys({
-  tunings,
-  spectra: spectrumSchema,
-  sets: Joi.array().items(Joi.object().keys({
-    id: Joi.string().description('A unique identifier for the set').required(),
-    name: Joi.string().description('The set\'s name').optional(),
-    description: Joi.string().description('A description of the set').optional(),
-    members: Joi.array().items(Joi.object().keys({
-      tuning: Joi.string().description('A reference of a tuning\'s ID').optional(),
-      spectrum: Joi.string().description('A reference of a spectrum\'s ID').optional(),
-      'override scale spectra': Joi.boolean().description('If true, the set\'s spectrum should be applied to all scales in the set\'s tuning, overriding any spectra that are references by the scales.').optional()
-    }).unknown())
-      .min(1)
-      .unique((a, b) => a.id && b.id && a.id === b.id)
-      .description('A list of set member objects')
-      .required()
-  }).unknown()).min(1).description('A list of set objects').optional()
+  tunings: Joi.array().items(tuningSchema)
+    .min(1)
+    .unique((a, b) => a.id && b.id && a.id === b.id)
+    .description('List of tuning objects')
+    .optional(),
+  spectra: Joi.array().items(spectrumSchema)
+    .min(1)
+    .unique((a, b) => a.id && b.id && a.id === b.id)
+    .description('A list of spectrum objects')
+    .optional(),
+  sets: Joi.array().items(setSchema)
+    .min(1)
+    .unique((a, b) => a.id && b.id && a.id === b.id)
+    .description('A list of set objects')
+    .optional()
 }).or('tunings', 'spectra', 'sets')
   .unknown();
 

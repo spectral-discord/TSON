@@ -670,6 +670,7 @@
       "type": "array",
       "description": "A list of set objects",
       "minItems": 1,
+      "uniqueItems": true,
       "items": {
         "type": "object",
         "properties": {
@@ -689,7 +690,6 @@
             "type": "array",
             "description": "A list of set member objects",
             "minItems": 1,
-            "uniqueItems": true,
             "items": {
               "type": "object",
               "properties": {
