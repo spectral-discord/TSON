@@ -120,16 +120,7 @@
               },
               "note": {
                 "type": "string",
-                "description": "The name of the note that should be mapped onto the reference frequency",
-                "const": {
-                  "ref": {
-                    "path": [
-                      "notes"
-                    ],
-                    "ancestor": 2,
-                    "in": true
-                  }
-                }
+                "description": "The name of the note that should be mapped onto the reference frequency"
               }
             },
             "required": [
