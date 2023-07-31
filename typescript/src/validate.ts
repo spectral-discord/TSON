@@ -5,8 +5,18 @@ import Joi from 'joi';
 import { evaluate } from 'mathjs';
 import YAML from 'yaml';
 
+const parseExpression = (value: string, helpers: any) => {
+  try {
+    if (evaluate(value) <= 0) return helpers.error(`Expression must resolve to a positive number: "${value}"`);
+  } catch (ex) {
+    return helpers.error(`Invalid expression could not be parsed: "${value}"`);
+  }
+
+  return value;
+};
+
 const expression = Joi.alternatives().try(
-  Joi.string().regex(/^([1234567890.+\-*/^%()e ]|(pi)|(tau)|(abs))+$/),
+  Joi.string().regex(/^([1234567890.+\-*/^%()e ]|(pi)|(tau)|(abs))+$/).custom(parseExpression),
   Joi.number().positive(),
 );
 
@@ -242,92 +252,6 @@ export default function validate(
           }
           if (mem.spectrum && !spectrumIds.includes(mem.spectrum)) {
             throw new Error(`Invalid TSON!\nSpectrum [${mem.spectrum}] not found`);
-          }
-        }
-      }
-    }
-  }
-
-  // Ensure that expressions can be evaluated
-  if (tson.tunings) {
-    for (const tuning of tson.tunings) {
-      for (const scale of tuning.scales) {
-        const repeat = scale.repeat || scale['repeat ratio'];
-        if (repeat) {
-          if (typeof(repeat) === 'string') {
-            try {
-              if (evaluate(repeat) <= 0) throw new Error();
-            } catch (ex) {
-              throw new Error(`
-                Error parsing expression string: "${repeat}"
-                Used for a repeat ratio in tuning: ${tuning.id}
-                Frequency ratio expressions must evaluate to a positive number.
-              `);
-            }
-          }
-        }
-
-        for (const note of scale.notes) {
-          if (typeof(note) === 'string') {
-            try {
-              if (evaluate(note) <= 0) throw new Error();
-            } catch (ex) {
-              throw new Error(`
-                Error parsing expression string: "${note}"
-                Used for a note's frequency ratio in tuning: ${tuning.id}
-                Frequency ratio expressions must evaluate to a positive number.
-              `);
-            }
-          } else if (typeof(note) === 'object') {
-            const ratio = note.ratio ? note.ratio : note['frequency ratio'];
-            if (typeof(ratio) === 'string') {
-              try {
-                if (evaluate(ratio) <= 0) throw new Error();
-              } catch (ex) {
-                throw new Error(`
-                  Error parsing expression string: "${ratio}"
-                  Used for a partial's frequency ratio in tuning: ${tuning.id}
-                  Frequency ratio expressions must evaluate to a positive number.
-                `);
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  if (tson.spectra) {
-    for (const spectrum of tson.spectra) {
-      const partials = spectrum.partials
-        ? spectrum.partials
-        : spectrum['partial distribution'];
-
-      if (partials) {
-        for (const partial of partials) {
-          const frequency = partial.ratio ? partial.ratio : partial['frequency ratio'];
-          const amplitude = partial.weight ? partial.weight : partial['amplitude weight'];
-          if (typeof(frequency) === 'string') {
-            try {
-              if (evaluate(frequency) <= 0) throw new Error();
-            } catch (ex) {
-              throw new Error(`
-                Error parsing expression string: "${frequency}"
-                Used for a partial's frequency ratio in spectrum: ${spectrum.id}
-                Frequency ratio expressions must evaluate to a positive number.
-              `);
-            }
-          }
-          if (typeof(amplitude) === 'string') {
-            try {
-              if (evaluate(amplitude) <= 0) throw new Error();
-            } catch (ex) {
-              throw new Error(`
-                Error parsing expression string: "${amplitude}"
-                Used for a partial's amplitude weight in spectrum: ${spectrum.id}
-                Amplitude weight expressions must evaluate to a positive number.
-              `);
-            }
           }
         }
       }
