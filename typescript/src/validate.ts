@@ -7,9 +7,9 @@ import YAML from 'yaml';
 
 const parseExpression = (value: string, helpers: any) => {
   try {
-    if (evaluate(value) <= 0) return helpers.error(`Expression must resolve to a positive number: "${value}"`);
+    if (evaluate(value) <= 0) return helpers.message(`Expression must resolve to a positive number: "${value}"`);
   } catch (ex) {
-    return helpers.error(`Invalid expression could not be parsed: "${value}"`);
+    return helpers.message(`Invalid expression could not be parsed: "${value}"`);
   }
 
   return value;
