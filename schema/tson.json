@@ -37,18 +37,7 @@
                   "minItems": 1,
                   "uniqueItems": true,
                   "items": {
-                    "anyOf": [
-                      {
-                        "oneOf": [
-                          {
-                            "type": "string",
-                            "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
-                          },
-                          {
-                            "type": "number"
-                          }
-                        ]
-                      },
+                    "oneOf": [
                       {
                         "type": "object",
                         "properties": {
@@ -81,31 +70,19 @@
                             "description": "The note's name"
                           }
                         },
-                        "additionalProperties": true,
-                        "if": {
-                          "propertyNames": {
-                            "enum": [
-                              "frequency ratio",
-                              "ratio"
-                            ]
+                        "additionalProperties": true
+                      },
+                      {
+                        "description": "The note's frequency ratio",
+                        "oneOf": [
+                          {
+                            "type": "string",
+                            "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                           },
-                          "minProperties": 2
-                        },
-                        "then": false,
-                        "else": {
-                          "oneOf": [
-                            {
-                              "required": [
-                                "frequency ratio"
-                              ]
-                            },
-                            {
-                              "required": [
-                                "ratio"
-                              ]
-                            }
-                          ]
-                        }
+                          {
+                            "type": "number"
+                          }
+                        ]
                       }
                     ]
                   }

@@ -47,6 +47,8 @@ describe('TSON validation tests', () => {
       valid: jest.fn().mockReturnThis(),
       in: jest.fn().mockReturnThis(),
       custom: jest.fn().mockReturnThis(),
+      error: jest.fn().mockReturnThis(),
+      messages: jest.fn().mockReturnThis(),
     }));
   });
 

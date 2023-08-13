@@ -7,9 +7,11 @@ import YAML from 'yaml';
 
 const parseExpression = (value: string, helpers: any) => {
   try {
-    if (evaluate(value) <= 0) return helpers.message(`Expression must resolve to a positive number: "${value}"`);
+    if (evaluate(value) <= 0) {
+      return helpers.message(`Expression must resolve to a positive number: "${value}"`);
+    }
   } catch (ex) {
-    return helpers.message(`Invalid expression could not be parsed: "${value}"`);
+    return helpers.message(`Expression invalid, unable to parse: "${value}"`);
   }
 
   return value;
@@ -25,39 +27,41 @@ const frequency = Joi.alternatives().try(
   Joi.string().regex(/^(0*[1-9][0-9]*(\.[0-9]+)?|0+\.[0-9]*[1-9][0-9]*)( Hz)?$/)
 );
 
-const notes = Joi.array().items(
-  expression,
-  Joi.object().keys({
+const notes = Joi.array().items(Joi.alternatives().conditional(Joi.object(), {
+  then: Joi.object({
     'frequency ratio': expression.description('The note\'s frequency ratio').optional(),
     ratio: expression.description('The note\'s frequency ratio').optional(),
     name: Joi.string().description('The note\'s name').optional(),
-  }).unknown().xor('frequency ratio', 'ratio')
-).min(1)
+  }).unknown(),
+  otherwise: expression.description('The note\'s frequency ratio')
+})).min(1)
   .unique((a, b) => {
-    let aFreq;
-    let bFreq;
+    const aFreq = typeof(a) === 'object' ? a['frequency ratio'] || a.ratio : a;
+    const bFreq = typeof(b) === 'object' ? b['frequency ratio'] || b.ratio : b;
+
+    if (aFreq && bFreq && aFreq === bFreq) {
+      return true;
+    }
+
+    let evaluatedA;
+    let evaluatedB;
 
     try {
-      if (typeof(b) === 'object') {
-        bFreq = evaluate(String(b['frequency ratio'] || b.ratio));
-      } else {
-        bFreq = evaluate(String(b));
-      }
+      evaluatedA = evaluate(String(aFreq));
     } catch (ex) {
-      throw new Error(`Error parsing expression string: "${(b.ratio || b['frequency ratio'])}"`);
+      return false;
     }
 
     try {
-      if (typeof(a) === 'object') {
-        aFreq = evaluate(String(a['frequency ratio'] || a.ratio));
-      } else {
-        aFreq = evaluate(String(a));
-      }
+      evaluatedB = evaluate(String(bFreq));
     } catch (ex) {
-      throw new Error(`Error parsing expression string: "${(a.ratio || a['frequency ratio'])}"`);
+      return false;
     }
 
-    return aFreq === bFreq;
+    return evaluatedA === evaluatedB;  
+  })
+  .messages({
+    'array.unique': 'The notes array contains frequency ratios that resolve to the same value at positions: {{#pos}}, {{#dupePos}}'
   })
   .description('A list of the scale\'s notes');
 
@@ -108,22 +112,32 @@ const partials = Joi.array().items(
     .unknown()
 ).min(1)
   .unique((a, b) => {
-    let aRatio;
-    let bRatio;
+    const aRatio = a.ratio || a['frequency ratio'];
+    const bRatio = b.ratio || b['frequency ratio'];
+
+    if (aRatio && bRatio && aRatio === bRatio) {
+      return true;
+    }
+
+    let evaluatedA;
+    let evaluatedB;
 
     try {
-      aRatio = evaluate(String(a.ratio || a['frequency ratio']));
+      evaluatedA = evaluate(String(aRatio));
     } catch (ex) {
-      throw new Error(`Error parsing expression string: "${(a.ratio || a['frequency ratio'])}"`);
+      return false;
     }
 
     try {
-      bRatio = evaluate(String(b.ratio || b['frequency ratio']));
+      evaluatedB = evaluate(String(bRatio));
     } catch (ex) {
-      throw new Error(`Error parsing expression string: "${(a.ratio || a['frequency ratio'])}"`);
+      return false;
     }
 
-    return aRatio === bRatio;
+    return evaluatedA === evaluatedB;
+  })
+  .messages({
+    'array.unique': 'The partials array contains frequency ratios that resolve to the same value at positions: {{#pos}}, {{#dupePos}}'
   })
   .description('A list of partials that should be used to reconstruct the spectrum');
 
@@ -217,7 +231,6 @@ export default function validate(
 
   // Validate TSON syntax & values
   Joi.assert(tson, tsonSchema, 'Invalid TSON!\n', {
-    abortEarly: false,
     allowUnknown: options.allowUnknown
   });
 
