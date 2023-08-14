@@ -8,7 +8,7 @@ import YAML from 'yaml';
 const parseExpression = (value: string, helpers: any) => {
   try {
     if (evaluate(value) <= 0) {
-      return helpers.message(`Expression must resolve to a positive number: "${value}"`);
+      return helpers.message(`Expression must evaluate to a positive number: "${value}"`);
     }
   } catch (ex) {
     return helpers.message(`Expression invalid, unable to parse: "${value}"`);
@@ -61,7 +61,7 @@ const notes = Joi.array().items(Joi.alternatives().conditional(Joi.object(), {
     return evaluatedA === evaluatedB;  
   })
   .messages({
-    'array.unique': 'The notes array contains frequency ratios that resolve to the same value at positions: {{#pos}}, {{#dupePos}}'
+    'array.unique': 'The notes array contains frequency ratios that evaluate to the same value: "{#value.ratio || #value.[frequency ratio] || #value}", "{#dupeValue.ratio || #dupeValue.[frequency ratio] || #dupeValue}"'
   })
   .description('A list of the scale\'s notes');
 
@@ -137,7 +137,7 @@ const partials = Joi.array().items(
     return evaluatedA === evaluatedB;
   })
   .messages({
-    'array.unique': 'The partials array contains frequency ratios that resolve to the same value at positions: {{#pos}}, {{#dupePos}}'
+    'array.unique': 'The partials array contains frequency ratios that evaluate to the same value: "{#value.ratio || #value.[frequency ratio]}", "{#dupeValue.ratio || #dupeValue.[frequency ratio]}"'
   })
   .description('A list of partials that should be used to reconstruct the spectrum');
 
