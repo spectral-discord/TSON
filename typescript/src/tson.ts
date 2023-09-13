@@ -3,7 +3,7 @@
 import validate, { ValidationOptions, validationOptionsSchema } from './validate';
 import standardize, { StandardizationOptions, standardizationOptionsSchema } from './standardize';
 import buildTuning, { BuildTuningOptions, BuiltNote } from './build-tuning';
-import reduce, { ReducedTSON } from './reduce';
+import reduce from './reduce';
 import YAML from 'yaml';
 import { assert } from 'joi';
 import { toTSON } from './export';
