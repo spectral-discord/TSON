@@ -56,7 +56,7 @@ export function fromScala(
 
   const numNotes = parseInt(lines[0].trim());
 
-  if (typeof(numNotes) !== 'number' || lines.length < numNotes) {
+  if (typeof numNotes !== 'number' || lines.length < numNotes) {
     throw new Error(`Error in line ${scala.split('\n').indexOf(lines[0]) + 1}\nThis line should contain the number of notes, and there should be at least that many lines of notes.`);
   }
 

@@ -356,7 +356,7 @@ export class TSON implements TSON {
    * @param {TSON | object | string} input A TSON to use for initialization. It can be another instance of this class, a javascript object, or a raw YAML string.
    */
   load (input: TSON | object | string, options?: LoadOptions): void {
-    let tson: TSON = typeof(input) === 'string' ? YAML.parse(input) : input;
+    let tson: TSON = typeof input === 'string' ? YAML.parse(input) : input;
     validate(tson, this.validationOptions);
 
     if (options?.reduce) {
@@ -365,7 +365,7 @@ export class TSON implements TSON {
       options?.standardize
       || (
         this.standardizationOptions
-        && !(typeof(options?.standardize) === 'boolean' && !options.standardize)
+        && !(typeof options?.standardize === 'boolean' && !options.standardize)
       )
     ) {
       tson = standardize(tson, this.standardizationOptions);

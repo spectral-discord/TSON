@@ -217,7 +217,7 @@ export default function reduce(tson: TSON): ReducedTSON {
 
         scale.notes.map(note => {
           // Evaluate note frequency ratio expressions
-          if (typeof(note) === 'object') {
+          if (typeof note === 'object') {
             try {
               const ratio = evaluate(String(note.ratio));
               if (ratio > 0) {

@@ -16,13 +16,13 @@ function ratioToCents(ratio: number): number {
  */
 export function toScala(scale: Scale, description?: string) {
   let ratios: number[] = scale.notes.map(note => {
-    if (typeof(note) === 'object') {
+    if (typeof note === 'object') {
       const ratio = note['frequency ratio'] || note.ratio;
       if (ratio) {
-        return typeof(ratio) === 'string' ? evaluate(ratio) : ratio;
+        return typeof ratio === 'string' ? evaluate(ratio) : ratio;
       }
     } else {
-      return typeof(note) === 'string' ? evaluate(note) : note;
+      return typeof note  === 'string' ? evaluate(note) : note;
     }
   });
 
@@ -41,7 +41,7 @@ export function toScala(scale: Scale, description?: string) {
 
   const repeat = scale.repeat || scale['repeat ratio'];
   if (repeat) {
-    const ratio = typeof(repeat) === 'string' ? evaluate(repeat) : repeat;
+    const ratio = typeof repeat === 'string' ? evaluate(repeat) : repeat;
     const cents = preSub < 0 ? ratioToCents(ratio - (preSub * ratio)) : ratioToCents(ratio);
     if (cents > ratios[ratios.length - 1]) {
       notesInCents.push(`${cents}${`${cents}`.includes('.') ? '' : '.'}`);

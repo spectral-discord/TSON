@@ -36,8 +36,8 @@ const notes = Joi.array().items(Joi.alternatives().conditional(Joi.object(), {
   otherwise: expression.description('The note\'s frequency ratio')
 })).min(1)
   .unique((a, b) => {
-    const aFreq = typeof(a) === 'object' ? a['frequency ratio'] || a.ratio : a;
-    const bFreq = typeof(b) === 'object' ? b['frequency ratio'] || b.ratio : b;
+    const aFreq = typeof a === 'object' ? a['frequency ratio'] || a.ratio : a;
+    const bFreq = typeof b === 'object' ? b['frequency ratio'] || b.ratio : b;
 
     if (aFreq && bFreq && aFreq === bFreq) {
       return true;
@@ -68,7 +68,7 @@ const notes = Joi.array().items(Joi.alternatives().conditional(Joi.object(), {
 const noteNamesRef = Joi.ref('...notes', {
   in: true,
   adjust: (notes: any[]) => notes.reduce((previous: any[], current: any) => {
-    if (typeof(current) === 'object' && current.name) {
+    if (typeof current === 'object' && current.name) {
       previous.push(current.name);
     }
     return previous;
@@ -227,7 +227,7 @@ export default function validate(
   Joi.assert(options, validationOptionsSchema, 'Invalid ValidationOptions!\n');
 
   // Parse input if it's a YAML string
-  const tson: TSON = typeof(input) === 'string' ? YAML.parse(input) : input;
+  const tson: TSON = typeof input === 'string' ? YAML.parse(input) : input;
 
   // Validate TSON syntax & values
   Joi.assert(tson, tsonSchema, 'Invalid TSON!\n', {
