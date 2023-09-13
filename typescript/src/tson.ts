@@ -504,7 +504,7 @@ export class TSON implements TSON {
    * evaluate expressions, normalize partial amplitude
    * weights, and remove 'Hz' from frequencies.
    *
-   * @returns {ReducedTSON} 
+   * @returns {ReducedTSON} A TSON object with reduced values
    */
   getReduced() {
     return reduce(this);
