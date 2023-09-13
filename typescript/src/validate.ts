@@ -32,7 +32,7 @@ const notes = Joi.array().items(Joi.alternatives().conditional(Joi.object(), {
     'frequency ratio': expression.description('The note\'s frequency ratio').optional(),
     ratio: expression.description('The note\'s frequency ratio').optional(),
     name: Joi.string().description('The note\'s name').optional(),
-  }).unknown(),
+  }).xor('ratio', 'frequency ratio').unknown(),
   otherwise: expression.description('The note\'s frequency ratio')
 })).min(1)
   .unique((a, b) => {
@@ -58,7 +58,7 @@ const notes = Joi.array().items(Joi.alternatives().conditional(Joi.object(), {
       return false;
     }
 
-    return evaluatedA === evaluatedB;  
+    return evaluatedA === evaluatedB;
   })
   .messages({
     'array.unique': 'The notes array contains frequency ratios that evaluate to the same value: "{#value.ratio || #value.[frequency ratio] || #value}", "{#dupeValue.ratio || #dupeValue.[frequency ratio] || #dupeValue}"'

@@ -3,7 +3,7 @@
 import validate, { ValidationOptions, validationOptionsSchema } from './validate';
 import standardize, { StandardizationOptions, standardizationOptionsSchema } from './standardize';
 import buildTuning, { BuildTuningOptions, BuiltNote } from './build-tuning';
-import reduce from './reduce';
+import reduce, { ReducedTSON } from './reduce';
 import YAML from 'yaml';
 import { assert } from 'joi';
 import { toTSON } from './export';
@@ -473,7 +473,7 @@ export class TSON implements TSON {
   }
 
   /**
-   * Reduces all TSON data in the class instance
+   * Reduces all TSON data  and modifies the existing object
    *
    * This will validate and standardize the TSON data,
    * evaluate expressions, normalize partial amplitude
@@ -493,6 +493,21 @@ export class TSON implements TSON {
     if (reduced?.sets) {
       this.sets = reduced.sets;
     }
+  }
+
+  /**
+   * Reduces all TSON data and returns a new TSON
+   * object with the reduced values without modifying
+   * the existing TSON object
+   *
+   * This will validate and standardize the TSON data,
+   * evaluate expressions, normalize partial amplitude
+   * weights, and remove 'Hz' from frequencies.
+   *
+   * @returns {ReducedTSON} 
+   */
+  getReduced() {
+    return reduce(this);
   }
 
   /**

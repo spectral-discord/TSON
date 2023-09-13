@@ -62,7 +62,31 @@
                       "description": "The note's name"
                     }
                   },
-                  "additionalProperties": true
+                  "additionalProperties": true,
+                  "if": {
+                    "propertyNames": {
+                      "enum": [
+                        "ratio",
+                        "frequency ratio"
+                      ]
+                    },
+                    "minProperties": 2
+                  },
+                  "then": false,
+                  "else": {
+                    "oneOf": [
+                      {
+                        "required": [
+                          "ratio"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "frequency ratio"
+                        ]
+                      }
+                    ]
+                  }
                 },
                 {
                   "description": "The note's frequency ratio",
