@@ -42,7 +42,7 @@
                         },
                         {
                           "type": "number",
-                          "minimum": 0.0
+                          "exclusiveMinimum": 0.0
                         }
                       ]
                     },
@@ -55,7 +55,7 @@
                         },
                         {
                           "type": "number",
-                          "minimum": 0.0
+                          "exclusiveMinimum": 0.0
                         }
                       ]
                     },
@@ -99,7 +99,7 @@
                     },
                     {
                       "type": "number",
-                      "minimum": 0.0
+                      "exclusiveMinimum": 0.0
                     }
                   ]
                 }
@@ -115,7 +115,7 @@
                 "oneOf": [
                   {
                     "type": "number",
-                    "minimum": 0.0
+                    "exclusiveMinimum": 0.0
                   },
                   {
                     "type": "string",
@@ -142,7 +142,7 @@
               },
               {
                 "type": "number",
-                "minimum": 0.0
+                "exclusiveMinimum": 0.0
               }
             ]
           },
@@ -155,7 +155,7 @@
               },
               {
                 "type": "number",
-                "minimum": 0.0
+                "exclusiveMinimum": 0.0
               }
             ]
           },
@@ -164,7 +164,7 @@
             "oneOf": [
               {
                 "type": "number",
-                "minimum": 0.0
+                "exclusiveMinimum": 0.0
               },
               {
                 "type": "string",
@@ -177,7 +177,7 @@
             "oneOf": [
               {
                 "type": "number",
-                "minimum": 0.0
+                "exclusiveMinimum": 0.0
               },
               {
                 "type": "string",
@@ -190,7 +190,7 @@
             "oneOf": [
               {
                 "type": "number",
-                "minimum": 0.0
+                "exclusiveMinimum": 0.0
               },
               {
                 "type": "string",
@@ -203,7 +203,7 @@
             "oneOf": [
               {
                 "type": "number",
-                "minimum": 0.0
+                "exclusiveMinimum": 0.0
               },
               {
                 "type": "string",
@@ -216,7 +216,7 @@
             "oneOf": [
               {
                 "type": "number",
-                "minimum": 0.0
+                "exclusiveMinimum": 0.0
               },
               {
                 "type": "string",
@@ -229,7 +229,7 @@
             "oneOf": [
               {
                 "type": "number",
-                "minimum": 0.0
+                "exclusiveMinimum": 0.0
               },
               {
                 "type": "string",
