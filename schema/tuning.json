@@ -41,7 +41,8 @@
                           "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                         },
                         {
-                          "type": "number"
+                          "type": "number",
+                          "minimum": 0.0
                         }
                       ]
                     },
@@ -53,7 +54,8 @@
                           "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                         },
                         {
-                          "type": "number"
+                          "type": "number",
+                          "minimum": 0.0
                         }
                       ]
                     },
@@ -96,7 +98,8 @@
                       "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                     },
                     {
-                      "type": "number"
+                      "type": "number",
+                      "minimum": 0.0
                     }
                   ]
                 }
@@ -111,7 +114,8 @@
                 "description": "The reference frequency - a number, optionally with \" Hz\" appended",
                 "oneOf": [
                   {
-                    "type": "number"
+                    "type": "number",
+                    "minimum": 0.0
                   },
                   {
                     "type": "string",
@@ -137,7 +141,8 @@
                 "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
               },
               {
-                "type": "number"
+                "type": "number",
+                "minimum": 0.0
               }
             ]
           },
@@ -149,7 +154,8 @@
                 "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
               },
               {
-                "type": "number"
+                "type": "number",
+                "minimum": 0.0
               }
             ]
           },
@@ -157,7 +163,8 @@
             "description": "A maximum frequency for the scale.\nWhen mapping the scale's notes onto actual frequencies, notes from this scale will not be mapped above the provided frequency.",
             "oneOf": [
               {
-                "type": "number"
+                "type": "number",
+                "minimum": 0.0
               },
               {
                 "type": "string",
@@ -169,7 +176,8 @@
             "description": "A maximum frequency for the scale.\nWhen mapping the scale's notes onto actual frequencies, notes from this scale will not be mapped above the provided frequency.",
             "oneOf": [
               {
-                "type": "number"
+                "type": "number",
+                "minimum": 0.0
               },
               {
                 "type": "string",
@@ -181,7 +189,8 @@
             "description": "A maximum frequency for the scale.\nWhen mapping the scale's notes onto actual frequencies, notes from this scale will not be mapped above the provided frequency.",
             "oneOf": [
               {
-                "type": "number"
+                "type": "number",
+                "minimum": 0.0
               },
               {
                 "type": "string",
@@ -193,7 +202,8 @@
             "description": "A minimum frequency for the scale.\nWhen mapping the scale's notes onto actual frequencies, notes from this scale will not be mapped below the provided frequency.",
             "oneOf": [
               {
-                "type": "number"
+                "type": "number",
+                "minimum": 0.0
               },
               {
                 "type": "string",
@@ -205,7 +215,8 @@
             "description": "A minimum frequency for the scale.\nWhen mapping the scale's notes onto actual frequencies, notes from this scale will not be mapped below the provided frequency.",
             "oneOf": [
               {
-                "type": "number"
+                "type": "number",
+                "minimum": 0.0
               },
               {
                 "type": "string",
@@ -217,7 +228,8 @@
             "description": "A minimum frequency for the scale.\nWhen mapping the scale's notes onto actual frequencies, notes from this scale will not be mapped below the provided frequency.",
             "oneOf": [
               {
-                "type": "number"
+                "type": "number",
+                "minimum": 0.0
               },
               {
                 "type": "string",
