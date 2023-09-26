@@ -37,108 +37,105 @@
                   "minItems": 1,
                   "uniqueItems": true,
                   "items": {
-                    "if": {
-                      "type": "object",
-                      "properties": {},
-                      "additionalProperties": false
-                    },
-                    "then": {
-                      "type": "object",
-                      "properties": {
-                        "frequency ratio": {
-                          "description": "The note's frequency ratio",
-                          "anyOf": [
-                            {
-                              "type": "string",
-                              "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
-                            },
-                            {
-                              "type": "number",
-                              "exclusiveMinimum": 0.0,
-                              "rules": [
-                                {
-                                  "name": "sign",
-                                  "args": {
-                                    "sign": "positive"
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "frequency ratio": {
+                            "description": "The note's frequency ratio",
+                            "oneOf": [
+                              {
+                                "type": "string",
+                                "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
+                              },
+                              {
+                                "type": "number",
+                                "exclusiveMinimum": 0.0,
+                                "rules": [
+                                  {
+                                    "name": "sign",
+                                    "args": {
+                                      "sign": "positive"
+                                    }
                                   }
-                                }
-                              ]
-                            }
-                          ]
-                        },
-                        "ratio": {
-                          "description": "The note's frequency ratio",
-                          "anyOf": [
-                            {
-                              "type": "string",
-                              "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
-                            },
-                            {
-                              "type": "number",
-                              "exclusiveMinimum": 0.0,
-                              "rules": [
-                                {
-                                  "name": "sign",
-                                  "args": {
-                                    "sign": "positive"
-                                  }
-                                }
-                              ]
-                            }
-                          ]
-                        },
-                        "name": {
-                          "type": "string",
-                          "description": "The note's name"
-                        }
-                      },
-                      "additionalProperties": true,
-                      "if": {
-                        "propertyNames": {
-                          "enum": [
-                            "ratio",
-                            "frequency ratio"
-                          ]
-                        },
-                        "minProperties": 2
-                      },
-                      "then": false,
-                      "else": {
-                        "oneOf": [
-                          {
-                            "required": [
-                              "ratio"
+                                ]
+                              }
                             ]
                           },
-                          {
-                            "required": [
+                          "ratio": {
+                            "description": "The note's frequency ratio",
+                            "oneOf": [
+                              {
+                                "type": "string",
+                                "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
+                              },
+                              {
+                                "type": "number",
+                                "exclusiveMinimum": 0.0,
+                                "rules": [
+                                  {
+                                    "name": "sign",
+                                    "args": {
+                                      "sign": "positive"
+                                    }
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "The note's name"
+                          }
+                        },
+                        "additionalProperties": true,
+                        "if": {
+                          "propertyNames": {
+                            "enum": [
+                              "ratio",
                               "frequency ratio"
+                            ]
+                          },
+                          "minProperties": 2
+                        },
+                        "then": false,
+                        "else": {
+                          "oneOf": [
+                            {
+                              "required": [
+                                "ratio"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "frequency ratio"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "description": "The note's frequency ratio",
+                        "oneOf": [
+                          {
+                            "type": "string",
+                            "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
+                          },
+                          {
+                            "type": "number",
+                            "exclusiveMinimum": 0.0,
+                            "rules": [
+                              {
+                                "name": "sign",
+                                "args": {
+                                  "sign": "positive"
+                                }
+                              }
                             ]
                           }
                         ]
                       }
-                    },
-                    "else": {
-                      "description": "The note's frequency ratio",
-                      "anyOf": [
-                        {
-                          "type": "string",
-                          "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
-                        },
-                        {
-                          "type": "number",
-                          "exclusiveMinimum": 0.0,
-                          "rules": [
-                            {
-                              "name": "sign",
-                              "args": {
-                                "sign": "positive"
-                              }
-                            }
-                          ]
-                        }
-                      ]
-                    }
+                    ]
                   }
                 },
                 "reference": {
