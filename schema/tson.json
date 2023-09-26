@@ -45,10 +45,6 @@
                             "description": "The note's frequency ratio",
                             "anyOf": [
                               {
-                                "type": "string",
-                                "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
-                              },
-                              {
                                 "type": "number",
                                 "exclusiveMinimum": 0.0,
                                 "rules": [
@@ -59,6 +55,10 @@
                                     }
                                   }
                                 ]
+                              },
+                              {
+                                "type": "string",
+                                "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                               }
                             ]
                           },
@@ -66,10 +66,6 @@
                             "description": "The note's frequency ratio",
                             "anyOf": [
                               {
-                                "type": "string",
-                                "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
-                              },
-                              {
                                 "type": "number",
                                 "exclusiveMinimum": 0.0,
                                 "rules": [
@@ -80,6 +76,10 @@
                                     }
                                   }
                                 ]
+                              },
+                              {
+                                "type": "string",
+                                "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                               }
                             ]
                           },
@@ -118,10 +118,6 @@
                         "description": "The note's frequency ratio",
                         "anyOf": [
                           {
-                            "type": "string",
-                            "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
-                          },
-                          {
                             "type": "number",
                             "exclusiveMinimum": 0.0,
                             "rules": [
@@ -132,6 +128,10 @@
                                 }
                               }
                             ]
+                          },
+                          {
+                            "type": "string",
+                            "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                           }
                         ]
                       }
@@ -177,10 +177,6 @@
                   "description": "The frequency ratio at which the scale's notes will repeat",
                   "anyOf": [
                     {
-                      "type": "string",
-                      "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
-                    },
-                    {
                       "type": "number",
                       "exclusiveMinimum": 0.0,
                       "rules": [
@@ -191,6 +187,10 @@
                           }
                         }
                       ]
+                    },
+                    {
+                      "type": "string",
+                      "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                     }
                   ]
                 },
@@ -198,10 +198,6 @@
                   "description": "The frequency ratio at which the scale's notes will repeat",
                   "anyOf": [
                     {
-                      "type": "string",
-                      "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
-                    },
-                    {
                       "type": "number",
                       "exclusiveMinimum": 0.0,
                       "rules": [
@@ -212,6 +208,10 @@
                           }
                         }
                       ]
+                    },
+                    {
+                      "type": "string",
+                      "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                     }
                   ]
                 },
@@ -519,10 +519,6 @@
                   "description": "The partial's frequency ratio",
                   "anyOf": [
                     {
-                      "type": "string",
-                      "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
-                    },
-                    {
                       "type": "number",
                       "exclusiveMinimum": 0.0,
                       "rules": [
@@ -533,6 +529,10 @@
                           }
                         }
                       ]
+                    },
+                    {
+                      "type": "string",
+                      "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                     }
                   ]
                 },
@@ -540,10 +540,6 @@
                   "description": "The partial's frequency ratio",
                   "anyOf": [
                     {
-                      "type": "string",
-                      "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
-                    },
-                    {
                       "type": "number",
                       "exclusiveMinimum": 0.0,
                       "rules": [
@@ -554,6 +550,10 @@
                           }
                         }
                       ]
+                    },
+                    {
+                      "type": "string",
+                      "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                     }
                   ]
                 },
@@ -561,10 +561,6 @@
                   "description": "The partial's amplitude weight.\nThis determines how much the partial contributes to the overall power (ie., loudness) of the reconstructed spectrum.",
                   "anyOf": [
                     {
-                      "type": "string",
-                      "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
-                    },
-                    {
                       "type": "number",
                       "exclusiveMinimum": 0.0,
                       "rules": [
@@ -575,6 +571,10 @@
                           }
                         }
                       ]
+                    },
+                    {
+                      "type": "string",
+                      "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                     }
                   ]
                 },
@@ -582,10 +582,6 @@
                   "description": "The partial's amplitude weight.\nThis determines how much the partial contributes to the overall power (ie., loudness) of the reconstructed spectrum.",
                   "anyOf": [
                     {
-                      "type": "string",
-                      "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
-                    },
-                    {
                       "type": "number",
                       "exclusiveMinimum": 0.0,
                       "rules": [
@@ -596,6 +592,10 @@
                           }
                         }
                       ]
+                    },
+                    {
+                      "type": "string",
+                      "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                     }
                   ]
                 }
@@ -669,10 +669,6 @@
                   "description": "The partial's frequency ratio",
                   "anyOf": [
                     {
-                      "type": "string",
-                      "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
-                    },
-                    {
                       "type": "number",
                       "exclusiveMinimum": 0.0,
                       "rules": [
@@ -683,6 +679,10 @@
                           }
                         }
                       ]
+                    },
+                    {
+                      "type": "string",
+                      "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                     }
                   ]
                 },
@@ -690,10 +690,6 @@
                   "description": "The partial's frequency ratio",
                   "anyOf": [
                     {
-                      "type": "string",
-                      "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
-                    },
-                    {
                       "type": "number",
                       "exclusiveMinimum": 0.0,
                       "rules": [
@@ -704,6 +700,10 @@
                           }
                         }
                       ]
+                    },
+                    {
+                      "type": "string",
+                      "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                     }
                   ]
                 },
@@ -711,10 +711,6 @@
                   "description": "The partial's amplitude weight.\nThis determines how much the partial contributes to the overall power (ie., loudness) of the reconstructed spectrum.",
                   "anyOf": [
                     {
-                      "type": "string",
-                      "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
-                    },
-                    {
                       "type": "number",
                       "exclusiveMinimum": 0.0,
                       "rules": [
@@ -725,6 +721,10 @@
                           }
                         }
                       ]
+                    },
+                    {
+                      "type": "string",
+                      "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                     }
                   ]
                 },
@@ -732,10 +732,6 @@
                   "description": "The partial's amplitude weight.\nThis determines how much the partial contributes to the overall power (ie., loudness) of the reconstructed spectrum.",
                   "anyOf": [
                     {
-                      "type": "string",
-                      "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
-                    },
-                    {
                       "type": "number",
                       "exclusiveMinimum": 0.0,
                       "rules": [
@@ -746,6 +742,10 @@
                           }
                         }
                       ]
+                    },
+                    {
+                      "type": "string",
+                      "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                     }
                   ]
                 }
