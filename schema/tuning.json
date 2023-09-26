@@ -25,7 +25,7 @@
         "properties": {
           "notes": {
             "type": "array",
-            "description": "A list of the scale's notes",
+            "description": "A list of the scale's notes.\nNotes can be defined in one of two ways:\n  • A number or algebraic expression string, which represents the note's frequency ratio\n  • An object that must have either `frequency` or `frequency ratio` as a property, and can optionally have a `name` property for the note's name.",
             "minItems": 1,
             "uniqueItems": true,
             "items": {
@@ -34,7 +34,7 @@
                   "type": "object",
                   "properties": {
                     "frequency ratio": {
-                      "description": "The note's frequency ratio",
+                      "description": "The note's frequency ratio.\nMust be a positive number or an algebraic expression that resolves to a positive number.",
                       "anyOf": [
                         {
                           "type": "number",
@@ -55,7 +55,7 @@
                       ]
                     },
                     "ratio": {
-                      "description": "The note's frequency ratio",
+                      "description": "The note's frequency ratio.\nMust be a positive number or an algebraic expression that resolves to a positive number.",
                       "anyOf": [
                         {
                           "type": "number",
@@ -107,7 +107,7 @@
                   }
                 },
                 {
-                  "description": "The note's frequency ratio",
+                  "description": "The note's frequency ratio.\nMust be a positive number or an algebraic expression that resolves to a positive number.",
                   "anyOf": [
                     {
                       "type": "number",
@@ -166,7 +166,7 @@
             "additionalProperties": true
           },
           "repeat ratio": {
-            "description": "The frequency ratio at which the scale's notes will repeat",
+            "description": "The frequency ratio at which the scale's notes will repeat.\nMust be a positive number or an algebraic expression that resolves to a positive number.",
             "anyOf": [
               {
                 "type": "number",

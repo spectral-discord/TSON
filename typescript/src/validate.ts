@@ -29,11 +29,11 @@ const frequency = Joi.alternatives().try(
 
 const notes = Joi.array().items(Joi.alternatives().conditional(Joi.object(), {
   then: Joi.object({
-    'frequency ratio': expression.description('The note\'s frequency ratio').optional(),
-    ratio: expression.description('The note\'s frequency ratio').optional(),
+    'frequency ratio': expression.description('The note\'s frequency ratio.\nMust be a positive number or an algebraic expression that resolves to a positive number.').optional(),
+    ratio: expression.description('The note\'s frequency ratio.\nMust be a positive number or an algebraic expression that resolves to a positive number.').optional(),
     name: Joi.string().description('The note\'s name').optional(),
   }).xor('ratio', 'frequency ratio').unknown(),
-  otherwise: expression.description('The note\'s frequency ratio')
+  otherwise: expression.description('The note\'s frequency ratio.\nMust be a positive number or an algebraic expression that resolves to a positive number.')
 })).min(1)
   .unique((a, b) => {
     const aFreq = typeof a === 'object' ? a['frequency ratio'] || a.ratio : a;
@@ -63,7 +63,7 @@ const notes = Joi.array().items(Joi.alternatives().conditional(Joi.object(), {
   .messages({
     'array.unique': 'The notes array contains frequency ratios that evaluate to the same value: "{#value.ratio || #value.[frequency ratio] || #value}", "{#dupeValue.ratio || #dupeValue.[frequency ratio] || #dupeValue}"'
   })
-  .description('A list of the scale\'s notes');
+  .description('A list of the scale\'s notes.\nNotes can be defined in one of two ways:\n  • A number or algebraic expression string, which represents the note\'s frequency ratio\n  • An object that must have either `frequency` or `frequency ratio` as a property, and can optionally have a `name` property for the note\'s name.');
 
 const noteNamesRef = Joi.ref('...notes', {
   in: true,
@@ -84,9 +84,9 @@ export const tuningSchema = Joi.object().keys({
     reference: Joi.object().keys({
       frequency: frequency.description('The reference frequency - a number, optionally with " Hz" appended').required(),
       note: Joi.string().valid(noteNamesRef).description('The name of the note that should be mapped onto the reference frequency').optional(),
-    }).unknown().description('A reference frequency that is used to map the note\'s frequency ratios to real frequencies values (ie., in Hz).\nCan be either a number (optionally appended with " Hz") or an object containing a frequency and an optional note that references one of the note names from the scale\'s notes list.\nIf no note name is provided, the reference frequency will be mapped to the frequency ratio "1".').required(),
-    'repeat ratio': expression.description('The frequency ratio at which the scale\'s notes will repeat').optional(),
-    repeat: expression.description('The frequency ratio at which the scale\'s notes will repeat').optional(),
+    }).unknown().description('A reference frequency that is used to map the note\'s frequency ratios to real frequencies values (ie., in Hz).\nMust be an object containing a `frequency` and an optional `note` that references one of the note names from the scale\'s notes list.\nIf no note name is provided, the reference frequency will be mapped to the frequency ratio "1".').required(),
+    'repeat ratio': expression.description('The frequency ratio at which the scale\'s notes will repeat.\nMust be a positive number or an algebraic expression that resolves to a positive number.').optional(),
+    repeat: expression.description('The frequency ratio at which the scale\'s notes will repeat.\nMust be a positive number or an algebraic expression that resolves to a positive number.').optional(),
     'max frequency': frequency.description('A maximum frequency for the scale.\nWhen mapping the scale\'s notes onto actual frequencies, notes from this scale will not be mapped above the provided frequency.').optional(),
     max: frequency.description('A maximum frequency for the scale.\nWhen mapping the scale\'s notes onto actual frequencies, notes from this scale will not be mapped above the provided frequency.').optional(),
     maximum: frequency.description('A maximum frequency for the scale.\nWhen mapping the scale\'s notes onto actual frequencies, notes from this scale will not be mapped above the provided frequency.').optional(),
@@ -103,10 +103,10 @@ export const tuningSchema = Joi.object().keys({
 
 const partials = Joi.array().items(
   Joi.object().keys({
-    'frequency ratio': expression.description('The partial\'s frequency ratio').optional(),
-    ratio: expression.description('The partial\'s frequency ratio').optional(),
-    'amplitude weight': expression.description('The partial\'s amplitude weight.\nThis determines how much the partial contributes to the overall power (ie., loudness) of the reconstructed spectrum.').optional(),
-    weight: expression.description('The partial\'s amplitude weight.\nThis determines how much the partial contributes to the overall power (ie., loudness) of the reconstructed spectrum.').optional(),
+    'frequency ratio': expression.description('The partial\'s frequency ratio.\nMust be a positive number or an algebraic expression that resolves to a positive number.').optional(),
+    ratio: expression.description('The partial\'s frequency ratio.\nMust be a positive number or an algebraic expression that resolves to a positive number.').optional(),
+    'amplitude weight': expression.description('The partial\'s amplitude weight.\nThis determines how much the partial contributes to the overall loudness of the reconstructed spectrum.\nMust be a positive number or an algebraic expression that resolves to a positive number.').optional(),
+    weight: expression.description('The partial\'s amplitude weight.\nThis determines how much the partial contributes to the overall loudness of the reconstructed spectrum.\nMust be a positive number or an algebraic expression that resolves to a positive number.').optional(),
   }).xor('frequency ratio', 'ratio')
     .xor('amplitude weight', 'weight')
     .unknown()
@@ -139,7 +139,7 @@ const partials = Joi.array().items(
   .messages({
     'array.unique': 'The partials array contains frequency ratios that evaluate to the same value: "{#value.ratio || #value.[frequency ratio]}", "{#dupeValue.ratio || #dupeValue.[frequency ratio]}"'
   })
-  .description('A list of partials that should be used to reconstruct the spectrum');
+  .description('A list of partials that should be used to reconstruct the spectrum.\nPartials must be an objects containing a `frequency ratio` and an `amplitude weight`.');
 
 export const spectrumSchema = Joi.object().keys({
   name: Joi.string().description('The spectrum\'s name').optional(),
