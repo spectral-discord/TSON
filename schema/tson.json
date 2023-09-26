@@ -37,78 +37,105 @@
                   "minItems": 1,
                   "uniqueItems": true,
                   "items": {
-                    "oneOf": [
-                      {
-                        "type": "object",
-                        "properties": {
-                          "frequency ratio": {
-                            "description": "The note's frequency ratio",
-                            "oneOf": [
-                              {
-                                "type": "string",
-                                "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
-                              },
-                              {
-                                "type": "number"
-                              }
-                            ]
-                          },
-                          "ratio": {
-                            "description": "The note's frequency ratio",
-                            "oneOf": [
-                              {
-                                "type": "string",
-                                "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
-                              },
-                              {
-                                "type": "number"
-                              }
-                            ]
-                          },
-                          "name": {
-                            "type": "string",
-                            "description": "The note's name"
-                          }
-                        },
-                        "additionalProperties": true,
-                        "if": {
-                          "propertyNames": {
-                            "enum": [
-                              "ratio",
-                              "frequency ratio"
-                            ]
-                          },
-                          "minProperties": 2
-                        },
-                        "then": false,
-                        "else": {
-                          "oneOf": [
+                    "if": {
+                      "type": "object",
+                      "properties": {},
+                      "additionalProperties": false
+                    },
+                    "then": {
+                      "type": "object",
+                      "properties": {
+                        "frequency ratio": {
+                          "description": "The note's frequency ratio",
+                          "anyOf": [
                             {
-                              "required": [
-                                "ratio"
-                              ]
+                              "type": "string",
+                              "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                             },
                             {
-                              "required": [
-                                "frequency ratio"
+                              "type": "number",
+                              "rules": [
+                                {
+                                  "name": "sign",
+                                  "args": {
+                                    "sign": "positive"
+                                  }
+                                }
                               ]
                             }
                           ]
+                        },
+                        "ratio": {
+                          "description": "The note's frequency ratio",
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
+                            },
+                            {
+                              "type": "number",
+                              "rules": [
+                                {
+                                  "name": "sign",
+                                  "args": {
+                                    "sign": "positive"
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "The note's name"
                         }
                       },
-                      {
-                        "description": "The note's frequency ratio",
+                      "additionalProperties": true,
+                      "if": {
+                        "propertyNames": {
+                          "enum": [
+                            "ratio",
+                            "frequency ratio"
+                          ]
+                        },
+                        "minProperties": 2
+                      },
+                      "then": false,
+                      "else": {
                         "oneOf": [
                           {
-                            "type": "string",
-                            "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
+                            "required": [
+                              "ratio"
+                            ]
                           },
                           {
-                            "type": "number"
+                            "required": [
+                              "frequency ratio"
+                            ]
                           }
                         ]
                       }
-                    ]
+                    },
+                    "else": {
+                      "description": "The note's frequency ratio",
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
+                        },
+                        {
+                          "type": "number",
+                          "rules": [
+                            {
+                              "name": "sign",
+                              "args": {
+                                "sign": "positive"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
                   }
                 },
                 "reference": {
@@ -117,7 +144,7 @@
                   "properties": {
                     "frequency": {
                       "description": "The reference frequency - a number, optionally with \" Hz\" appended",
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "type": "number"
                         },
@@ -139,31 +166,47 @@
                 },
                 "repeat ratio": {
                   "description": "The frequency ratio at which the scale's notes will repeat",
-                  "oneOf": [
+                  "anyOf": [
                     {
                       "type": "string",
                       "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                     },
                     {
-                      "type": "number"
+                      "type": "number",
+                      "rules": [
+                        {
+                          "name": "sign",
+                          "args": {
+                            "sign": "positive"
+                          }
+                        }
+                      ]
                     }
                   ]
                 },
                 "repeat": {
                   "description": "The frequency ratio at which the scale's notes will repeat",
-                  "oneOf": [
+                  "anyOf": [
                     {
                       "type": "string",
                       "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                     },
                     {
-                      "type": "number"
+                      "type": "number",
+                      "rules": [
+                        {
+                          "name": "sign",
+                          "args": {
+                            "sign": "positive"
+                          }
+                        }
+                      ]
                     }
                   ]
                 },
                 "max frequency": {
                   "description": "A maximum frequency for the scale.\nWhen mapping the scale's notes onto actual frequencies, notes from this scale will not be mapped above the provided frequency.",
-                  "oneOf": [
+                  "anyOf": [
                     {
                       "type": "number"
                     },
@@ -175,7 +218,7 @@
                 },
                 "max": {
                   "description": "A maximum frequency for the scale.\nWhen mapping the scale's notes onto actual frequencies, notes from this scale will not be mapped above the provided frequency.",
-                  "oneOf": [
+                  "anyOf": [
                     {
                       "type": "number"
                     },
@@ -187,7 +230,7 @@
                 },
                 "maximum": {
                   "description": "A maximum frequency for the scale.\nWhen mapping the scale's notes onto actual frequencies, notes from this scale will not be mapped above the provided frequency.",
-                  "oneOf": [
+                  "anyOf": [
                     {
                       "type": "number"
                     },
@@ -199,7 +242,7 @@
                 },
                 "min frequency": {
                   "description": "A minimum frequency for the scale.\nWhen mapping the scale's notes onto actual frequencies, notes from this scale will not be mapped below the provided frequency.",
-                  "oneOf": [
+                  "anyOf": [
                     {
                       "type": "number"
                     },
@@ -211,7 +254,7 @@
                 },
                 "minimum": {
                   "description": "A minimum frequency for the scale.\nWhen mapping the scale's notes onto actual frequencies, notes from this scale will not be mapped below the provided frequency.",
-                  "oneOf": [
+                  "anyOf": [
                     {
                       "type": "number"
                     },
@@ -223,7 +266,7 @@
                 },
                 "min": {
                   "description": "A minimum frequency for the scale.\nWhen mapping the scale's notes onto actual frequencies, notes from this scale will not be mapped below the provided frequency.",
-                  "oneOf": [
+                  "anyOf": [
                     {
                       "type": "number"
                     },
@@ -409,49 +452,81 @@
               "properties": {
                 "frequency ratio": {
                   "description": "The partial's frequency ratio",
-                  "oneOf": [
+                  "anyOf": [
                     {
                       "type": "string",
                       "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                     },
                     {
-                      "type": "number"
+                      "type": "number",
+                      "rules": [
+                        {
+                          "name": "sign",
+                          "args": {
+                            "sign": "positive"
+                          }
+                        }
+                      ]
                     }
                   ]
                 },
                 "ratio": {
                   "description": "The partial's frequency ratio",
-                  "oneOf": [
+                  "anyOf": [
                     {
                       "type": "string",
                       "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                     },
                     {
-                      "type": "number"
+                      "type": "number",
+                      "rules": [
+                        {
+                          "name": "sign",
+                          "args": {
+                            "sign": "positive"
+                          }
+                        }
+                      ]
                     }
                   ]
                 },
                 "amplitude weight": {
                   "description": "The partial's amplitude weight.\nThis determines how much the partial contributes to the overall power (ie., loudness) of the reconstructed spectrum.",
-                  "oneOf": [
+                  "anyOf": [
                     {
                       "type": "string",
                       "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                     },
                     {
-                      "type": "number"
+                      "type": "number",
+                      "rules": [
+                        {
+                          "name": "sign",
+                          "args": {
+                            "sign": "positive"
+                          }
+                        }
+                      ]
                     }
                   ]
                 },
                 "weight": {
                   "description": "The partial's amplitude weight.\nThis determines how much the partial contributes to the overall power (ie., loudness) of the reconstructed spectrum.",
-                  "oneOf": [
+                  "anyOf": [
                     {
                       "type": "string",
                       "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                     },
                     {
-                      "type": "number"
+                      "type": "number",
+                      "rules": [
+                        {
+                          "name": "sign",
+                          "args": {
+                            "sign": "positive"
+                          }
+                        }
+                      ]
                     }
                   ]
                 }
@@ -523,49 +598,81 @@
               "properties": {
                 "frequency ratio": {
                   "description": "The partial's frequency ratio",
-                  "oneOf": [
+                  "anyOf": [
                     {
                       "type": "string",
                       "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                     },
                     {
-                      "type": "number"
+                      "type": "number",
+                      "rules": [
+                        {
+                          "name": "sign",
+                          "args": {
+                            "sign": "positive"
+                          }
+                        }
+                      ]
                     }
                   ]
                 },
                 "ratio": {
                   "description": "The partial's frequency ratio",
-                  "oneOf": [
+                  "anyOf": [
                     {
                       "type": "string",
                       "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                     },
                     {
-                      "type": "number"
+                      "type": "number",
+                      "rules": [
+                        {
+                          "name": "sign",
+                          "args": {
+                            "sign": "positive"
+                          }
+                        }
+                      ]
                     }
                   ]
                 },
                 "amplitude weight": {
                   "description": "The partial's amplitude weight.\nThis determines how much the partial contributes to the overall power (ie., loudness) of the reconstructed spectrum.",
-                  "oneOf": [
+                  "anyOf": [
                     {
                       "type": "string",
                       "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                     },
                     {
-                      "type": "number"
+                      "type": "number",
+                      "rules": [
+                        {
+                          "name": "sign",
+                          "args": {
+                            "sign": "positive"
+                          }
+                        }
+                      ]
                     }
                   ]
                 },
                 "weight": {
                   "description": "The partial's amplitude weight.\nThis determines how much the partial contributes to the overall power (ie., loudness) of the reconstructed spectrum.",
-                  "oneOf": [
+                  "anyOf": [
                     {
                       "type": "string",
                       "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                     },
                     {
-                      "type": "number"
+                      "type": "number",
+                      "rules": [
+                        {
+                          "name": "sign",
+                          "args": {
+                            "sign": "positive"
+                          }
+                        }
+                      ]
                     }
                   ]
                 }

@@ -26,49 +26,81 @@
         "properties": {
           "frequency ratio": {
             "description": "The partial's frequency ratio",
-            "oneOf": [
+            "anyOf": [
               {
                 "type": "string",
                 "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
               },
               {
-                "type": "number"
+                "type": "number",
+                "rules": [
+                  {
+                    "name": "sign",
+                    "args": {
+                      "sign": "positive"
+                    }
+                  }
+                ]
               }
             ]
           },
           "ratio": {
             "description": "The partial's frequency ratio",
-            "oneOf": [
+            "anyOf": [
               {
                 "type": "string",
                 "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
               },
               {
-                "type": "number"
+                "type": "number",
+                "rules": [
+                  {
+                    "name": "sign",
+                    "args": {
+                      "sign": "positive"
+                    }
+                  }
+                ]
               }
             ]
           },
           "amplitude weight": {
             "description": "The partial's amplitude weight.\nThis determines how much the partial contributes to the overall power (ie., loudness) of the reconstructed spectrum.",
-            "oneOf": [
+            "anyOf": [
               {
                 "type": "string",
                 "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
               },
               {
-                "type": "number"
+                "type": "number",
+                "rules": [
+                  {
+                    "name": "sign",
+                    "args": {
+                      "sign": "positive"
+                    }
+                  }
+                ]
               }
             ]
           },
           "weight": {
             "description": "The partial's amplitude weight.\nThis determines how much the partial contributes to the overall power (ie., loudness) of the reconstructed spectrum.",
-            "oneOf": [
+            "anyOf": [
               {
                 "type": "string",
                 "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
               },
               {
-                "type": "number"
+                "type": "number",
+                "rules": [
+                  {
+                    "name": "sign",
+                    "args": {
+                      "sign": "positive"
+                    }
+                  }
+                ]
               }
             ]
           }
@@ -140,49 +172,81 @@
         "properties": {
           "frequency ratio": {
             "description": "The partial's frequency ratio",
-            "oneOf": [
+            "anyOf": [
               {
                 "type": "string",
                 "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
               },
               {
-                "type": "number"
+                "type": "number",
+                "rules": [
+                  {
+                    "name": "sign",
+                    "args": {
+                      "sign": "positive"
+                    }
+                  }
+                ]
               }
             ]
           },
           "ratio": {
             "description": "The partial's frequency ratio",
-            "oneOf": [
+            "anyOf": [
               {
                 "type": "string",
                 "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
               },
               {
-                "type": "number"
+                "type": "number",
+                "rules": [
+                  {
+                    "name": "sign",
+                    "args": {
+                      "sign": "positive"
+                    }
+                  }
+                ]
               }
             ]
           },
           "amplitude weight": {
             "description": "The partial's amplitude weight.\nThis determines how much the partial contributes to the overall power (ie., loudness) of the reconstructed spectrum.",
-            "oneOf": [
+            "anyOf": [
               {
                 "type": "string",
                 "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
               },
               {
-                "type": "number"
+                "type": "number",
+                "rules": [
+                  {
+                    "name": "sign",
+                    "args": {
+                      "sign": "positive"
+                    }
+                  }
+                ]
               }
             ]
           },
           "weight": {
             "description": "The partial's amplitude weight.\nThis determines how much the partial contributes to the overall power (ie., loudness) of the reconstructed spectrum.",
-            "oneOf": [
+            "anyOf": [
               {
                 "type": "string",
                 "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
               },
               {
-                "type": "number"
+                "type": "number",
+                "rules": [
+                  {
+                    "name": "sign",
+                    "args": {
+                      "sign": "positive"
+                    }
+                  }
+                ]
               }
             ]
           }

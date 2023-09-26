@@ -29,81 +29,105 @@
             "minItems": 1,
             "uniqueItems": true,
             "items": {
-              "oneOf": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "frequency ratio": {
-                      "description": "The note's frequency ratio",
-                      "oneOf": [
-                        {
-                          "type": "string",
-                          "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
-                        },
-                        {
-                          "type": "number",
-                          "exclusiveMinimum": 0.0
-                        }
-                      ]
-                    },
-                    "ratio": {
-                      "description": "The note's frequency ratio",
-                      "oneOf": [
-                        {
-                          "type": "string",
-                          "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
-                        },
-                        {
-                          "type": "number",
-                          "exclusiveMinimum": 0.0
-                        }
-                      ]
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "The note's name"
-                    }
-                  },
-                  "additionalProperties": true,
-                  "if": {
-                    "propertyNames": {
-                      "enum": [
-                        "ratio",
-                        "frequency ratio"
-                      ]
-                    },
-                    "minProperties": 2
-                  },
-                  "then": false,
-                  "else": {
-                    "oneOf": [
+              "if": {
+                "type": "object",
+                "properties": {},
+                "additionalProperties": false
+              },
+              "then": {
+                "type": "object",
+                "properties": {
+                  "frequency ratio": {
+                    "description": "The note's frequency ratio",
+                    "anyOf": [
                       {
-                        "required": [
-                          "ratio"
-                        ]
+                        "type": "string",
+                        "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
                       },
                       {
-                        "required": [
-                          "frequency ratio"
+                        "type": "number",
+                        "rules": [
+                          {
+                            "name": "sign",
+                            "args": {
+                              "sign": "positive"
+                            }
+                          }
                         ]
                       }
                     ]
+                  },
+                  "ratio": {
+                    "description": "The note's frequency ratio",
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
+                      },
+                      {
+                        "type": "number",
+                        "rules": [
+                          {
+                            "name": "sign",
+                            "args": {
+                              "sign": "positive"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The note's name"
                   }
                 },
-                {
-                  "description": "The note's frequency ratio",
+                "additionalProperties": true,
+                "if": {
+                  "propertyNames": {
+                    "enum": [
+                      "ratio",
+                      "frequency ratio"
+                    ]
+                  },
+                  "minProperties": 2
+                },
+                "then": false,
+                "else": {
                   "oneOf": [
                     {
-                      "type": "string",
-                      "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
+                      "required": [
+                        "ratio"
+                      ]
                     },
                     {
-                      "type": "number",
-                      "exclusiveMinimum": 0.0
+                      "required": [
+                        "frequency ratio"
+                      ]
                     }
                   ]
                 }
-              ]
+              },
+              "else": {
+                "description": "The note's frequency ratio",
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
+                  },
+                  {
+                    "type": "number",
+                    "rules": [
+                      {
+                        "name": "sign",
+                        "args": {
+                          "sign": "positive"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
             }
           },
           "reference": {
@@ -112,10 +136,9 @@
             "properties": {
               "frequency": {
                 "description": "The reference frequency - a number, optionally with \" Hz\" appended",
-                "oneOf": [
+                "anyOf": [
                   {
-                    "type": "number",
-                    "exclusiveMinimum": 0.0
+                    "type": "number"
                   },
                   {
                     "type": "string",
@@ -135,36 +158,49 @@
           },
           "repeat ratio": {
             "description": "The frequency ratio at which the scale's notes will repeat",
-            "oneOf": [
+            "anyOf": [
               {
                 "type": "string",
                 "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
               },
               {
                 "type": "number",
-                "exclusiveMinimum": 0.0
+                "rules": [
+                  {
+                    "name": "sign",
+                    "args": {
+                      "sign": "positive"
+                    }
+                  }
+                ]
               }
             ]
           },
           "repeat": {
             "description": "The frequency ratio at which the scale's notes will repeat",
-            "oneOf": [
+            "anyOf": [
               {
                 "type": "string",
                 "pattern": "^([1234567890.,+\\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$"
               },
               {
                 "type": "number",
-                "exclusiveMinimum": 0.0
+                "rules": [
+                  {
+                    "name": "sign",
+                    "args": {
+                      "sign": "positive"
+                    }
+                  }
+                ]
               }
             ]
           },
           "max frequency": {
             "description": "A maximum frequency for the scale.\nWhen mapping the scale's notes onto actual frequencies, notes from this scale will not be mapped above the provided frequency.",
-            "oneOf": [
+            "anyOf": [
               {
-                "type": "number",
-                "exclusiveMinimum": 0.0
+                "type": "number"
               },
               {
                 "type": "string",
@@ -174,10 +210,9 @@
           },
           "max": {
             "description": "A maximum frequency for the scale.\nWhen mapping the scale's notes onto actual frequencies, notes from this scale will not be mapped above the provided frequency.",
-            "oneOf": [
+            "anyOf": [
               {
-                "type": "number",
-                "exclusiveMinimum": 0.0
+                "type": "number"
               },
               {
                 "type": "string",
@@ -187,10 +222,9 @@
           },
           "maximum": {
             "description": "A maximum frequency for the scale.\nWhen mapping the scale's notes onto actual frequencies, notes from this scale will not be mapped above the provided frequency.",
-            "oneOf": [
+            "anyOf": [
               {
-                "type": "number",
-                "exclusiveMinimum": 0.0
+                "type": "number"
               },
               {
                 "type": "string",
@@ -200,10 +234,9 @@
           },
           "min frequency": {
             "description": "A minimum frequency for the scale.\nWhen mapping the scale's notes onto actual frequencies, notes from this scale will not be mapped below the provided frequency.",
-            "oneOf": [
+            "anyOf": [
               {
-                "type": "number",
-                "exclusiveMinimum": 0.0
+                "type": "number"
               },
               {
                 "type": "string",
@@ -213,10 +246,9 @@
           },
           "minimum": {
             "description": "A minimum frequency for the scale.\nWhen mapping the scale's notes onto actual frequencies, notes from this scale will not be mapped below the provided frequency.",
-            "oneOf": [
+            "anyOf": [
               {
-                "type": "number",
-                "exclusiveMinimum": 0.0
+                "type": "number"
               },
               {
                 "type": "string",
@@ -226,10 +258,9 @@
           },
           "min": {
             "description": "A minimum frequency for the scale.\nWhen mapping the scale's notes onto actual frequencies, notes from this scale will not be mapped below the provided frequency.",
-            "oneOf": [
+            "anyOf": [
               {
-                "type": "number",
-                "exclusiveMinimum": 0.0
+                "type": "number"
               },
               {
                 "type": "string",
