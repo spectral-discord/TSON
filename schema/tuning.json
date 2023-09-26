@@ -46,6 +46,7 @@
                       },
                       {
                         "type": "number",
+                        "exclusiveMinimum": 0.0,
                         "rules": [
                           {
                             "name": "sign",
@@ -66,6 +67,7 @@
                       },
                       {
                         "type": "number",
+                        "exclusiveMinimum": 0.0,
                         "rules": [
                           {
                             "name": "sign",
@@ -117,6 +119,7 @@
                   },
                   {
                     "type": "number",
+                    "exclusiveMinimum": 0.0,
                     "rules": [
                       {
                         "name": "sign",
@@ -138,7 +141,16 @@
                 "description": "The reference frequency - a number, optionally with \" Hz\" appended",
                 "anyOf": [
                   {
-                    "type": "number"
+                    "type": "number",
+                    "exclusiveMinimum": 0.0,
+                    "rules": [
+                      {
+                        "name": "sign",
+                        "args": {
+                          "sign": "positive"
+                        }
+                      }
+                    ]
                   },
                   {
                     "type": "string",
@@ -165,6 +177,7 @@
               },
               {
                 "type": "number",
+                "exclusiveMinimum": 0.0,
                 "rules": [
                   {
                     "name": "sign",
@@ -185,6 +198,7 @@
               },
               {
                 "type": "number",
+                "exclusiveMinimum": 0.0,
                 "rules": [
                   {
                     "name": "sign",
@@ -200,7 +214,16 @@
             "description": "A maximum frequency for the scale.\nWhen mapping the scale's notes onto actual frequencies, notes from this scale will not be mapped above the provided frequency.",
             "anyOf": [
               {
-                "type": "number"
+                "type": "number",
+                "exclusiveMinimum": 0.0,
+                "rules": [
+                  {
+                    "name": "sign",
+                    "args": {
+                      "sign": "positive"
+                    }
+                  }
+                ]
               },
               {
                 "type": "string",
@@ -212,7 +235,16 @@
             "description": "A maximum frequency for the scale.\nWhen mapping the scale's notes onto actual frequencies, notes from this scale will not be mapped above the provided frequency.",
             "anyOf": [
               {
-                "type": "number"
+                "type": "number",
+                "exclusiveMinimum": 0.0,
+                "rules": [
+                  {
+                    "name": "sign",
+                    "args": {
+                      "sign": "positive"
+                    }
+                  }
+                ]
               },
               {
                 "type": "string",
@@ -224,7 +256,16 @@
             "description": "A maximum frequency for the scale.\nWhen mapping the scale's notes onto actual frequencies, notes from this scale will not be mapped above the provided frequency.",
             "anyOf": [
               {
-                "type": "number"
+                "type": "number",
+                "exclusiveMinimum": 0.0,
+                "rules": [
+                  {
+                    "name": "sign",
+                    "args": {
+                      "sign": "positive"
+                    }
+                  }
+                ]
               },
               {
                 "type": "string",
@@ -236,7 +277,16 @@
             "description": "A minimum frequency for the scale.\nWhen mapping the scale's notes onto actual frequencies, notes from this scale will not be mapped below the provided frequency.",
             "anyOf": [
               {
-                "type": "number"
+                "type": "number",
+                "exclusiveMinimum": 0.0,
+                "rules": [
+                  {
+                    "name": "sign",
+                    "args": {
+                      "sign": "positive"
+                    }
+                  }
+                ]
               },
               {
                 "type": "string",
@@ -248,7 +298,16 @@
             "description": "A minimum frequency for the scale.\nWhen mapping the scale's notes onto actual frequencies, notes from this scale will not be mapped below the provided frequency.",
             "anyOf": [
               {
-                "type": "number"
+                "type": "number",
+                "exclusiveMinimum": 0.0,
+                "rules": [
+                  {
+                    "name": "sign",
+                    "args": {
+                      "sign": "positive"
+                    }
+                  }
+                ]
               },
               {
                 "type": "string",
@@ -260,7 +319,16 @@
             "description": "A minimum frequency for the scale.\nWhen mapping the scale's notes onto actual frequencies, notes from this scale will not be mapped below the provided frequency.",
             "anyOf": [
               {
-                "type": "number"
+                "type": "number",
+                "exclusiveMinimum": 0.0,
+                "rules": [
+                  {
+                    "name": "sign",
+                    "args": {
+                      "sign": "positive"
+                    }
+                  }
+                ]
               },
               {
                 "type": "string",

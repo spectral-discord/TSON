@@ -33,6 +33,7 @@
               },
               {
                 "type": "number",
+                "exclusiveMinimum": 0.0,
                 "rules": [
                   {
                     "name": "sign",
@@ -53,6 +54,7 @@
               },
               {
                 "type": "number",
+                "exclusiveMinimum": 0.0,
                 "rules": [
                   {
                     "name": "sign",
@@ -73,6 +75,7 @@
               },
               {
                 "type": "number",
+                "exclusiveMinimum": 0.0,
                 "rules": [
                   {
                     "name": "sign",
@@ -93,6 +96,7 @@
               },
               {
                 "type": "number",
+                "exclusiveMinimum": 0.0,
                 "rules": [
                   {
                     "name": "sign",
@@ -179,6 +183,7 @@
               },
               {
                 "type": "number",
+                "exclusiveMinimum": 0.0,
                 "rules": [
                   {
                     "name": "sign",
@@ -199,6 +204,7 @@
               },
               {
                 "type": "number",
+                "exclusiveMinimum": 0.0,
                 "rules": [
                   {
                     "name": "sign",
@@ -219,6 +225,7 @@
               },
               {
                 "type": "number",
+                "exclusiveMinimum": 0.0,
                 "rules": [
                   {
                     "name": "sign",
@@ -239,6 +246,7 @@
               },
               {
                 "type": "number",
+                "exclusiveMinimum": 0.0,
                 "rules": [
                   {
                     "name": "sign",
