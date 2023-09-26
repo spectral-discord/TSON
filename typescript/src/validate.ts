@@ -18,8 +18,8 @@ const parseExpression = (value: string, helpers: any) => {
 };
 
 const expression = Joi.alternatives().try(
-  Joi.string().regex(/^([1234567890.,+\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$/).custom(parseExpression),
   Joi.number().positive(),
+  Joi.string().regex(/^([1234567890.,+\-*/^%()e ]|(pi)|(tau)|(abs)|(log))+$/).custom(parseExpression),
 );
 
 const frequency = Joi.alternatives().try(
